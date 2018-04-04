@@ -7,33 +7,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSmart.Host", "SuperSma
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSmart.Core", "SuperSmart.Core\SuperSmart.Core.csproj", "{7927C633-0883-459F-8EAE-449CACEEE0CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSmart.Test", "SuperSmart.Test\SuperSmart.Test.csproj", "{9A2CE95B-D602-4E76-8237-BDA9C9114B00}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-		Test|Any CPU = Test|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E921A630-8488-47A3-B1D9-E0BC7903A485}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E921A630-8488-47A3-B1D9-E0BC7903A485}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E921A630-8488-47A3-B1D9-E0BC7903A485}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E921A630-8488-47A3-B1D9-E0BC7903A485}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E921A630-8488-47A3-B1D9-E0BC7903A485}.Test|Any CPU.ActiveCfg = Release|Any CPU
-		{E921A630-8488-47A3-B1D9-E0BC7903A485}.Test|Any CPU.Build.0 = Release|Any CPU
 		{7927C633-0883-459F-8EAE-449CACEEE0CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7927C633-0883-459F-8EAE-449CACEEE0CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7927C633-0883-459F-8EAE-449CACEEE0CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7927C633-0883-459F-8EAE-449CACEEE0CB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7927C633-0883-459F-8EAE-449CACEEE0CB}.Test|Any CPU.ActiveCfg = Debug|Any CPU
-		{7927C633-0883-459F-8EAE-449CACEEE0CB}.Test|Any CPU.Build.0 = Debug|Any CPU
-		{9A2CE95B-D602-4E76-8237-BDA9C9114B00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9A2CE95B-D602-4E76-8237-BDA9C9114B00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9A2CE95B-D602-4E76-8237-BDA9C9114B00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9A2CE95B-D602-4E76-8237-BDA9C9114B00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9A2CE95B-D602-4E76-8237-BDA9C9114B00}.Test|Any CPU.ActiveCfg = Release|Any CPU
-		{9A2CE95B-D602-4E76-8237-BDA9C9114B00}.Test|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

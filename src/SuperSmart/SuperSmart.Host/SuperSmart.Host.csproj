@@ -98,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Controllers\VerificationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -116,14 +115,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Controllers\" />
     <Folder Include="ViewModels\" />
-    <Folder Include="Views\Verification\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SuperSmart.Core\SuperSmart.Core.csproj">
-      <Project>{7927C633-0883-459F-8EAE-449CACEEE0CB}</Project>
-      <Name>SuperSmart.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
