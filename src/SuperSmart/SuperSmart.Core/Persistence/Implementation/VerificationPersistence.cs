@@ -12,9 +12,45 @@ namespace SuperSmart.Core.Persistence.Implementation
 {
     public class VerificationPersistence : IVerificationPersistence
     {
-        public Guid Login(LoginViewModel loginViewModel)
+        public string Login(LoginViewModel loginViewModel)
         {
-            throw new NotImplementedException();
+            if (loginViewModel == null)
+            {
+                throw new PropertyExceptionCollection(nameof(loginViewModel), "Parameter cannot be null");
+            }
+            var validationResults = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(loginViewModel, new ValidationContext(loginViewModel, serviceProvider: null, items: null), validationResults, true))
+            {
+                throw new PropertyExceptionCollection(validationResults);
+            }
+            using (var db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.Email == loginViewModel.Email.ToLower());
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(new List<Tuple<string, string>>()
+                    {
+                        new Tuple<string, string>(nameof(loginViewModel.Email), "A user with this combination doesn't exist"),
+                        new Tuple<string, string>(nameof(loginViewModel.Password), "A user with this combination doesn't exist"),
+                    });
+                }
+                var tmpPass = loginViewModel.Password.GenerateHash(account.Salt);
+                if (tmpPass != account.Password)
+                {
+                    throw new PropertyExceptionCollection(new List<Tuple<string, string>>()
+                    {
+                        new Tuple<string, string>(nameof(loginViewModel.Email), "A user with this combination doesn't exist"),
+                        new Tuple<string, string>(nameof(loginViewModel.Password), "A user with this combination doesn't exist"),
+                    });
+                }
+                if((DateTime.Now - account.LastLogin).TotalHours > 8)
+                {
+                    account.LoginToken = 256.RandomString();
+                }
+                account.LastLogin = DateTime.Now;
+                db.SaveChanges();
+                return account.LoginToken;
+            }
         }
 
         public void Register(RegisterViewModel registerViewModel)

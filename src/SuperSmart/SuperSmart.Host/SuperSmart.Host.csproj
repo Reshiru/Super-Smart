@@ -172,6 +172,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helper\BasicAuthorizeAttribute.cs" />
     <Compile Include="Helper\ModelStateHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -183,6 +184,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\_Layout.cshtml" />
     <Content Include="Views\Verification\Register.cshtml" />
+    <Content Include="Views\Verification\Login.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

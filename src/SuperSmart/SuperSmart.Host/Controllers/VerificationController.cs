@@ -5,6 +5,7 @@ using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Host.Helper;
 using System;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace SuperSmart.Host.Controllers
 {
@@ -30,6 +31,26 @@ namespace SuperSmart.Host.Controllers
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
             return View("Register");
+        }
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return View("Login");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(LoginViewModel loginViewModel)
+        {
+            try
+            {
+                FormsAuthentication.SetAuthCookie(verificationPersistence.Login(loginViewModel), true);
+                // ToDo: Return to overview
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+            return View("Login");
         }
     }
 }

@@ -17,6 +17,16 @@ namespace SuperSmart.Core.Extension
                 propertyName
             }));
         }
+        public PropertyExceptionCollection(List<Tuple<string, string>> validationResults) : this()
+        {
+            foreach (var item in validationResults)
+            {
+                this.Exceptions.Add(new ValidationResult(item.Item1, new List<string>()
+                {
+                    item.Item2
+                }));
+            }
+        }
         public PropertyExceptionCollection(List<ValidationResult> validationResults) : this()
         {
             this.Exceptions = validationResults;
