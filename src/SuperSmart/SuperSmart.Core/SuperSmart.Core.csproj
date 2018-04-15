@@ -135,7 +135,9 @@
     <Compile Include="Data\Implementation\TeachingClass.cs" />
     <Compile Include="Data\ViewModels\LoginViewModel.cs" />
     <Compile Include="Data\ViewModels\RegisterViewModel.cs" />
+    <Compile Include="Extension\IntExtension.cs" />
     <Compile Include="Extension\PropertyExceptionCollection.cs" />
+    <Compile Include="Extension\StringExtension.cs" />
     <Compile Include="Persistence\Implementation\VerificationPersistence.cs" />
     <Compile Include="Persistence\Interface\IVerificationPersistence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

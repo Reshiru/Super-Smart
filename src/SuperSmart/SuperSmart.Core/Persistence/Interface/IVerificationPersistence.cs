@@ -9,13 +9,15 @@ namespace SuperSmart.Core.Persistence.Interface
     public interface IVerificationPersistence
     {
         /// <summary>
-        /// CHecks if the username with the given password exists,
-        /// if true returns new session id
+        /// Generates new login token for user if model is valid
         /// </summary>
-        /// <param name="username"></param>
-        /// <param name="password"></param>
-        /// <returns></returns>
+        /// <param name="loginViewModel"></param>
+        /// <returns>The login token</returns>
         Guid Login(LoginViewModel loginViewModel);
+        /// <summary>
+        /// Registers a new user with the given data if model is valid
+        /// </summary>
+        /// <param name="registerViewModel"></param>
         void Register(RegisterViewModel registerViewModel);
     }
 }
