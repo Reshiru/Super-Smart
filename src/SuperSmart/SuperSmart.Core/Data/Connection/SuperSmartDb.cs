@@ -1,11 +1,5 @@
-﻿using SQLite.CodeFirst;
+﻿using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Implementation;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperSmart.Core.Data.Connection
 {
@@ -15,16 +9,10 @@ namespace SuperSmart.Core.Data.Connection
         /*Constructor*/
         /****************************/
         #region ctor
-        /// <summary>
-        /// The database constructor (initialize database location)
-        /// </summary>
         public SuperSmartDb()
-#if !Release
-            : base("Local")
-#else
-            : base ("Release")
-#endif
-        { }
+        {
+            this.Database.EnsureCreated();
+        }
         #endregion ctor
         public DbSet<Account> Accounts { get; set; }
         public DbSet<TeachingClass> TeachingClasses { get; set; }
@@ -33,13 +21,34 @@ namespace SuperSmart.Core.Data.Connection
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Document> Documents { get; set; }
         /// <summary>
-        /// Overrides the model creation method and initializes the code first database
+        /// The configuration for the database
         /// </summary>
-        /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        /// <param name="optionsBuilder"></param>
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // Code first implementation
-            Database.SetInitializer(new SqliteCreateDatabaseIfNotExists<SuperSmartDb>(modelBuilder));
+            optionsBuilder.UseSqlite($"Data Source={ConnectionString}");
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Account>().HasMany(a => a.AssignedClasses);
+            modelBuilder.Entity<Account>().HasMany(a => a.RequestedClasses);
+            modelBuilder.Entity<TeachingClass>().HasMany(a => a.AssignedAccounts);
+            modelBuilder.Entity<TeachingClass>().HasMany(a => a.OpenRequests);
+        }
+        /// <summary>
+        /// Returns the connection
+        /// </summary>
+        /// <returns></returns>
+        public static string ConnectionString
+        {
+            get
+            {
+#if TEST
+                return ".\\SuperSmartTest.db";
+#else
+                return ".\\SuperSmartRelease.db";
+#endif
+            }
         }
     }
 }

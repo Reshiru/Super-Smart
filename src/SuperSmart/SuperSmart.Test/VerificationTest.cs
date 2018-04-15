@@ -1,32 +1,109 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SuperSmart.Core.Data.ViewModels;
+using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
+using SuperSmart.Test.Helper;
+using System;
 
 namespace SuperSmart.Test
 {
     [TestClass]
     public class VerificationTest
     {
-        public VerificationTest()
-        {
-            verificationPersistence = new VerificationPersistence();
-        }
-
-        IVerificationPersistence verificationPersistence;
+        IVerificationPersistence verificationPersistence = new VerificationPersistence();
 
         [TestMethod]
-        public void LoginEmptyTest()
+        public void RegisterNullTest()
         {
             try
             {
-                verificationPersistence.Login(string.Empty, string.Empty);
-                Assert.IsTrue(false);
+                verificationPersistence.Register(null);
             }
-            catch 
+            catch (Exception ex)
             {
+                if(ex is PropertyExceptionCollection)
+                {
+                    Assert.IsTrue(true);
+                    return;
+                }
+            }
+            Assert.IsTrue(false);
+        }
+        [TestMethod]
+        public void RegisterNewDataTest()
+        {
+            DatabaseHelper.SecureDeleteDatabase();
+            try
+            {
+                verificationPersistence.Register(new RegisterViewModel()
+                {
+                    Email = "test@user.com",
+                    FirstName = "Test",
+                    LastName = "User",
+                    Password = "TestPass"
+                });
                 Assert.IsTrue(true);
             }
+            catch
+            {
+                Assert.IsTrue(false);
+            }
+        }
+        [TestMethod]
+        public void RegisterInvalidPasswordTest()
+        {
+            DatabaseHelper.SecureDeleteDatabase();
+            try
+            {
+                verificationPersistence.Register(new RegisterViewModel()
+                {
+                    Email = "test@user.com",
+                    FirstName = "Test",
+                    LastName = "User",
+                    Password = "Short"
+                });
+            }
+            catch (Exception ex)
+            {
+                if (ex is PropertyExceptionCollection)
+                {
+                    Assert.IsTrue(true);
+                    return;
+                }
+            }
+            Assert.IsTrue(false);
+        }
+        [TestMethod]
+        public void RegisterExistingDataTest()
+        {
+            DatabaseHelper.SecureDeleteDatabase();
+            try
+            {
+                verificationPersistence.Register(new RegisterViewModel()
+                {
+                    Email = "u1@user.com",
+                    FirstName = "Test",
+                    LastName = "User",
+                    Password = "TestPass"
+                });
+                verificationPersistence.Register(new RegisterViewModel()
+                {
+                    Email = "u1@user.com",
+                    FirstName = "Test",
+                    LastName = "User",
+                    Password = "TestPass"
+                });
+            }
+            catch (Exception ex)
+            {
+                if(ex is PropertyExceptionCollection)
+                {
+                    Assert.IsTrue(true);
+                    return;
+                }
+            }
+            Assert.IsTrue(false);
         }
     }
 }

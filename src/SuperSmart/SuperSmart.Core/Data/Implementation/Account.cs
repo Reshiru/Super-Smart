@@ -7,9 +7,12 @@ namespace SuperSmart.Core.Data.Implementation
     public class Account
     {
         /// <summary>
+        /// The database generated identifier
+        /// </summary>
+        public Int64 Id { get; set; }
+        /// <summary>
         /// The email addess from the account
         /// </summary>
-        [Key]
         public string Email { get; set; }
         /// <summary>
         /// The first name from the account user

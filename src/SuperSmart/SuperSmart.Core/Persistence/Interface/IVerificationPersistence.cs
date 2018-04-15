@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SuperSmart.Core.Data.ViewModels;
+using System;
 
 namespace SuperSmart.Core.Persistence.Interface
 {
@@ -14,12 +15,7 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        Guid Login(string username, string password);
-        /// <summary>
-        /// Checks if the given token does exist and is valid
-        /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        bool Check(Guid token);
+        Guid Login(LoginViewModel loginViewModel);
+        void Register(RegisterViewModel registerViewModel);
     }
 }

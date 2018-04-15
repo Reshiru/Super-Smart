@@ -11,9 +11,12 @@ namespace SuperSmart.Core.Data.Implementation
     public class Document
     {
         /// <summary>
+        /// The database generated identifier
+        /// </summary>
+        public Int64 Id { get; set; }
+        /// <summary>
         /// The system generated file name 
         /// </summary>
-        [Key]
         public string SystemFileName { get; set; }
         /// <summary>
         /// The document type from the document
