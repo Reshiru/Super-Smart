@@ -34,6 +34,7 @@ namespace SuperSmart.Core.Data.Connection
             modelBuilder.Entity<Account>().HasMany(a => a.RequestedClasses);
             modelBuilder.Entity<TeachingClass>().HasMany(a => a.AssignedAccounts);
             modelBuilder.Entity<TeachingClass>().HasMany(a => a.OpenRequests);
+            modelBuilder.Entity<TeachingClass>().HasOne(a => a.Admin);
         }
         /// <summary>
         /// Returns the connection

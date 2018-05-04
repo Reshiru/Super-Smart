@@ -25,6 +25,7 @@ namespace SuperSmart.Host.Controllers
             try
             {
                 verificationPersistence.Register(registerViewModel);
+                return RedirectToAction("Login");
             }
             catch (Exception ex)
             {
@@ -32,6 +33,7 @@ namespace SuperSmart.Host.Controllers
             }
             return View("Register");
         }
+
         [HttpGet]
         public ActionResult Login()
         {
@@ -44,13 +46,20 @@ namespace SuperSmart.Host.Controllers
             try
             {
                 FormsAuthentication.SetAuthCookie(verificationPersistence.Login(loginViewModel), true);
-                // ToDo: Return to overview
+                return Redirect(Request?.UrlReferrer?.ToString() ?? "/");
             }
             catch (Exception ex)
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
             return View("Login");
+        }
+
+        [HttpGet]
+        public ActionResult Logout()
+        {
+            FormsAuthentication.SignOut();
+            return Redirect(Request?.UrlReferrer?.ToString() ?? "/");
         }
     }
 }

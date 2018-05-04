@@ -1,0 +1,20 @@
+﻿@model CreateTeachingClassViewModel
+
+@using (Html.BeginForm("Create", "TeachingClass"))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.LabelFor(m => m.Designation)
+    @Html.TextBoxFor(m => m.Designation)
+    @Html.ValidationMessageFor(m => m.Designation)
+
+    @Html.LabelFor(m => m.NumberOfEducationYears)
+    @Html.TextBoxFor(m => m.NumberOfEducationYears)
+    @Html.ValidationMessageFor(m => m.NumberOfEducationYears)
+
+    @Html.LabelFor(m => m.Started)
+    @Html.TextBoxFor(m => m.Started)
+    @Html.ValidationMessageFor(m => m.Started)
+
+    <input type="submit" value="Submit" />
+}

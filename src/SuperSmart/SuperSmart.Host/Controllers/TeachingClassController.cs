@@ -1,0 +1,53 @@
+﻿using SuperSmart.Core.Data.ViewModels;
+using SuperSmart.Core.Extension;
+using SuperSmart.Core.Persistence.Implementation;
+using SuperSmart.Core.Persistence.Interface;
+using SuperSmart.Host.Helper;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+
+namespace SuperSmart.Host.Controllers
+{
+    [BasicAuthorize]
+    public class TeachingClassController : Controller
+    {
+        ITeachingClassPersistence teachingClassPersistence = new TeachingClassPersistence();
+
+        [HttpGet]
+        public ActionResult Create()
+        {
+            return View("CreateTeachingClass");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(CreateTeachingClassViewModel createTeachingClassViewModel)
+        {
+            try
+            {
+                teachingClassPersistence.Create(createTeachingClassViewModel, User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+            return View("CreateTeachingClass");
+        }
+
+        [HttpGet]
+        public ActionResult Join(string referral)
+        {
+            try
+            {
+                teachingClassPersistence.Join(referral, User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+            return Redirect(Request?.UrlReferrer?.ToString() ?? "/");
+        }
+    }
+}

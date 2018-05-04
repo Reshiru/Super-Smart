@@ -168,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\TeachingClassController.cs" />
     <Compile Include="Controllers\VerificationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -185,6 +186,7 @@
     <Content Include="Views\_Layout.cshtml" />
     <Content Include="Views\Verification\Register.cshtml" />
     <Content Include="Views\Verification\Login.cshtml" />
+    <Content Include="Views\TeachingClass\CreateTeachingClass.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

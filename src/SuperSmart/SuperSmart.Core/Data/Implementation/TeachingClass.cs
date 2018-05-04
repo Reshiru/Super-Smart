@@ -9,6 +9,10 @@ namespace SuperSmart.Core.Data.Implementation
         /// </summary>
         public Int64 Id { get; set; }
         /// <summary>
+        /// The refferal to join the class
+        /// </summary>
+        public string Referral { get; set; }
+        /// <summary>
         /// The designation of the teaching class
         /// </summary>
         public string Designation { get; set; }
@@ -32,5 +36,9 @@ namespace SuperSmart.Core.Data.Implementation
         /// The accounts which have requested access to this class
         /// </summary>
         public ICollection<Account> OpenRequests { get; set; }
+        /// <summary>
+        /// The administator from the teaching class
+        /// </summary>
+        public Account Admin { get; set; }
     }
 }
