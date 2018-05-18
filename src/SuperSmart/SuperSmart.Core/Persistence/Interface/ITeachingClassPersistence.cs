@@ -9,7 +9,7 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="createTeachingClassViewModel"></param>
         /// <param name="loginToken"></param>
-        void Create(RemoveUserFromTeachingClassViewModel createTeachingClassViewModel, string loginToken);
+        void Create(CreateTeachingClassViewModel createTeachingClassViewModel, string loginToken);
 
         /// <summary>
         /// Joins the given class (referral) with the given account
