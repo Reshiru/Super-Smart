@@ -16,5 +16,11 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="referral"></param>
         /// <param name="loginToken"></param>
         void Join(string referral, string loginToken);
+
+        /// <summary>
+        /// Delete a existing teaching class with id
+        /// </summary>
+        /// <param name="id"></param>
+        void Delete(int id);
     }
 }
