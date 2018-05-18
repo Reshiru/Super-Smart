@@ -134,6 +134,7 @@
     <Compile Include="Data\Implementation\Task.cs" />
     <Compile Include="Data\Implementation\TeachingClass.cs" />
     <Compile Include="Data\ViewModels\CreateTeachingClassViewModel.cs" />
+    <Compile Include="Data\ViewModels\RemoveUserFromTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\LoginViewModel.cs" />
     <Compile Include="Data\ViewModels\RegisterViewModel.cs" />
     <Compile Include="Extension\IntExtension.cs" />

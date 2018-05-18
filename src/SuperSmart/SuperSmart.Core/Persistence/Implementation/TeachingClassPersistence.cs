@@ -19,7 +19,7 @@ namespace SuperSmart.Core.Persistence.Implementation
             {
                 throw new PropertyExceptionCollection(nameof(createTeachingClassViewModel), "Parameter cannot be null");
             }
-            if (loginToken == null || loginToken == string.Empty)
+            if (string.IsNullOrEmpty(loginToken))
             {
                 throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
             }
@@ -57,11 +57,11 @@ namespace SuperSmart.Core.Persistence.Implementation
 
         public void Join(string referral, string loginToken)
         {
-            if (referral == null || referral == string.Empty)
+            if (string.IsNullOrEmpty(referral))
             {
                 throw new PropertyExceptionCollection(nameof(referral), "Parameter cannot be null or empty");
             }
-            if (loginToken == null || loginToken == string.Empty)
+            if (string.IsNullOrEmpty(loginToken))
             {
                 throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null or empty");
             }
@@ -83,32 +83,27 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
-        public void RemoveUser(int classId, int userId, string loginToken)
+        public void RemoveUser(RemoveUserFromTeachingClassViewModel removeUserFromTeachingClassViewModel, string loginToken)
         {
-            if (classId == 0)
+            if (removeUserFromTeachingClassViewModel == null)
             {
-                throw new PropertyExceptionCollection(nameof(id), "Parameter cannot be null or empty");
+                throw new PropertyExceptionCollection(nameof(removeUserFromTeachingClassViewModel), "Parameter cannot be null or empty");
             }
-
-            if (userId == 0)
-            {
-                throw new PropertyExceptionCollection(nameof(id), "Parameter cannot be null or empty");
-            }
-
+            
             if (string.IsNullOrEmpty(loginToken))
             {
-                throw new PropertyExceptionCollection(nameof(id), "Parameter cannot be null or empty");
+                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null or empty");
             }
 
             using (var db = new SuperSmartDb())
             {
-                var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == classId);
+                var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == removeUserFromTeachingClassViewModel.TeachingClassId);
                 if (teachingClass == null)
                 {
                     throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
                 }
 
-                var user = db.Accounts.SingleOrDefault(a => a.Id == userId);
+                var user = db.Accounts.SingleOrDefault(a => a.Id == removeUserFromTeachingClassViewModel.UserId);
                 if (user == null)
                 {
                     throw new PropertyExceptionCollection(nameof(teachingClass), "User not found");
@@ -122,7 +117,7 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 if (teachingClass.Admin.Id != admin.Id)
                 {
-                    throw new Exception("User hasn't the permissions to remove a user from this class");
+                    throw new PropertyExceptionCollection(nameof(admin), "User hasn't the permissions to remove a user from this class");
                 }
 
                 user.AssignedClasses.Remove(teachingClass);
