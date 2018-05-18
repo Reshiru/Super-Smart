@@ -1,4 +1,5 @@
-﻿using SuperSmart.Core.Data.Connection;
+﻿using System;
+using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
@@ -78,6 +79,55 @@ namespace SuperSmart.Core.Persistence.Implementation
                 }
                 account.AssignedClasses.Add(teachingClass);
                 teachingClass.AssignedAccounts.Add(account);
+                db.SaveChanges();
+            }
+        }
+
+        public void RemoveUser(int classId, int userId, string loginToken)
+        {
+            if (classId == 0)
+            {
+                throw new PropertyExceptionCollection(nameof(id), "Parameter cannot be null or empty");
+            }
+
+            if (userId == 0)
+            {
+                throw new PropertyExceptionCollection(nameof(id), "Parameter cannot be null or empty");
+            }
+
+            if (string.IsNullOrEmpty(loginToken))
+            {
+                throw new PropertyExceptionCollection(nameof(id), "Parameter cannot be null or empty");
+            }
+
+            using (var db = new SuperSmartDb())
+            {
+                var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == classId);
+                if (teachingClass == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
+                }
+
+                var user = db.Accounts.SingleOrDefault(a => a.Id == userId);
+                if (user == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "User not found");
+                }
+
+                var admin = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+                if (admin == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "User not found");
+                }
+
+                if (teachingClass.Admin.Id != admin.Id)
+                {
+                    throw new Exception("User hasn't the permissions to remove a user from this class");
+                }
+
+                user.AssignedClasses.Remove(teachingClass);
+                teachingClass.AssignedAccounts.Add(user);
+
                 db.SaveChanges();
             }
         }
