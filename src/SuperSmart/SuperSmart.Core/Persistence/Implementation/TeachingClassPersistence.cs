@@ -147,5 +147,30 @@ namespace SuperSmart.Core.Persistence.Implementation
                 db.SaveChanges();
             }
         }
+
+        public void Manage(ManageTeachingClassViewModel manageTeachingClassViewModel, int id, string loginToken)
+        {
+            if (loginToken == null || loginToken == string.Empty)
+            {
+                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
+            }
+            using (var db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+                var teachingClass = db.TeachingClasses.SingleOrDefault(c => c.Id == id);
+                if (teachingClass == null || teachingClass.Admin != account)
+                {
+                    throw new PropertyExceptionCollection(nameof(id), "ID invalid");
+                }
+                if (teachingClass.Admin != account)
+                {
+                    throw new PropertyExceptionCollection(nameof(account), "You don't have enought rights");
+                }
+                teachingClass.Referral = manageTeachingClassViewModel.Referral;
+                teachingClass.Designation = manageTeachingClassViewModel.Designation;
+                teachingClass.Started = manageTeachingClassViewModel.Started;
+                db.SaveChanges();
+            }
+        }
     }
 }
