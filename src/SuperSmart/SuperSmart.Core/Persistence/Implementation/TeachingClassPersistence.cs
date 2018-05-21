@@ -1,4 +1,5 @@
-﻿using SuperSmart.Core.Data.Connection;
+﻿using System;
+using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
@@ -6,6 +7,7 @@ using SuperSmart.Core.Persistence.Interface;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using SuperSmart.Core.Data.Enumeration;
 
 namespace SuperSmart.Core.Persistence.Implementation
 {
@@ -13,11 +15,11 @@ namespace SuperSmart.Core.Persistence.Implementation
     {
         public void Create(CreateTeachingClassViewModel createTeachingClassViewModel, string loginToken)
         {
-            if(createTeachingClassViewModel == null)
+            if (createTeachingClassViewModel == null)
             {
                 throw new PropertyExceptionCollection(nameof(createTeachingClassViewModel), "Parameter cannot be null");
             }
-            if(loginToken == null || loginToken == string.Empty)
+            if (string.IsNullOrEmpty(loginToken))
             {
                 throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
             }
@@ -29,7 +31,7 @@ namespace SuperSmart.Core.Persistence.Implementation
             using (var db = new SuperSmartDb())
             {
                 var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
-                if(account == null)
+                if (account == null)
                 {
                     throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
                 }
@@ -55,23 +57,23 @@ namespace SuperSmart.Core.Persistence.Implementation
 
         public void Join(string referral, string loginToken)
         {
-            if(referral == null || referral == string.Empty)
+            if (string.IsNullOrEmpty(referral))
             {
                 throw new PropertyExceptionCollection(nameof(referral), "Parameter cannot be null or empty");
             }
-            if(loginToken == null || loginToken == string.Empty)
+            if (string.IsNullOrEmpty(loginToken))
             {
                 throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null or empty");
             }
             using (var db = new SuperSmartDb())
             {
                 var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
-                if(account == null)
+                if (account == null)
                 {
                     throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
                 }
                 var teachingClass = db.TeachingClasses.SingleOrDefault(c => c.Referral == referral);
-                if(teachingClass == null)
+                if (teachingClass == null)
                 {
                     throw new PropertyExceptionCollection(nameof(referral), "Referral invalid");
                 }
@@ -81,23 +83,67 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
-        public void Manage(ManageTeachingClassViewModel vm, int id, string loginToken)
+        public void RemoveUser(RemoveUserFromTeachingClassViewModel removeUserFromTeachingClassViewModel, string loginToken)
         {
-            if (loginToken == null || loginToken == string.Empty)
+            if (removeUserFromTeachingClassViewModel == null)
             {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
+                throw new PropertyExceptionCollection(nameof(removeUserFromTeachingClassViewModel), "Parameter cannot be null or empty");
             }
+            
+            if (string.IsNullOrEmpty(loginToken))
+            {
+                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null or empty");
+            }
+
             using (var db = new SuperSmartDb())
             {
-                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
-                var teachingClass = db.TeachingClasses.SingleOrDefault(c => c.Id == id);
-                if (teachingClass == null || teachingClass.Admin != account)
+                var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == removeUserFromTeachingClassViewModel.TeachingClassId);
+                if (teachingClass == null)
                 {
-                    throw new PropertyExceptionCollection(nameof(referral), "ID invalid");
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
                 }
-                teachingClass.Refferal = vm.Refferal;
-                teachingClass.Designation = vm.Designation;
-                teachingClass.Started = vm.Started;
+
+                var user = db.Accounts.SingleOrDefault(a => a.Id == removeUserFromTeachingClassViewModel.UserId);
+                if (user == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "User not found");
+                }
+
+                var admin = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+                if (admin == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "User not found");
+                }
+
+                if (teachingClass.Admin.Id != admin.Id)
+                {
+                    throw new PropertyExceptionCollection(nameof(admin), "User hasn't the permissions to remove a user from this class");
+                }
+
+                user.AssignedClasses.Remove(teachingClass);
+                teachingClass.AssignedAccounts.Add(user);
+
+                db.SaveChanges();
+            }
+        }
+
+        public void Delete(int id)
+        {
+            if (id == 0)
+            {
+                throw new PropertyExceptionCollection(nameof(id), "Parameter cannot be null or empty");
+            }
+
+            using (var db = new SuperSmartDb())
+            {
+                var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == id);
+                if (teachingClass == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
+                }
+
+                teachingClass.Active = false;
+
                 db.SaveChanges();
             }
         }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using SuperSmart.Core.Data.Enumeration;
+
 namespace SuperSmart.Core.Data.Implementation
 {
     public class TeachingClass
@@ -40,5 +42,9 @@ namespace SuperSmart.Core.Data.Implementation
         /// The administator from the teaching class
         /// </summary>
         public Account Admin { get; set; }
+        /// <summary>
+        /// The state of the teaching class / active = not archived
+        /// </summary>
+        public bool Active { get; set; }
     }
 }
