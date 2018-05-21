@@ -135,6 +135,7 @@
     <Compile Include="Data\Implementation\TeachingClass.cs" />
     <Compile Include="Data\ViewModels\CreateTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\LoginViewModel.cs" />
+    <Compile Include="Data\ViewModels\ManageTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\RegisterViewModel.cs" />
     <Compile Include="Extension\IntExtension.cs" />
     <Compile Include="Extension\PropertyExceptionCollection.cs" />
