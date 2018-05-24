@@ -6,6 +6,38 @@
     <meta name="pagename" content="Super-Smart">
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" href="">
+    <script type="text/javascript" src="@Url.Content("/Scripts/jquery-3.3.1.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("/Scripts/EmailValidation.js")"></script>
+    <style>
+        input:focus {
+            outline: none;
+        }
+
+        .emptyInput, .wrongEmail {
+            border: 3px solid #900 !important;
+            background-color: #FDD !important;
+            border-style: double;
+        }
+
+        .validateEmail {
+            border: 3px solid #32CD32 !important;
+            background-color: none !important;
+            border-style: double;
+        }
+
+        .wrongEmail::after {
+            content: "dum ashole enter a valid email";
+            display: inline-block;
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .errormessage {
+            background-color: darkred;
+            opacity: 0.8;
+        }
+    </style>
     @RenderSection("head", required: false)
 </head>
 <body>
