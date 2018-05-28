@@ -133,6 +133,7 @@
     <Compile Include="Data\Implementation\Subject.cs" />
     <Compile Include="Data\Implementation\Task.cs" />
     <Compile Include="Data\Implementation\TeachingClass.cs" />
+    <Compile Include="Data\ViewModels\CreateSubjectViewModel.cs" />
     <Compile Include="Data\ViewModels\CreateTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\RemoveUserFromTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\LoginViewModel.cs" />
@@ -141,8 +142,10 @@
     <Compile Include="Extension\IntExtension.cs" />
     <Compile Include="Extension\PropertyExceptionCollection.cs" />
     <Compile Include="Extension\StringExtension.cs" />
+    <Compile Include="Persistence\Implementation\SubjectPersistence.cs" />
     <Compile Include="Persistence\Implementation\TeachingClassPersistence.cs" />
     <Compile Include="Persistence\Implementation\VerificationPersistence.cs" />
+    <Compile Include="Persistence\Interface\ISubjectPersistence.cs" />
     <Compile Include="Persistence\Interface\ITeachingClassPersistence.cs" />
     <Compile Include="Persistence\Interface\IVerificationPersistence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
