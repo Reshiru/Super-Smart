@@ -6,6 +6,14 @@ namespace SuperSmart.Core.Data.Implementation
 {
     public class TeachingClass
     {
+        public TeachingClass()
+        {
+            this.Subjects = new List<Subject>();
+            this.AssignedAccounts = new List<Account>();
+            this.OpenRequests = new List<Account>();
+
+        }
+
         /// <summary>
         /// The database generated id
         /// </summary>
