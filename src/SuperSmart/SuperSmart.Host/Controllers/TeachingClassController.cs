@@ -4,9 +4,6 @@ using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Host.Helper;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SuperSmart.Host.Controllers
@@ -14,13 +11,14 @@ namespace SuperSmart.Host.Controllers
     [BasicAuthorize]
     public class TeachingClassController : Controller
     {
-        ITeachingClassPersistence teachingClassPersistence = new TeachingClassPersistence();
+        private readonly ITeachingClassPersistence teachingClassPersistence = new TeachingClassPersistence();
 
         [HttpGet]
         public ActionResult Create()
         {
             return View("CreateTeachingClass");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateTeachingClassViewModel createTeachingClassViewModel)
@@ -36,6 +34,7 @@ namespace SuperSmart.Host.Controllers
             return View("CreateTeachingClass");
         }
 
+
         [HttpGet]
         public ActionResult Join(string referral)
         {
@@ -48,6 +47,31 @@ namespace SuperSmart.Host.Controllers
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
             return Redirect(Request?.UrlReferrer?.ToString() ?? "/");
+        }
+
+
+        [HttpGet]
+        public ActionResult Manage(int teachingClassId)
+        {
+            return View("ManageTeachingClass", new ManageTeachingClassViewModel()
+            {
+                Id = teachingClassId
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Manage(ManageTeachingClassViewModel manageTeachingClassViewModel)
+        {
+            try
+            {
+                teachingClassPersistence.Manage(manageTeachingClassViewModel, User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+            return View("ManageTeachingClass");
         }
     }
 }

@@ -18,18 +18,23 @@ namespace SuperSmart.Host.Helper
             {
                 return false;
             }
-            var token = httpContext.User?.Identity?.Name.ToString();
-            if (token != null && token != string.Empty)
+
+            var token = httpContext?.User?.Identity?.Name;
+
+            if (string.IsNullOrEmpty(token))
             {
-                using (var db = new SuperSmartDb())
+                return false;
+            }
+
+            using (var db = new SuperSmartDb())
+            {
+                if (db.Accounts.SingleOrDefault(a => a.LoginToken == token) == null)
                 {
-                    if (db.Accounts.SingleOrDefault(a => a.LoginToken == token) != null)
-                    {
-                        return true;
-                    }
+                    return false;
                 }
             }
-            return false;
+
+            return true;
         }
     }
 }
