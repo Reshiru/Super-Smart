@@ -15,7 +15,8 @@ namespace SuperSmart.Test
     {
         IVerificationPersistence verificationPersistence = new VerificationPersistence();
         ITeachingClassPersistence teachingClassPersistence = new TeachingClassPersistence();
-        
+        IUserPersistence userPersistence = new UserPersistence();
+
         [TestMethod]
         public void CreateNullStringEmptyTest()
         {
@@ -75,7 +76,7 @@ namespace SuperSmart.Test
                     Started = DateTime.Now
                 }, loginToken);
             }
-            catch 
+            catch
             {
                 Assert.IsTrue(false);
                 return;
@@ -199,6 +200,94 @@ namespace SuperSmart.Test
             try
             {
                 teachingClassPersistence.Join(referral, loginToken);
+            }
+            catch
+            {
+                Assert.IsTrue(false);
+                return;
+            }
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod]
+        public void RemoveUserFromClassEmptyNullTest()
+        {
+            try
+            {
+                teachingClassPersistence.RemoveUser(null, null);
+            }
+            catch (Exception ex)
+            {
+                if (ex is PropertyExceptionCollection)
+                {
+                    Assert.IsTrue(true);
+                    return;
+                }
+            }
+            Assert.IsTrue(false);
+        }
+        [TestMethod]
+        public void RemoveUserFromClassValidTest()
+        {
+            DatabaseHelper.SecureDeleteDatabase();
+
+            //Register admin user
+            verificationPersistence.Register(new RegisterViewModel()
+            {
+                Email = "class.admin@test.test",
+                FirstName = "Admin",
+                LastName = "Test",
+                Password = "12345678"
+            });
+
+            var loginTokenAdmin = verificationPersistence.Login(new LoginViewModel()
+            {
+                Email = "class.admin@test.test",
+                Password = "12345678"
+            });
+
+            teachingClassPersistence.Create(new CreateTeachingClassViewModel()
+            {
+                Designation = "Test",
+                NumberOfEducationYears = 4,
+                Started = DateTime.Now
+            }, loginTokenAdmin);
+
+            //Register user to remove
+            verificationPersistence.Register(new RegisterViewModel()
+            {
+                Email = "class.remove@test.test",
+                FirstName = "Remove",
+                LastName = "Test",
+                Password = "12345678"
+            });
+
+            var loginTokenUserToRemove = verificationPersistence.Login(new LoginViewModel()
+            {
+                Email = "class.remove@test.test",
+                Password = "12345678"
+            });
+
+            var referral = string.Empty;
+            long classId;
+            UserViewModel user;
+            using (var db = new SuperSmartDb())
+            {
+                referral = db.TeachingClasses.First().Referral;
+                classId = db.TeachingClasses.First().Id;
+                user = userPersistence.GetUserByLoginToken(loginTokenUserToRemove);
+            }
+
+            teachingClassPersistence.Join(referral, loginTokenUserToRemove);
+
+            try
+            {
+
+                teachingClassPersistence.RemoveUser(new RemoveUserFromTeachingClassViewModel()
+                {
+                    TeachingClassId = classId,
+                    UserId = user.Id
+                }, loginTokenAdmin);
             }
             catch
             {

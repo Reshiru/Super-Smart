@@ -12,6 +12,13 @@ namespace SuperSmart.Core.Persistence.Interface
         void Create(CreateTeachingClassViewModel createTeachingClassViewModel, string loginToken);
 
         /// <summary>
+        /// Changes properties from a given teaching class
+        /// </summary>
+        /// <param name="manageTeachingClassViewModel"></param>
+        /// <param name="loginToken"></param>
+        void Manage(ManageTeachingClassViewModel manageTeachingClassViewModel, string loginToken);
+
+        /// <summary>
         /// Joins the given class (referral) with the given account
         /// </summary>
         /// <param name="referral"></param>
@@ -21,8 +28,7 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <summary>
         /// Remove a user from a teaching class
         /// </summary>
-        /// <param name="classId"></param>
-        /// <param name="userId"></param>
+        /// <param name="removeUserFromTeachingClassViewModel"></param>
         /// <param name="loginToken"></param>
         void RemoveUser(RemoveUserFromTeachingClassViewModel removeUserFromTeachingClassViewModel, string loginToken);
 
@@ -30,6 +36,14 @@ namespace SuperSmart.Core.Persistence.Interface
         /// Delete a existing teaching class with id
         /// </summary>
         /// <param name="id"></param>
-        void Delete(int id);
+        /// <param name="loginToken"></param>
+        void Delete(int id, string loginToken);
+
+        /// <summary>
+        /// Changes the referral from the given teaching class id
+        /// </summary>
+        /// <param name="id">teaching class id</param>
+        /// <param name="loginToken"></param>
+        void ChangeReferral(int id, string loginToken);
     }
 }

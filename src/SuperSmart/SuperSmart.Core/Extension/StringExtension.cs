@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Linq;
+using System.Security.Cryptography;
 
 namespace SuperSmart.Core.Extension
 {
@@ -6,18 +7,18 @@ namespace SuperSmart.Core.Extension
     {
         public static string GenerateHash(this string value, string salt)
         {
-            string hash = value.GetHashCode().ToString();
+            var hash = value.GetHashCode().ToString();
             hash = hash + "sRaL*=" + $"{salt}";
-            var crypto = new SHA512CryptoServiceProvider();
-            byte[] bytes = new byte[hash.Length * sizeof(char)];
-            System.Buffer.BlockCopy(hash.ToCharArray(), 0, bytes, 0, bytes.Length);
-            byte[] hashTwo = crypto.ComputeHash(bytes);
-            string tempHash = "";
-            foreach (var oneByte in hash)
+
+            using (var crypto = new SHA512CryptoServiceProvider())
             {
-                tempHash += $"{oneByte}";
+                var bytes = new byte[hash.Length * sizeof(char)];
+                System.Buffer.BlockCopy(hash.ToCharArray(), 0, bytes, 0, bytes.Length);
+
+                var hashTwo = crypto.ComputeHash(bytes);
+
+                return hashTwo.Aggregate("", (current, oneByte) => current + $"{oneByte}");
             }
-            return tempHash;
         }
     }
 }
