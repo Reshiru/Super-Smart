@@ -88,13 +88,11 @@ namespace SuperSmart.Core.Persistence.Implementation
             if (removeUserFromTeachingClassViewModel == null)
             {
                 throw new PropertyExceptionCollection(nameof(removeUserFromTeachingClassViewModel), "Parameter cannot be null or empty");
-            }
-            
+            }         
             if (string.IsNullOrEmpty(loginToken))
             {
                 throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null or empty");
             }
-
             using (var db = new SuperSmartDb())
             {
                 var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == removeUserFromTeachingClassViewModel.TeachingClassId);
@@ -121,8 +119,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 }
 
                 user.AssignedClasses.Remove(teachingClass);
-                teachingClass.AssignedAccounts.Add(user);
-
+                teachingClass.AssignedAccounts.Remove(user);
                 db.SaveChanges();
             }
         }
@@ -133,7 +130,6 @@ namespace SuperSmart.Core.Persistence.Implementation
             {
                 throw new PropertyExceptionCollection(nameof(id), "Parameter cannot be null or empty");
             }
-
             using (var db = new SuperSmartDb())
             {
                 var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == id);
