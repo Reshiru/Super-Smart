@@ -11,7 +11,6 @@ namespace SuperSmart.Core.Data.Implementation
             this.Subjects = new List<Subject>();
             this.AssignedAccounts = new List<Account>();
             this.OpenRequests = new List<Account>();
-
         }
 
         /// <summary>
