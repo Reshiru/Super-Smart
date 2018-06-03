@@ -48,7 +48,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(teachingClass), "Teaching class not found");
                 }
 
-                if(!teachingClass.AssignedAccounts.Any(a => a == account))
+                if(!(teachingClass.Admin == account))
                 {
                     throw new PropertyExceptionCollection(nameof(account),
                         "No permissions granted");
