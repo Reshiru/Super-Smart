@@ -113,6 +113,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\DatabaseHelper.cs" />
+    <Compile Include="SubjectTest.cs" />
+    <Compile Include="UserTests.cs" />
     <Compile Include="TeachingClassTest.cs" />
     <Compile Include="VerificationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

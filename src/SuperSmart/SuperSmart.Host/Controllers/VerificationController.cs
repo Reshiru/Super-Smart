@@ -11,7 +11,7 @@ namespace SuperSmart.Host.Controllers
 {
     public class VerificationController : Controller
     {
-        IVerificationPersistence verificationPersistence = new VerificationPersistence();
+        private readonly IVerificationPersistence verificationPersistence = new VerificationPersistence();
 
         [HttpGet]
         public ActionResult Register()

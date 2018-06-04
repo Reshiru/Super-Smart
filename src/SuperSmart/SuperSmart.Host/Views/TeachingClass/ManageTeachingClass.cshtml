@@ -1,0 +1,18 @@
+﻿@model ManageTeachingClassViewModel
+
+@using (Html.BeginForm("Manage", "TeachingClass"))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.Id)
+
+    @Html.LabelFor(m => m.Designation)
+    @Html.TextBoxFor(m => m.Designation)
+    @Html.ValidationMessageFor(m => m.Designation)
+
+    @Html.LabelFor(m => m.Started)
+    @Html.TextBoxFor(m => m.Started)
+    @Html.ValidationMessageFor(m => m.Started)
+
+    <input type="submit" value="Submit" />
+}
