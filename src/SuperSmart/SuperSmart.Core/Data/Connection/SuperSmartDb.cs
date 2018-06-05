@@ -17,7 +17,7 @@ namespace SuperSmart.Core.Data.Connection
         public DbSet<Account> Accounts { get; set; }
         public DbSet<TeachingClass> TeachingClasses { get; set; }
         public DbSet<Subject> Subjects { get; set; }
-        public DbSet<Implementation.Task> Tasks { get; set; }
+        public DbSet<Task> Tasks { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
         public DbSet<Document> Documents { get; set; }
         /// <summary>

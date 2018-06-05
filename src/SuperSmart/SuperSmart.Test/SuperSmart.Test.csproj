@@ -114,6 +114,7 @@
   <ItemGroup>
     <Compile Include="Helper\DatabaseHelper.cs" />
     <Compile Include="SubjectTest.cs" />
+    <Compile Include="TaskTest.cs" />
     <Compile Include="UserTests.cs" />
     <Compile Include="TeachingClassTest.cs" />
     <Compile Include="VerificationTest.cs" />

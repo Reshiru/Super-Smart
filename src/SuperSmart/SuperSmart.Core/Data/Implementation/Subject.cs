@@ -8,6 +8,11 @@ namespace SuperSmart.Core.Data.Implementation
     /// </summary>
     public class Subject
     {
+        public Subject()
+        {
+            this.Appointments = new List<Appointment>();
+            this.Tasks = new List<Task>();
+        }
         /// <summary>
         /// The database generated id
         /// </summary>
