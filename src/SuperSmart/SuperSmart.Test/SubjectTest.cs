@@ -129,30 +129,96 @@ namespace SuperSmart.Test
                     acc.AssignedClasses.Add(teachingClass);
                     db.TeachingClasses.Add(teachingClass);
 
+                    Subject subject1 = new Subject
+                    {
+                        Designation = "Test1",
+                        TeachingClass = teachingClass,
+                    };
+
+                    db.Subjects.Add(subject1);
+
+                    Subject subject2 = new Subject
+                    {
+                        Designation = "Test2",
+                        TeachingClass = teachingClass,
+                    };
+
+                    db.Subjects.Add(subject2);
+
                     db.SaveChanges();
 
                     teachingClassId = (int)teachingClass.Id;
-
                 }
 
-                subjectPersistence.Create(new CreateSubjectViewModel()
-                {
-                    Designation = "Test1",
-                    TeachingClassId = teachingClassId,
-                }, token);
+                List<OverviewSubjectViewModel> result = subjectPersistence.GetSubjectsForOverviewByClassId(teachingClassId);
 
-                subjectPersistence.Create(new CreateSubjectViewModel()
-                {
-                    Designation = "Test2",
-                    TeachingClassId = teachingClassId,
-                }, token);
-
-                List<OverviewSubjectViewModel> result = subjectPersistence.GetSubjectsByClassId(teachingClassId);
-
-                if (result.Any(itm=> itm.Designation == "Test1"))
+                if (result.Count == 2)
                     Assert.IsTrue(true);
                 else
                     Assert.IsTrue(false);
+            }
+            catch
+            {
+                Assert.IsTrue(false);
+            }
+        }
+
+        [TestMethod]
+        public void ManageSubject()
+        {
+            DatabaseHelper.SecureDeleteDatabase();
+
+            try
+            {
+                var token = "isvalidtoken";
+                var subjectId = 1;
+                using (var db = new SuperSmartDb())
+                {
+                    var acc = new Account()
+                    {
+                        Created = DateTime.Now,
+                        Email = "test@test.test",
+                        LoginToken = token
+                    };
+
+                    db.Accounts.Add(acc);
+
+                    var teachingClass = new TeachingClass()
+                    {
+                        Admin = acc,
+                        Started = DateTime.Now,
+                        Referral = "reff",
+                    };
+
+                    acc.AssignedClasses.Add(teachingClass);
+                    db.TeachingClasses.Add(teachingClass);
+
+                    var subject = new Subject()
+                    {
+                        Designation = "Test",
+                        TeachingClass = teachingClass
+                    };
+
+                    db.Subjects.Add(subject);
+
+                    db.SaveChanges();
+
+                    subjectId = (int)subject.Id;
+                }
+
+                subjectPersistence.Manage(new ManageSubjectViewModel()
+                {
+                    Designation = "TestBlaBla",
+                    Id = subjectId,
+                }, token);
+
+                using (SuperSmartDb db = new SuperSmartDb())
+                {
+                    if (db.Subjects.SingleOrDefault(itm => itm.Id == subjectId)?.Designation == "TestBlaBla")
+                        Assert.IsTrue(true);
+                    else
+                        Assert.IsTrue(false);
+                }
             }
             catch
             {

@@ -78,6 +78,44 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
+        public void Manage(ManageSubjectViewModel manageSubjectViewModel, string loginToken)
+        {
+            if (manageSubjectViewModel == null)
+            {
+                throw new PropertyExceptionCollection(nameof(manageSubjectViewModel), "Parameter cannot be null");
+            }
+
+            if (manageSubjectViewModel.Id == 0)
+            {
+                throw new PropertyExceptionCollection(nameof(manageSubjectViewModel.Id), "Parameter cannot be null");
+            }
+
+            if (string.IsNullOrEmpty(loginToken))
+            {
+                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
+            }
+
+            var validationResults = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(manageSubjectViewModel, new System.ComponentModel.DataAnnotations.ValidationContext(manageSubjectViewModel, serviceProvider: null, items: null), validationResults, true))
+            {
+                throw new PropertyExceptionCollection(validationResults);
+            }
+
+            using (var db = new SuperSmartDb())
+            {
+                var subject = db.Subjects.SingleOrDefault(itm => itm.Id == manageSubjectViewModel.Id);
+
+                if (subject == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(subject), "Subject not found");
+                }
+
+                subject.Designation = manageSubjectViewModel.Designation;
+
+                db.SaveChanges();
+            }
+        }
+
         public List<OverviewSubjectViewModel> GetSubjectsForOverviewByClassId(int classId)
         {
             if (classId == 0)
