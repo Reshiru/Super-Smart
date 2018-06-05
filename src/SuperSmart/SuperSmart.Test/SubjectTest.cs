@@ -7,6 +7,8 @@ using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Test.Helper;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SuperSmart.Test
 {
@@ -90,6 +92,67 @@ namespace SuperSmart.Test
                     TeachingClassId = teachingClassId,
                 }, token);
                 Assert.IsTrue(true);
+            }
+            catch
+            {
+                Assert.IsTrue(false);
+            }
+        }
+
+        [TestMethod]
+        public void GetSubjectOverview()
+        {
+            DatabaseHelper.SecureDeleteDatabase();
+
+            try
+            {
+                var token = "isvalidtoken";
+                var teachingClassId = 1;
+                using (var db = new SuperSmartDb())
+                {
+                    var acc = new Account()
+                    {
+                        Created = DateTime.Now,
+                        Email = "test@test.test",
+                        LoginToken = token
+                    };
+
+                    db.Accounts.Add(acc);
+
+                    var teachingClass = new TeachingClass()
+                    {
+                        Admin = acc,
+                        Started = DateTime.Now,
+                        Referral = "reff",
+                    };
+
+                    acc.AssignedClasses.Add(teachingClass);
+                    db.TeachingClasses.Add(teachingClass);
+
+                    db.SaveChanges();
+
+                    teachingClassId = (int)teachingClass.Id;
+
+                }
+
+                subjectPersistence.Create(new CreateSubjectViewModel()
+                {
+                    Designation = "Test1",
+                    TeachingClassId = teachingClassId,
+                }, token);
+
+                subjectPersistence.Create(new CreateSubjectViewModel()
+                {
+                    Designation = "Test2",
+                    TeachingClassId = teachingClassId,
+                }, token);
+
+                List<OverviewSubjectViewModel> result = subjectPersistence.GetSubjectsByClassId(teachingClassId);
+
+                if (result.Any(itm=> itm.Designation == "Test1"))
+                    Assert.IsTrue(true);
+                else
+                    Assert.IsTrue(false);
             }
             catch
             {

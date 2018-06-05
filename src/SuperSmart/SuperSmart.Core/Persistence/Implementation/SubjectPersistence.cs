@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
@@ -25,7 +26,7 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
 
             var validationResults = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(createSubjectViewModel, new ValidationContext(createSubjectViewModel, serviceProvider: null, items: null), validationResults, true))
+            if (!Validator.TryValidateObject(createSubjectViewModel, new System.ComponentModel.DataAnnotations.ValidationContext(createSubjectViewModel, serviceProvider: null, items: null), validationResults, true))
             {
                 throw new PropertyExceptionCollection(validationResults);
             }
@@ -48,7 +49,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(teachingClass), "Teaching class not found");
                 }
 
-                if(teachingClass.Admin != account)
+                if (teachingClass.Admin != account)
                 {
                     throw new PropertyExceptionCollection(nameof(account),
                         "No permissions granted");
@@ -57,9 +58,9 @@ namespace SuperSmart.Core.Persistence.Implementation
                 var existingSubject = teachingClass.Subjects
                     .SingleOrDefault(s => s.Designation.ToLower().Trim() == createSubjectViewModel.Designation.ToLower().Trim());
 
-                if(existingSubject != null)
+                if (existingSubject != null)
                 {
-                    throw new PropertyExceptionCollection(nameof(createSubjectViewModel.Designation), 
+                    throw new PropertyExceptionCollection(nameof(createSubjectViewModel.Designation),
                         "A subject with the same name does already exist");
                 }
 
@@ -74,6 +75,29 @@ namespace SuperSmart.Core.Persistence.Implementation
                 db.Subjects.Add(subject);
 
                 db.SaveChanges();
+            }
+        }
+
+        public List<OverviewSubjectViewModel> GetSubjectsForOverviewByClassId(int classId)
+        {
+            if (classId == 0)
+            {
+                throw new PropertyExceptionCollection(nameof(classId), "Parameter cannot be 0");
+            }
+
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Subject, OverviewSubjectViewModel>()
+                 .ForMember(vm => vm.Id, map => map.MapFrom(m => m.Id))
+                 .ForMember(vm => vm.Designation, map => map.MapFrom(m => m.Designation));
+            });
+
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                //TODO: Mapper
+                var result = db.Subjects.Where(itm => itm.TeachingClass.Id == classId);
+
+                return Mapper.Map<List<OverviewSubjectViewModel>>(result);
             }
         }
     }

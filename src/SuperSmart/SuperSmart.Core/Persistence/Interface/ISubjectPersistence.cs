@@ -1,4 +1,5 @@
 ﻿using SuperSmart.Core.Data.ViewModels;
+using System.Collections.Generic;
 
 namespace SuperSmart.Core.Persistence.Interface
 {
@@ -10,5 +11,11 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="createSubjectViewModel"></param>
         /// <param name="loginToken"></param>
         void Create(CreateSubjectViewModel createSubjectViewModel, string loginToken);
+
+        /// <summary>
+        /// Get subjects for a overview by Id of a teaching class
+        /// </summary>
+        /// <param name="classId"></param>
+        List<OverviewSubjectViewModel> GetSubjectsForOverviewByClassId(int classId);
     }
 }
