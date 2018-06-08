@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper\DatabaseHelper.cs" />
+    <Compile Include="DashboardTest.cs" />
     <Compile Include="SubjectTest.cs" />
     <Compile Include="TaskTest.cs" />
     <Compile Include="UserTests.cs" />
