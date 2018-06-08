@@ -44,5 +44,10 @@ namespace SuperSmart.Core.Data.Implementation
         /// The task linked to the document
         /// </summary>
         public Task Task { get; set; }
+
+        /// <summary>
+        /// The state of the document / active = not archived
+        /// </summary>
+        public bool Active { get; set; }
     }
 }
