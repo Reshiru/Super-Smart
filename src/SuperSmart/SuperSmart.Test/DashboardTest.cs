@@ -18,11 +18,11 @@ namespace SuperSmart.Test
         IDashboardPersistence dashboardPersistence = new DashboardPersistence();
 
         [TestMethod]
-        public void DashboardTest()
+        public void DashboardDataTest()
         {
             DatabaseHelper.SecureDeleteDatabase();
 
-            string token = "logintoken";
+            long userId = 1;
             using (SuperSmartDb db = new SuperSmartDb())
             {
 
@@ -30,27 +30,35 @@ namespace SuperSmart.Test
                 {
                     Created = DateTime.Now,
                     Email = "test@test.test",
-                    LoginToken = token
+                    LoginToken = "token"
                 };
 
                 db.Accounts.Add(acc);
 
+                var admin = new Account()
+                {
+                    Created = DateTime.Now,
+                    Email = "admin@test.test",
+                    LoginToken = "adminToken"
+                };
+
+                db.Accounts.Add(admin);
+
                 var teachingClass = new TeachingClass()
                 {
-                    Admin = acc,
+                    Admin = admin,
                     Started = DateTime.Now,
                     Referral = "reff",
                 };
 
                 teachingClass.AssignedAccounts.Add(acc);
-                acc.AssignedClasses.Add(teachingClass);
-                
+
                 db.TeachingClasses.Add(teachingClass);
 
                 var sub = new Subject()
                 {
                     Designation = "m426",
-                    TeachingClass = teachingClass                   
+                    TeachingClass = teachingClass
                 };
 
                 db.Subjects.Add(sub);
@@ -73,16 +81,22 @@ namespace SuperSmart.Test
                     Designation = "Husi",
                     Finished = DateTime.Now.AddHours(4),
                     Owner = acc,
-                    Subject = sub,                    
+                    Subject = sub,
                 };
 
                 db.Tasks.Add(task);
 
                 db.SaveChanges();
 
+                userId = acc.Id;
             }
 
-            //TODO: Test fertigstellen und Daten in DatabaseHelper umbauen
+            DashboardViewModel result = dashboardPersistence.GetDashboardData((int)userId);
+
+            if (result.Appointments.Any() && result.Tasks.Any())
+                Assert.IsTrue(true);
+            else
+                Assert.IsFalse(false);
         }
     }
 }
