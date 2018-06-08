@@ -149,11 +149,13 @@
     <Compile Include="Extension\IntExtension.cs" />
     <Compile Include="Extension\PropertyExceptionCollection.cs" />
     <Compile Include="Extension\StringExtension.cs" />
+    <Compile Include="Persistence\Implementation\DocumentPersistence.cs" />
     <Compile Include="Persistence\Implementation\SubjectPersistence.cs" />
     <Compile Include="Persistence\Implementation\TaskPersistence.cs" />
     <Compile Include="Persistence\Implementation\TeachingClassPersistence.cs" />
     <Compile Include="Persistence\Implementation\UserPersistence.cs" />
     <Compile Include="Persistence\Implementation\VerificationPersistence.cs" />
+    <Compile Include="Persistence\Interface\IDocumentPersistence.cs" />
     <Compile Include="Persistence\Interface\ISubjectPersistence.cs" />
     <Compile Include="Persistence\Interface\ITaskPersistence.cs" />
     <Compile Include="Persistence\Interface\ITeachingClassPersistence.cs" />
