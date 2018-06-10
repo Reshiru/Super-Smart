@@ -78,19 +78,43 @@ namespace SuperSmart.Test.Helper
             using (var db = new SuperSmartDb())
             {
                 var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == teachingClassId);
-                
+
                 var subject = new Subject()
                 {
                     Active = true,
                     Designation = "Test modul",
                     TeachingClass = teachingClass,
-                    
+
                 };
 
                 db.Subjects.Add(subject);
                 db.SaveChanges();
 
                 return subject.Id;
+            }
+        }
+
+        public static Int64 GenerateFakeTask(Int64 subjectId, string ownerToken)
+        {
+            using (var db = new SuperSmartDb())
+            {
+                var subject = db.Subjects.SingleOrDefault(s => s.Id == subjectId);
+
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == ownerToken);
+
+                var task = new Task()
+                {
+                    Active = true,
+                    Designation = "Test modul",
+                    Subject = subject,
+                    Owner = account,
+                    Finished = DateTime.Now.AddDays(3)
+                };
+
+                db.Tasks.Add(task);
+                db.SaveChanges();
+
+                return task.Id;
             }
         }
     }

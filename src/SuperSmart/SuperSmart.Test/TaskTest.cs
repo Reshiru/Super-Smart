@@ -54,7 +54,7 @@ namespace SuperSmart.Test
         }
 
         [TestMethod]
-        public void CreateTeachingClassSucceed()
+        public void CreateTaskSucceed()
         {
             DatabaseHelper.SecureDeleteDatabase();
 
@@ -69,6 +69,32 @@ namespace SuperSmart.Test
                     Designation = "Test",
                     SubjectId = subjectId,
                     Finished = DateTime.Now.AddDays(2)
+                }, token);
+                Assert.IsTrue(true);
+            }
+            catch
+            {
+                Assert.IsTrue(false);
+            }
+        }
+
+        [TestMethod]
+        public void ManageTaskSucceed()
+        {
+            DatabaseHelper.SecureDeleteDatabase();
+
+            try
+            {
+                var token = DatabaseHelper.GenerateFakeAccount();
+                var teachingClassId = DatabaseHelper.GenerateFakeTeachingClass(token);
+                var subjectId = DatabaseHelper.GenerateFakeSubject(teachingClassId);
+                var taskId = DatabaseHelper.GenerateFakeTask(subjectId, token);
+
+                taskPersistence.Manage(new ManageTaskViewModel()
+                {
+                    Designation = "Test",
+                    TaskId = taskId,
+                    Finished = DateTime.Now.AddDays(4)
                 }, token);
                 Assert.IsTrue(true);
             }

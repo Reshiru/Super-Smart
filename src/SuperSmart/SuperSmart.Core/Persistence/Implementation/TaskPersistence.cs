@@ -58,7 +58,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(account),
                         "No permissions granted");
                 }
-                
+
                 var task = new Task()
                 {
                     Active = true,
@@ -70,6 +70,63 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 subject.Tasks.Add(task);
                 db.Tasks.Add(task);
+
+                db.SaveChanges();
+            }
+        }
+        public void Manage(ManageTaskViewModel manageTaskViewModel, string loginToken)
+        {
+            if (manageTaskViewModel == null)
+            {
+                throw new PropertyExceptionCollection(nameof(manageTaskViewModel), "Parameter cannot be null");
+            }
+
+            if (string.IsNullOrEmpty(loginToken))
+            {
+                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
+            }
+
+            var validationResults = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(manageTaskViewModel, new ValidationContext(manageTaskViewModel, serviceProvider: null, items: null), validationResults, true))
+            {
+                throw new PropertyExceptionCollection(validationResults);
+            }
+
+
+            using (var db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
+                }
+
+                var subject = db.Subjects.SingleOrDefault(s => s.Tasks.Any(t => t.Id == manageTaskViewModel.TaskId));
+
+
+                if (subject == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(subject),
+                        "Subject not found");
+                }
+
+                if (subject.TeachingClass.AssignedAccounts.All(a => a != account))
+                {
+                    throw new PropertyExceptionCollection(nameof(account),
+                        "No permissions granted");
+                }
+
+                var task = db.Tasks.SingleOrDefault(t => t.Id == manageTaskViewModel.TaskId);
+
+                if (task == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(task),
+                        "Task not found");
+                }
+
+                task.Designation = manageTaskViewModel.Designation;
+                task.Finished = manageTaskViewModel.Finished;
 
                 db.SaveChanges();
             }
