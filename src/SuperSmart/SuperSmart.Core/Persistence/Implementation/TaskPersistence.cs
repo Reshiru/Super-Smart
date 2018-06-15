@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Connection;
+using SuperSmart.Core.Data.Enumeration;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
@@ -130,6 +131,21 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 db.SaveChanges();
             }
+        }
+
+        public TaskStatus GetTaskStatus(long taskId, long accountId)
+        {
+
+            return TaskStatus.New;
+
+            using (var db = new SuperSmartDb())
+            {
+                AccountTask at = db.AccountTask.SingleOrDefault(itm => itm.Account.Id == accountId && itm.Task.Id == taskId);
+                if (at != null)
+                    return at.Status;
+                else
+                    return TaskStatus.New;
+        }
         }
     }
 }

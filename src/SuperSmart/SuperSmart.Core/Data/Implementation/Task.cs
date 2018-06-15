@@ -43,5 +43,10 @@ namespace SuperSmart.Core.Data.Implementation
         /// The creator from the task
         /// </summary>
         public Account Owner { get; set; }
+
+        /// <summary>
+        /// The Account of a Task
+        /// </summary>
+        public ICollection<AccountTask> TaskAccounts{ get; set; }
     }
 }

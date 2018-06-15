@@ -1,4 +1,5 @@
-﻿using SuperSmart.Core.Data.ViewModels;
+﻿using SuperSmart.Core.Data.Enumeration;
+using SuperSmart.Core.Data.ViewModels;
 
 namespace SuperSmart.Core.Persistence.Interface
 {
@@ -17,5 +18,12 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="manageTaskViewModel"></param>
         /// <param name="loginToken"></param>
         void Manage(ManageTaskViewModel manageTaskViewModel, string loginToken);
+
+        /// <summary>
+        /// Get TaskStatus by taskId and accountId
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="accountId"></param>
+        TaskStatus GetTaskStatus(long taskId, long accountId);
     }
 }

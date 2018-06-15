@@ -72,5 +72,10 @@ namespace SuperSmart.Core.Data.Implementation
         /// The uploaded documents from this account
         /// </summary>
         public ICollection<Document> Documents { get; set; }
+        
+        /// <summary>
+        /// The Task of a Account
+        /// </summary>
+        public ICollection<AccountTask> AccountTasks { get; set; }
     }
 }

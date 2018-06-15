@@ -1,69 +1,62 @@
-﻿@{
+﻿@model DashboardViewModel
+
+@{
     ViewBag.Title = "Index";
 }
+@using (Html.BeginForm("Create", "TeachingClass"))
+{
+    <box class="no-padding w-60 float-left">
+        <table class="clean-table">
+            <tr>
+                <th>Status</th>
+                <th><i class="fa fa-question"></i> What</th>
+                <th><i class="fa fa-calendar-o"></i> Until</th>
+                <th><i class="fa fa-cloud-upload"></i> Solutions</th>
+            </tr>
 
-<box class="no-padding w-60 float-left">
-    <table class="clean-table">
-        <tr>
-            <th>Status</th>
-            <th><i class="fa fa-question"></i> What</th>
-            <th><i class="fa fa-calendar-o"></i> Until</th>
-            <th><i class="fa fa-cloud-upload"></i> Solutions</th>
-        </tr>
-        <tr class="task-todo">
-            <td>
-                <i class="fa fa-check-circle"></i>
-            </td>
-            <td>
-                <label class="task-header">Cheng exam</label>
-                <p class="task-content">Exam about Userinterfaces, Mockups drawing and bit of binding</p>
-            </td>
-            <td>
-                Friday, the 24.05.18
-            </td>
-            <td><i class="fa fa-cloud-upload"></i></td>
-        </tr>
+            @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.New))
+            {
+                <tr class="task-todo">
+                    <td>
+                        <i class="fa fa-check-circle"></i>
+                    </td>
+                    <td>
+                        <label class="task-header"> @Html.DisplayFor(modelItem => item.SubjectName)</label>
+                        <p class="task-content"> @Html.DisplayFor(modelItem => item.Designation)</p>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DisplayFinished)
+                    </td>
+                    <td><i class="fa fa-cloud-upload"></i></td>
+                </tr>
+            }
+            <tr>
+                <th>Done</th>
+                <th></th>
+                <th></th>
+            </tr>
 
-        <tr>
-            <th>Done</th>
-            <th></th>
-            <th></th>
-        </tr>
+            @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done))
+            {
+                <tr class="task-done">
+                    <td>
+                        <i class="fa fa-check-circle"></i>
+                    </td>
+                    <td>
+                        <label class="task-header"> @Html.DisplayFor(modelItem => item.SubjectName)</label>
+                        <p class="task-content"> @Html.DisplayFor(modelItem => item.Designation)</p>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DisplayFinished)
+                    </td>
+                    <td><i class="fa fa-cloud-upload"></i></td>
 
-        <tr class="task-done">
-            <td>
-                <i class="fa fa-check-circle"></i>
-            </td>
-            <td>
-                <label class="task-header">SQL Setup</label>
-                <p class="task-content">Set up MySQL for the next lessons, Slide 7 for information</p>
-            </td>
-            <td>
-                Friday, the 24.05.18
-            </td>
-            <td><i class="fa fa-cloud-upload"></i></td>
+                </tr>}
+        </table>
+    </box>
 
-        </tr>
-        <tr class="task-done">
-            <td>
-                <i class="fa fa-check-circle"></i>
-            </td>
-            <td>
-                <label class="task-header">GANTT Diagram</label>
-                <p class="task-content">Make a fucking GANTT diagram for Maier</p>
-            </td>
-            <td>
-                Thursday, the 23.05.18
-            </td>
-            <td><i class="fa fa-cloud-upload"></i></td>
+    <box class="w-40 float-left no-margin">
+        <table class="calendar"></table>
+    </box>
 
-        </tr>
-    </table>
-</box>
-
-<box class="w-40 float-left no-margin">
-    <table class="calendar">
-        
-    </table>
-</box>
-
+}

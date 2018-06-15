@@ -129,8 +129,10 @@
   <ItemGroup>
     <Compile Include="Data\Connection\SuperSmartDb.cs" />
     <Compile Include="Data\Enumeration\DocumentType.cs" />
+    <Compile Include="Data\Enumeration\TaskStatus.cs" />
     <Compile Include="Data\Enumeration\TaskType.cs" />
     <Compile Include="Data\Implementation\Account.cs" />
+    <Compile Include="Data\Implementation\AccountTask.cs" />
     <Compile Include="Data\Implementation\Appointment.cs" />
     <Compile Include="Data\Implementation\Document.cs" />
     <Compile Include="Data\Implementation\Subject.cs" />

@@ -91,7 +91,7 @@ namespace SuperSmart.Test
                 userId = acc.Id;
             }
 
-            DashboardViewModel result = dashboardPersistence.GetDashboardData((int)userId);
+            DashboardViewModel result = dashboardPersistence.GetDashboardData("token");
 
             if (result.Appointments.Any() && result.Tasks.Any())
                 Assert.IsTrue(true);

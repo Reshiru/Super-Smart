@@ -14,21 +14,30 @@ namespace SuperSmart.Core.Persistence.Implementation
 {
     public class DashboardPersistence : IDashboardPersistence
     {
-        public DashboardViewModel GetDashboardData(int userId)
+        public DashboardViewModel GetDashboardData(string loginToken)
         {
             using (SuperSmartDb db = new SuperSmartDb())
             {
-                var appointmentsQuery = from appointments in db.Appointments
-                                        where appointments.Subject.TeachingClass.AssignedAccounts.Any(itm => itm.Id == userId)
-                                        select appointments;
+                if (string.IsNullOrWhiteSpace(loginToken))
+                    throw new PropertyExceptionCollection(nameof(loginToken), "LoginToken cannot be empty");
+
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Your account couldn't be found. Pleas try to relogin");
+
+
+                var appointmentsQuery = from appointment in db.Appointments
+                                        where appointment.Subject.TeachingClass.AssignedAccounts.Any(itm => itm.LoginToken == loginToken)
+                                        select appointment;
 
                 var taskQuery = from task in db.Tasks
-                                where task.Subject.TeachingClass.AssignedAccounts.Any(itm => itm.Id == userId) &&
+                                where task.Subject.TeachingClass.AssignedAccounts.Any(itm => itm.LoginToken == loginToken) &&
                                 task.Finished > DateTime.Now &&
                                 task.Finished < DateTime.Now.AddDays(7)
                                 select task;
 
-                Mapper.Initialize(cfg =>
+                var config = new MapperConfiguration(cfg =>
                 {
                     cfg.CreateMap<Appointment, DashboardAppointmentViewModel>()
                      .ForMember(vm => vm.Classroom, map => map.MapFrom(m => m.Classroom))
@@ -44,10 +53,22 @@ namespace SuperSmart.Core.Persistence.Implementation
                      .ForMember(vm => vm.TaskId, map => map.MapFrom(m => m.Id));
                 });
 
+                IMapper mapper = config.CreateMapper();
+
+                List<DashboardAppointmentViewModel> appointments = mapper.Map<List<DashboardAppointmentViewModel>>(appointmentsQuery);
+                List<DashboardTaskViewModel> tasks = mapper.Map<List<DashboardTaskViewModel>>(taskQuery);
+
+                ITaskPersistence taskPersistence = new TaskPersistence();
+
+                tasks.ForEach(itm =>
+                {
+                    itm.Status = taskPersistence.GetTaskStatus(itm.TaskId, account.Id);
+                });
+
                 return new DashboardViewModel()
                 {
-                    Appointments = Mapper.Map<List<DashboardAppointmentViewModel>>(appointmentsQuery),
-                    Tasks = Mapper.Map<List<DashboardTaskViewModel>>(taskQuery)
+                    Appointments = appointments,
+                    Tasks = tasks
                 };
             }
         }
