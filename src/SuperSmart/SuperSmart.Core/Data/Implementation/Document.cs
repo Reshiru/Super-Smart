@@ -18,7 +18,7 @@ namespace SuperSmart.Core.Data.Implementation
         /// <summary>
         /// The system generated file name 
         /// </summary>
-        public string SystemFileName { get; set; }
+        public byte[] File { get; set; }
 
         /// <summary>
         /// The document type from the document
