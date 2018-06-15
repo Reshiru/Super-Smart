@@ -18,8 +18,69 @@ namespace SuperSmart.Core.Persistence.Implementation
 {
     class DocumentPersistence : IDocumentPersistence
     {
-        public void Delete(int id, string loginToken)
+        public void Create(CreateDocumentViewModel createDocumentViewModel, string loginToken)
         {
+            if (createDocumentViewModel == null)
+            {
+                throw new PropertyExceptionCollection(nameof(createDocumentViewModel), "Parameter cannot be null");
+            }
+
+            if (string.IsNullOrEmpty(loginToken))
+            {
+                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
+            }
+
+            var validationResults = new List<ValidationResult>();
+            if (!Validator.TryValidateObject(createDocumentViewModel, new System.ComponentModel.DataAnnotations.ValidationContext(createDocumentViewModel, serviceProvider: null, items: null), validationResults, true))
+            {
+                throw new PropertyExceptionCollection(validationResults);
+            }
+
+
+            using (var db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
+                }
+
+                var task = db.Tasks.SingleOrDefault(t => t.Id == createDocumentViewModel.TaskId);
+
+
+                if (task == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(task),
+                        "Subject not found");
+                }
+
+                if (task.Subject.TeachingClass.AssignedAccounts.All(a => a != account))
+                {
+                    throw new PropertyExceptionCollection(nameof(task),
+                        "No permissions granted");
+                }
+
+                var document = new Document()
+                {
+                    File = createDocumentViewModel.File,
+                    DocumentType = createDocumentViewModel.DocumentType,
+                    FileName = createDocumentViewModel.FileName,
+                    Uploaded = DateTime.Now,
+                    Uploader = account,
+                    Task = task,
+                    Active = true
+                };
+
+                task.Documents.Add(document);
+                db.Documents.Add(document);
+
+                db.SaveChanges();
+            }
+        }
+
+            public void Delete(int id, string loginToken)
+            {
             using (var db = new SuperSmartDb())
             {
                 var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
