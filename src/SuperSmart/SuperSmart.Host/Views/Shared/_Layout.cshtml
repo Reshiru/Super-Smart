@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <!--Default tags-->
+    <meta name="language" content="English">
+    <meta name="pagename" content="Super-Smart">
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="">
+
+    <!-- STYLE -->
+    <link href="~/Content/Style/Site.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet">
+
+    <!-- FONTAWESOME -->
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+
+    @RenderSection("head", required: false)
+</head>
+<body>
+    <header class="float-clear">
+        <h1 id="title">Gradscade</h1>
+        <div id="current-user">
+            <label>Josh Rost</label>
+            <i class="fa fa-user-circle-o"></i>
+        </div>
+    </header>
+    <div id="sidebar">
+
+    </div>
+    <main class="float-clear">
+        @RenderBody()
+    </main>
+    <footer></footer>
+</body>
+</html>
