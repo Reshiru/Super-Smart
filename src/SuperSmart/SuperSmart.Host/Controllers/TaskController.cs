@@ -41,7 +41,14 @@ namespace SuperSmart.Host.Controllers
                         file.InputStream.CopyTo(target);
                         byte[] data = target.ToArray();
 
-                        documentPersistence.Create(new CreateDocumentViewModel { DocumentType = Core.Data.Enumeration.DocumentType.Document, File = data, FileName = file.FileName, TaskId = taskId }, this.User.Identity.Name }
+                        documentPersistence.Create(new CreateDocumentViewModel()
+                        {
+                            DocumentType = Core.Data.Enumeration.DocumentType.Document,
+                            File = data,
+                            FileName = file.FileName,
+                            TaskId = taskId
+                        }, this.User.Identity.Name);
+                    }
                     catch (Exception ex)
                     {
                         throw new PropertyExceptionCollection("FileUpload", ex.Message);
