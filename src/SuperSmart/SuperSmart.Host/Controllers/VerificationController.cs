@@ -37,7 +37,13 @@ namespace SuperSmart.Host.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            return View("Login");
+            if (this.User.Identity.IsAuthenticated)
+                if (!string.IsNullOrWhiteSpace(Request.Form["ReturnUrl"]) && Request.Form["ReturnUrl"] != "/")
+                    return Redirect("~/" + Request.Form["ReturnUrl"]);
+                else
+                    return RedirectToAction("Home");
+            else
+                return View("Login");
         }
 
         [HttpPost]
@@ -54,16 +60,16 @@ namespace SuperSmart.Host.Controllers
             }
 
             if (!string.IsNullOrWhiteSpace(Request.Form["ReturnUrl"]) && Request.Form["ReturnUrl"] != "/")
-                return Redirect("~/"+Request.Form["ReturnUrl"]);
+                return Redirect("~/" + Request.Form["ReturnUrl"]);
             else
-                return View("Login");
+                return RedirectToAction("Home");
         }
 
         [HttpGet]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            return View("Login");
+            return RedirectToAction("Login");
         }
     }
 }
