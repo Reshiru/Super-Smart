@@ -48,7 +48,7 @@ namespace SuperSmart.Host.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginViewModel loginViewModel, string returnUrl)
+        public ActionResult Login(LoginViewModel loginViewModel)
         {
             try
             {
@@ -58,11 +58,11 @@ namespace SuperSmart.Host.Controllers
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
-
+            
             if (!string.IsNullOrWhiteSpace(Request.Form["ReturnUrl"]) && Request.Form["ReturnUrl"] != "/")
                 return Redirect("~/" + Request.Form["ReturnUrl"]);
             else
-                return RedirectToAction("Home");
+                return RedirectToAction("Index","Home");
         }
 
         [HttpGet]
