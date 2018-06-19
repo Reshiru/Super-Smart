@@ -3,7 +3,7 @@
 @using (Html.BeginForm("Create", "Task"))
 {
     @Html.AntiForgeryToken()
-    
+
     @Html.HiddenFor(m => m.SubjectId)
 
     @Html.LabelFor(m => m.Designation)
@@ -13,5 +13,8 @@
     @Html.LabelFor(m => m.Finished)
     @Html.TextBoxFor(m => m.Finished, new { type = "Date" })
     @Html.ValidationMessageFor(m => m.Finished)
+
+    <input type="file" name="file" />
+
     <input type="submit" value="Submit" />
 }
