@@ -50,14 +50,12 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 if (subject == null)
                 {
-                    throw new PropertyExceptionCollection(nameof(subject),
-                        "Subject not found");
+                    throw new PropertyExceptionCollection(nameof(subject), "Subject not found");
                 }
 
                 if (subject.TeachingClass.AssignedAccounts.All(a => a != account))
                 {
-                    throw new PropertyExceptionCollection(nameof(account),
-                        "No permissions granted");
+                    throw new PropertyExceptionCollection(nameof(account), "No permissions granted");
                 }
 
                 var task = new Task()
@@ -75,6 +73,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 db.SaveChanges();
             }
         }
+
         public void Manage(ManageTaskViewModel manageTaskViewModel, string loginToken)
         {
             if (manageTaskViewModel == null)
@@ -110,22 +109,19 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 if (subject == null)
                 {
-                    throw new PropertyExceptionCollection(nameof(subject),
-                        "Subject not found");
+                    throw new PropertyExceptionCollection(nameof(subject), "Subject not found");
                 }
 
                 if (subject.TeachingClass.AssignedAccounts.All(a => a != account))
                 {
-                    throw new PropertyExceptionCollection(nameof(account),
-                        "No permissions granted");
+                    throw new PropertyExceptionCollection(nameof(account), "No permissions granted");
                 }
 
                 var task = db.Tasks.SingleOrDefault(t => t.Id == manageTaskViewModel.TaskId);
 
                 if (task == null)
                 {
-                    throw new PropertyExceptionCollection(nameof(task),
-                        "Task not found");
+                    throw new PropertyExceptionCollection(nameof(task), "Task not found");
                 }
 
                 task.Designation = manageTaskViewModel.Designation;
@@ -137,9 +133,6 @@ namespace SuperSmart.Core.Persistence.Implementation
 
         public TaskStatus GetTaskStatus(long taskId, long accountId)
         {
-
-            return TaskStatus.New;
-
             using (var db = new SuperSmartDb())
             {
                 AccountTask at = db.AccountTask.SingleOrDefault(itm => itm.Account.Id == accountId && itm.Task.Id == taskId);
@@ -147,7 +140,39 @@ namespace SuperSmart.Core.Persistence.Implementation
                     return at.Status;
                 else
                     return TaskStatus.New;
+            }
         }
+
+        public void SaveTaskStatus(SaveTaskStatusViewModel saveTaskStatusViewModel)
+        {
+            using (var db = new SuperSmartDb())
+            {
+                if (saveTaskStatusViewModel == null)
+                    throw new PropertyExceptionCollection(nameof(saveTaskStatusViewModel), "Parameter cannot be null");
+
+                Account account = db.Accounts.SingleOrDefault(itm => itm.Id == saveTaskStatusViewModel.AccountId);
+                if (account == null)
+                    throw new PropertyExceptionCollection(nameof(account), "Account not found");
+
+                Task task = db.Tasks.SingleOrDefault(itm => itm.Id == saveTaskStatusViewModel.TaskId);
+                if (task == null)
+                    throw new PropertyExceptionCollection(nameof(task), "Task not found");
+
+                AccountTask at = db.AccountTask.SingleOrDefault(itm => itm.Account == account && itm.Task == task);
+
+                if (at == null)
+                {
+                    at = new AccountTask();
+                    db.AccountTask.Add(at);
+
+                    at.Account = account;
+                    at.Task = task;
+                }
+
+                at.Status = saveTaskStatusViewModel.Status;
+
+                db.SaveChanges();
+            }
         }
     }
 }

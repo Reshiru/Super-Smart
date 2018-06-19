@@ -25,5 +25,11 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="taskId"></param>
         /// <param name="accountId"></param>
         TaskStatus GetTaskStatus(long taskId, long accountId);
+
+        /// <summary>
+        /// Save status of a task
+        /// </summary>
+        /// <param name="saveTaskStatusViewModel"></param>
+        void SaveTaskStatus(SaveTaskStatusViewModel saveTaskStatusViewModel);
     }
 }

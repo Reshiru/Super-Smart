@@ -152,6 +152,7 @@
     <Compile Include="Data\ViewModels\LoginViewModel.cs" />
     <Compile Include="Data\ViewModels\ManageTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\RegisterViewModel.cs" />
+    <Compile Include="Data\ViewModels\SaveTaskStatusViewModel.cs" />
     <Compile Include="Data\ViewModels\UserViewModel.cs" />
     <Compile Include="Extension\IntExtension.cs" />
     <Compile Include="Extension\PropertyExceptionCollection.cs" />
