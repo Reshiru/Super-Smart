@@ -141,7 +141,9 @@ namespace SuperSmart.Test
             {
                 taskPersistence.SaveTaskStatus(new SaveTaskStatusViewModel()
                 {
-                    AccountId = account.Id, Status = TaskStatus.Done, TaskId = task.Id
+                    AccountId = account.Id,
+                    Status = TaskStatus.Done,
+                    TaskId = task.Id
                 });
                 Assert.IsTrue(true);
             }

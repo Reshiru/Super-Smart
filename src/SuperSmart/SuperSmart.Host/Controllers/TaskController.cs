@@ -2,6 +2,7 @@
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
+using SuperSmart.Host.Authentication;
 using SuperSmart.Host.Helper;
 using System;
 using System.IO;
@@ -10,7 +11,7 @@ using System.Web.Mvc;
 
 namespace SuperSmart.Host.Controllers
 {
-    [BasicAuthorize]
+    [DbAuthorize]
     public class TaskController : Controller
     {
         private readonly ITaskPersistence taskPersistence = new TaskPersistence();
@@ -41,7 +42,14 @@ namespace SuperSmart.Host.Controllers
                         file.InputStream.CopyTo(target);
                         byte[] data = target.ToArray();
 
-                        documentPersistence.Create(new CreateDocumentViewModel { DocumentType = Core.Data.Enumeration.DocumentType.Document, File = data, FileName = file.FileName, TaskId = taskId }, this.User.Identity.Name }
+                        documentPersistence.Create(new CreateDocumentViewModel
+                        {
+                            DocumentType = Core.Data.Enumeration.DocumentType.Document,
+                            File = data,
+                            FileName = file.FileName,
+                            TaskId = taskId
+                        }, this.User.Identity.Name);
+                    }
                     catch (Exception ex)
                     {
                         throw new PropertyExceptionCollection("FileUpload", ex.Message);
