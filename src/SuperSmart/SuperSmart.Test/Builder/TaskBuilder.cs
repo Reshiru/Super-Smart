@@ -60,22 +60,16 @@ namespace SuperSmart.Test.Builder
 
         public Task Build()
         {
-            using (var db = new SuperSmartDb())
+            var task = new Task()
             {
-                var task = new Task()
-                {
-                    Active = this.active,
-                    Designation = this.designation,
-                    Subject = this.subject,
-                    Owner = this.owner,
-                    Finished = this.finished
-                };
+                Active = this.active,
+                Designation = this.designation,
+                Subject = this.subject,
+                Owner = this.owner,
+                Finished = this.finished
+            };
 
-                db.Tasks.Add(task);
-                db.SaveChanges();
-
-                return task;
-            }
+            return task;
         }
     }
 }

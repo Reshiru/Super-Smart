@@ -1,5 +1,4 @@
-﻿using SuperSmart.Core.Data.Connection;
-using SuperSmart.Core.Data.Implementation;
+﻿using SuperSmart.Core.Data.Implementation;
 using System;
 
 namespace SuperSmart.Test.Builder
@@ -57,22 +56,16 @@ namespace SuperSmart.Test.Builder
 
         public Appointment Build()
         {
-            using (var db = new SuperSmartDb())
+            var appointment = new Appointment()
             {
-                var appointment = new Appointment()
-                {
-                    Day = this.day,
-                    Classroom = this.classroom,
-                    From = this.from,
-                    Until = this.until,
-                    Subject = this.subject
-                };
+                Day = this.day,
+                Classroom = this.classroom,
+                From = this.from,
+                Until = this.until,
+                Subject = this.subject
+            };
 
-                db.Appointments.Add(appointment);
-                db.SaveChanges();
-
-                return appointment;
-            }
+            return appointment;
         }
     }
 }

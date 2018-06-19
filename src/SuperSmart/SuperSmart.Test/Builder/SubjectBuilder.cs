@@ -1,5 +1,4 @@
-﻿using SuperSmart.Core.Data.Connection;
-using SuperSmart.Core.Data.Implementation;
+﻿using SuperSmart.Core.Data.Implementation;
 using System;
 
 namespace SuperSmart.Test.Builder
@@ -42,20 +41,14 @@ namespace SuperSmart.Test.Builder
 
         public Subject Build()
         {
-            using (var db = new SuperSmartDb())
+            var subject = new Subject()
             {
-                var subject = new Subject()
-                {
-                    Active = this.active,
-                    Designation = this.designation,
-                    TeachingClass = this.teachingClass,
-                };
+                Active = this.active,
+                Designation = this.designation,
+                TeachingClass = this.teachingClass,
+            };
 
-                db.Subjects.Add(subject);
-                db.SaveChanges();
-
-                return subject;
-            }
+            return subject;
         }
     }
 }

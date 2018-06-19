@@ -10,6 +10,9 @@ namespace SuperSmart.Test.Builder
         private bool secureDatabaseDeleted;
         private List<Account> accounts;
         private List<TeachingClass> teachingClasses;
+        private List<Subject> subjects;
+        private List<Appointment> appointments;
+        private List<Task> tasks;
 
         public DatabaseBuilder()
         {
@@ -17,6 +20,9 @@ namespace SuperSmart.Test.Builder
 
             accounts = new List<Account>();
             teachingClasses = new List<TeachingClass>();
+            subjects = new List<Subject>();
+            appointments = new List<Appointment>();
+            tasks = new List<Task>();
         }
 
         public DatabaseBuilder WithAccount(Account account)
@@ -29,6 +35,27 @@ namespace SuperSmart.Test.Builder
         public DatabaseBuilder WithTeachingClass(TeachingClass teachingClasse)
         {
             this.teachingClasses.Add(teachingClasse);
+
+            return this;
+        }
+
+        public DatabaseBuilder WithSubject(Subject subject)
+        {
+            this.subjects.Add(subject);
+
+            return this;
+        }
+
+        public DatabaseBuilder WithAppointment(Appointment appointment)
+        {
+            this.appointments.Add(appointment);
+
+            return this;
+        }
+
+        public DatabaseBuilder WithTask(Task task)
+        {
+            this.tasks.Add(task);
 
             return this;
         }
@@ -49,15 +76,11 @@ namespace SuperSmart.Test.Builder
 
             using (var db = new SuperSmartDb())
             {
-                foreach (var account in accounts)
-                {
-                    db.Accounts.Add(account);
-                }
-
-                foreach (var teachingClass in teachingClasses)
-                {
-                    db.TeachingClasses.Add(teachingClass);
-                }
+                accounts.ForEach(a => db.Accounts.Add(a));
+                teachingClasses.ForEach(t => db.TeachingClasses.Add(t));
+                subjects.ForEach(s => db.Subjects.Add(s));
+                appointments.ForEach(a => db.Appointments.Add(a));
+                tasks.ForEach(a => db.Tasks.Add(a));
 
                 db.SaveChanges();
             }

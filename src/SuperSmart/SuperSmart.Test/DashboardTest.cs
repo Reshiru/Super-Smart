@@ -1,13 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SuperSmart.Core.Data.Connection;
-using SuperSmart.Core.Data.Implementation;
-using SuperSmart.Core.Data.ViewModels;
-using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
-using SuperSmart.Test.Helper;
-using System;
-using System.Collections.Generic;
+using SuperSmart.Test.Builder;
 using System.Linq;
 
 namespace SuperSmart.Test
@@ -20,83 +14,35 @@ namespace SuperSmart.Test
         [TestMethod]
         public void DashboardDataTest()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var account = new AccountBuilder().Build();
+            var admin = new AccountBuilder().Build();
 
-            long userId = 1;
-            using (SuperSmartDb db = new SuperSmartDb())
-            {
+            var teachingClass = new TeachingClassBuilder().WithAdmin(admin)
+                                                          .WithAssignedAccount(account)
+                                                          .Build();
 
-                var acc = new Account()
-                {
-                    Created = DateTime.Now,
-                    Email = "test@test.test",
-                    LoginToken = "token"
-                };
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
 
-                db.Accounts.Add(acc);
+            var appointment = new AppointmentBuilder().WithSubject(subject)
+                                                      .Build();
 
-                var admin = new Account()
-                {
-                    Created = DateTime.Now,
-                    Email = "admin@test.test",
-                    LoginToken = "adminToken"
-                };
+            var task = new TaskBuilder().WithSubject(subject)
+                                        .WithOwner(account)
+                                        .Build();
 
-                db.Accounts.Add(admin);
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithAccount(admin)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithAppointment(appointment)
+                                 .WithTask(task)
+                                 .Build();
 
-                var teachingClass = new TeachingClass()
-                {
-                    Admin = admin,
-                    Started = DateTime.Now,
-                    Referral = "reff",
-                };
+            var result = dashboardPersistence.GetDashboardData(account.LoginToken);
 
-                teachingClass.AssignedAccounts.Add(acc);
-
-                db.TeachingClasses.Add(teachingClass);
-
-                var sub = new Subject()
-                {
-                    Designation = "m426",
-                    TeachingClass = teachingClass
-                };
-
-                db.Subjects.Add(sub);
-
-                var app = new Appointment()
-                {
-                    Classroom = "m426",
-                    Day = DayOfWeek.Monday,
-                    From = DateTime.Now.AddHours(3),
-                    Until = DateTime.Now.AddHours(6),
-                    Subject = sub
-                };
-
-                sub.Appointments.Add(app);
-
-                db.Appointments.Add(app);
-
-                var task = new Task()
-                {
-                    Designation = "Husi",
-                    Finished = DateTime.Now.AddHours(4),
-                    Owner = acc,
-                    Subject = sub,
-                };
-
-                db.Tasks.Add(task);
-
-                db.SaveChanges();
-
-                userId = acc.Id;
-            }
-
-            DashboardViewModel result = dashboardPersistence.GetDashboardData("token");
-
-            if (result.Appointments.Any() && result.Tasks.Any())
-                Assert.IsTrue(true);
-            else
-                Assert.IsFalse(false);
+            Assert.IsTrue(result.Appointments.Any() && result.Tasks.Any());
         }
     }
 }
