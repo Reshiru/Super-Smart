@@ -3,6 +3,7 @@ using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
+using SuperSmart.Test.Builder;
 using SuperSmart.Test.Helper;
 using System;
 
@@ -19,30 +20,36 @@ namespace SuperSmart.Test
             try
             {
                 verificationPersistence.Register(null);
+
+                Assert.IsTrue(false);
             }
             catch (Exception ex)
             {
-                if(ex is PropertyExceptionCollection)
-                {
-                    Assert.IsTrue(true);
-                    return;
-                }
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
-            Assert.IsTrue(false);
         }
+
         [TestMethod]
         public void RegisterNewDataTest()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var email = "test@user.com";
+            var firstname = "Test";
+            var lastname = "User";
+            var password = "TestPass";
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .Build();
+
             try
             {
                 verificationPersistence.Register(new RegisterViewModel()
                 {
-                    Email = "test@user.com",
-                    FirstName = "Test",
-                    LastName = "User",
-                    Password = "TestPass"
+                    Email = email,
+                    FirstName = firstname,
+                    LastName = lastname,
+                    Password = password,
                 });
+
                 Assert.IsTrue(true);
             }
             catch
@@ -50,60 +57,68 @@ namespace SuperSmart.Test
                 Assert.IsTrue(false);
             }
         }
+
         [TestMethod]
         public void RegisterInvalidPasswordTest()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var email = "test@user.com";
+            var firstname = "Test";
+            var lastname = "User";
+            var password = "Short";
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .Build();
+
             try
             {
                 verificationPersistence.Register(new RegisterViewModel()
                 {
-                    Email = "test@user.com",
-                    FirstName = "Test",
-                    LastName = "User",
-                    Password = "Short"
+                    Email = email,
+                    FirstName = firstname,
+                    LastName = lastname,
+                    Password = password
                 });
+
+                Assert.IsTrue(false);
             }
             catch (Exception ex)
             {
-                if (ex is PropertyExceptionCollection)
-                {
-                    Assert.IsTrue(true);
-                    return;
-                }
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
-            Assert.IsTrue(false);
+
         }
+
         [TestMethod]
         public void RegisterExistingDataTest()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var email = "u1@user.com";
+            var firstname = "Test";
+            var lastname = "User";
+
+            var account = new AccountBuilder().WithEmail(email)
+                                              .WithFirstname(firstname)
+                                              .WithLastname(lastname)
+                                              .Build();
+
+            new DatabaseBuilder().WithAccount(account)
+                                 .WithSecureDatabaseDeleted(true)
+                                 .Build();
+            
             try
             {
                 verificationPersistence.Register(new RegisterViewModel()
                 {
-                    Email = "u1@user.com",
-                    FirstName = "Test",
-                    LastName = "User",
-                    Password = "TestPass"
+                    Email = email,
+                    FirstName = firstname,
+                    LastName = lastname,
                 });
-                verificationPersistence.Register(new RegisterViewModel()
-                {
-                    Email = "u1@user.com",
-                    FirstName = "Test",
-                    LastName = "User",
-                    Password = "TestPass"
-                });
+
+                Assert.IsTrue(false);
             }
             catch (Exception ex)
             {
-                if(ex is PropertyExceptionCollection)
-                {
-                    Assert.IsTrue(true);
-                    return;
-                }
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
-            Assert.IsTrue(false);
         }
 
         [TestMethod]
@@ -112,57 +127,62 @@ namespace SuperSmart.Test
             try
             {
                 verificationPersistence.Login(null);
+
+                Assert.IsTrue(false);
             }
             catch (Exception ex)
             {
-                if (ex is PropertyExceptionCollection)
-                {
-                    Assert.IsTrue(true);
-                    return;
-                }
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
-            Assert.IsTrue(false);
         }
+
         [TestMethod]
         public void LoginInvalidDataTest()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var email = "test@user.com";
+            var password = "TestPass";
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .Build();
+            
             try
             {
                 verificationPersistence.Login(new LoginViewModel()
                 {
-                    Email = "test@user.com",
-                    Password = "TestPass"
+                    Email = email,
+                    Password = password
                 });
+
+                Assert.IsTrue(false);
             }
             catch (Exception ex)
             {
-                if (ex is PropertyExceptionCollection)
-                {
-                    Assert.IsTrue(true);
-                    return;
-                }
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
-            Assert.IsTrue(false);
         }
+
         [TestMethod]
         public void LoginValidDataTest()
         {
-            DatabaseHelper.SecureDeleteDatabase();
-            verificationPersistence.Register(new RegisterViewModel()
-            {
-                Email = "test@user.com",
-                FirstName = "Test",
-                LastName = "User",
-                Password = "TestPass"
-            });
+            var email = "test@user.com";
+            var password = "TestPass";
+
+            var account = new AccountBuilder().WithEmail(email)
+                                              .WithPassword(password)
+                                              .Build();
+
+            new DatabaseBuilder().WithAccount(account)
+                                 .WithSecureDatabaseDeleted(true)
+                                 .Build();
+
             try
             {
                 verificationPersistence.Login(new LoginViewModel()
                 {
-                    Email = "test@user.com",
-                    Password = "TestPass"
+                    Email = email,
+                    Password = password
                 });
+
                 Assert.IsTrue(true);
             }
             catch

@@ -1,12 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
+using SuperSmart.Test.Builder;
 using SuperSmart.Test.Helper;
 using System;
-using System.Linq;
 
 namespace SuperSmart.Test
 {
@@ -19,58 +18,30 @@ namespace SuperSmart.Test
         [TestMethod]
         public void GetUserByLoginTokenValidTest()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var account = new AccountBuilder().WithEmail("test@test.test")
+                                              .WithFirstname("User")
+                                              .WithLastname("Test")
+                                              .Build();
 
-            //Register admin user
-            verificationPersistence.Register(new RegisterViewModel()
-            {
-                Email = "test@test.test",
-                FirstName = "User",
-                LastName = "Test",
-                Password = "12345678"
-            });
-
-            var loginToken = verificationPersistence.Login(new LoginViewModel()
-            {
-                Email = "test@test.test",
-                Password = "12345678"
-            });
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .Build();
 
             try
             {
-                UserViewModel user = userPersistence.GetUserByLoginToken(loginToken);
+                UserViewModel user = userPersistence.GetUserByLoginToken(account.LoginToken);
 
-                if (user == null)
+                if (user == null || user.Email != "test@test.test" || user.Firstname != "User" ||
+                    user.Lastname != "Test")
                 {
                     Assert.IsTrue(false);
-                    return;
-                }
-                if (user.Email != "test@test.test")
-                {
-                    Assert.IsTrue(false);
-                    return;
-                }
-                if (user.Firstname != "User")
-                {
-                    Assert.IsTrue(false);
-                    return;
-                }
-                if (user.Lastname != "Test")
-                {
-                    Assert.IsTrue(false);
-                    return;
                 }
 
             }
             catch (Exception ex)
             {
-                if (ex is PropertyExceptionCollection)
-                {
-                    Assert.IsTrue(false);
-                    return;
-                }
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
-            Assert.IsTrue(true);
         }
 
         [TestMethod]
@@ -90,6 +61,5 @@ namespace SuperSmart.Test
             }
             Assert.IsTrue(false);
         }
-
     }
 }

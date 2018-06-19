@@ -47,6 +47,6 @@ namespace SuperSmart.Core.Data.Implementation
         /// <summary>
         /// The Account of a Task
         /// </summary>
-        public ICollection<AccountTask> TaskAccounts{ get; set; }
+        public ICollection<AccountTask> TaskAccounts { get; set; }
     }
 }
