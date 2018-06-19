@@ -61,5 +61,75 @@ namespace SuperSmart.Test
                 Assert.IsTrue(ex is PropertyExceptionCollection);
             }
         }
+
+        [TestMethod]
+        public void GetFullNameFromValidTokenTest()
+        {
+            var firstname = "User";
+            var lastname = "Test";
+            var email = "test@test.test";
+
+            var account = new AccountBuilder().WithEmail(email)
+                                  .WithFirstname(firstname)
+                                  .WithLastname(lastname)
+                                  .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .Build();
+
+            try
+            { 
+                var user = userPersistence.GetFullNameFromUser(account.LoginToken);
+
+                if (user == null || user.Firstname != firstname && user.Lastname != lastname)
+                {
+                    Assert.IsTrue(false);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void GetFullNameFromTokenNullTest()
+        {
+            try
+            {
+                var user = userPersistence.GetFullNameFromUser(null);
+            }
+            catch (Exception ex)
+            {
+                if (ex is PropertyExceptionCollection)
+                {
+                    Assert.IsTrue(true);
+                    return;
+                }
+            }
+
+            Assert.IsTrue(false);
+        }
+
+        [TestMethod]
+        public void GetFullNameFromEmptyTokenString()
+        {
+            try
+            {
+                var user = userPersistence.GetFullNameFromUser(string.Empty);
+            }
+            catch (Exception ex)
+            {
+                if (ex is PropertyExceptionCollection)
+                {
+                    Assert.IsTrue(true);
+                    return;
+                }
+            }
+
+            Assert.IsTrue(false);
+        }
     }
 }

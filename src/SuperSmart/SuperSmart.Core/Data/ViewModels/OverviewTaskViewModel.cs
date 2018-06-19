@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SuperSmart.Core.Data.Enumeration
+namespace SuperSmart.Core.Data.ViewModels
 {
-    public enum TaskStatus
+   public class OverviewTaskViewModel
     {
-        ToDo = 1,
-        Done =2
+        public List<TaskViewModel> Tasks { get; set; }
     }
 }

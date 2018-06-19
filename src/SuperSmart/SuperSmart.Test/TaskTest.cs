@@ -1,8 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SuperSmart.Core.Data.Enumeration;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
+using SuperSmart.Test.Builder;
 using SuperSmart.Test.Helper;
 using System;
 
@@ -101,6 +103,65 @@ namespace SuperSmart.Test
             catch
             {
                 Assert.IsTrue(false);
+            }
+        }
+
+        [TestMethod]
+        public void SaveValidTaskStatusTest()
+        {
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder()
+                .WithAdmin(account)
+                .Build();
+
+            var subject = new SubjectBuilder()
+                .WithTeachingClass(teachingClass)
+                .Build();
+
+            var task = new TaskBuilder()
+                .WithOwner(account)
+                .WithSubject(subject)
+                .Build();
+
+            var appointment = new AppointmentBuilder()
+                .WithSubject(subject)
+                .Build();
+            
+            new DatabaseBuilder()
+                .WithTask(task)
+                .WithAppointment(appointment)
+                .WithSubject(subject)
+                .WithSecureDatabaseDeleted(true)
+                .WithAccount(account)
+                .WithTeachingClass(teachingClass)
+                .Build();
+           
+            try
+            {
+                taskPersistence.SaveTaskStatus(new SaveTaskStatusViewModel()
+                {
+                    AccountId = account.Id, Status = TaskStatus.Done, TaskId = task.Id
+                });
+                Assert.IsTrue(true);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(false);
+            }
+        }
+
+        [TestMethod]
+        public void SaveNullTasktStatusTest()
+        {
+            try
+            {
+                taskPersistence.SaveTaskStatus(null);
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
         }
     }

@@ -121,6 +121,39 @@ namespace SuperSmart.Test
         }
 
         [TestMethod]
+        public void RegisterUserWithInValidEmail()
+        {
+            var email = "123";
+            var firstname = "Test";
+            var lastname = "User";
+
+            var account = new AccountBuilder().WithEmail(email)
+                                              .WithFirstname(firstname)
+                                              .WithLastname(lastname)
+                                              .Build();
+
+            new DatabaseBuilder().WithAccount(account)
+                                 .WithSecureDatabaseDeleted(true)
+                                 .Build();
+
+            try
+            {
+                verificationPersistence.Register(new RegisterViewModel()
+                {
+                    Email = email,
+                    FirstName = firstname,
+                    LastName = lastname,
+                });
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
         public void LoginNullTest()
         {
             try
@@ -188,6 +221,7 @@ namespace SuperSmart.Test
             {
                 Assert.IsTrue(false);
             }
+
         }
     }
 }

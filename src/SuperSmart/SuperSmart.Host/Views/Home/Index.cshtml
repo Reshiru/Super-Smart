@@ -14,7 +14,7 @@
                 <th><i class="fa fa-cloud-upload"></i> Solutions</th>
             </tr>
 
-            @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.New))
+            @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.ToDo))
             {
                 <tr class="task-todo">
                     <td>

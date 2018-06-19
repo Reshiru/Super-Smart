@@ -10,7 +10,7 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="createTaskViewModel"></param>
         /// <param name="loginToken"></param>
-        void Create(CreateTaskViewModel createTaskViewModel, string loginToken);
+        long Create(CreateTaskViewModel createTaskViewModel, string loginToken);
 
         /// <summary>
         /// Changes properties from a given task
@@ -31,5 +31,17 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="saveTaskStatusViewModel"></param>
         void SaveTaskStatus(SaveTaskStatusViewModel saveTaskStatusViewModel);
+
+        /// <summary>
+        /// Has accoutn rights to manage task
+        /// </summary>
+        /// <param name="loginToken"></param>
+        bool HasAccountRightsForTask(long id, string loginToken);
+
+        /// <summary>
+        /// Get Overview of tasks
+        /// </summary>
+        /// <param name="loginToken"></param>
+        OverviewTaskViewModel GetOverview(string loginToken, long subjectId);
     }
 }
