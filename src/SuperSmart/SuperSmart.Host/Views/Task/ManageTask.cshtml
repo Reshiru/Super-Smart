@@ -1,0 +1,18 @@
+﻿@model ManageTaskViewModel
+
+@using (Html.BeginForm("Manage", "Task"))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.TaskId)
+
+    @Html.LabelFor(m => m.Designation)
+    @Html.TextBoxFor(m => m.Designation)
+    @Html.ValidationMessageFor(m => m.Designation)
+
+    @Html.LabelFor(m => m.Finished)
+    @Html.TextBoxFor(m => m.Finished, new { type = "Date"})
+    @Html.ValidationMessageFor(m => m.Finished)
+
+    <input type="submit" value="Submit" />
+}

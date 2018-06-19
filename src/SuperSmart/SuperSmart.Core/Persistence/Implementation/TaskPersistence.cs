@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Enumeration;
@@ -27,7 +28,7 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
 
             var validationResults = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(createTaskViewModel, new ValidationContext(createTaskViewModel, serviceProvider: null, items: null), validationResults, true))
+            if (!Validator.TryValidateObject(createTaskViewModel, new System.ComponentModel.DataAnnotations.ValidationContext(createTaskViewModel, serviceProvider: null, items: null), validationResults, true))
             {
                 throw new PropertyExceptionCollection(validationResults);
             }
@@ -74,6 +75,38 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
+        public bool HasAccountRightsForTask(long id ,string loginToken)
+        {
+            if (string.IsNullOrEmpty(loginToken))
+            {
+                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
+            }
+
+            if (id == 0)
+            {
+                throw new PropertyExceptionCollection(nameof(id), "Parameter cannot be 0");
+            }
+
+            using (var db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
+                }
+
+                var task = db.Tasks.SingleOrDefault(t => t.Id == id);
+
+                if (task == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(task), "Task not found");
+                }
+
+                return task.Owner == account && task.Subject.TeachingClass.Admin == account;
+            }
+        }
+
         public void Manage(ManageTaskViewModel manageTaskViewModel, string loginToken)
         {
             if (manageTaskViewModel == null)
@@ -87,11 +120,10 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
 
             var validationResults = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(manageTaskViewModel, new ValidationContext(manageTaskViewModel, serviceProvider: null, items: null), validationResults, true))
+            if (!Validator.TryValidateObject(manageTaskViewModel, new System.ComponentModel.DataAnnotations.ValidationContext(manageTaskViewModel, serviceProvider: null, items: null), validationResults, true))
             {
                 throw new PropertyExceptionCollection(validationResults);
             }
-
 
             using (var db = new SuperSmartDb())
             {
@@ -112,16 +144,16 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(subject), "Subject not found");
                 }
 
-                if (subject.TeachingClass.AssignedAccounts.All(a => a != account))
-                {
-                    throw new PropertyExceptionCollection(nameof(account), "No permissions granted");
-                }
-
                 var task = db.Tasks.SingleOrDefault(t => t.Id == manageTaskViewModel.TaskId);
 
                 if (task == null)
                 {
                     throw new PropertyExceptionCollection(nameof(task), "Task not found");
+                }
+
+                if (task.Owner != account && subject.TeachingClass.Admin != account)
+                {
+                    throw new PropertyExceptionCollection(nameof(account), "No permissions granted");
                 }
 
                 task.Designation = manageTaskViewModel.Designation;
@@ -139,7 +171,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 if (at != null)
                     return at.Status;
                 else
-                    return TaskStatus.New;
+                    return TaskStatus.ToDo;
             }
         }
 
@@ -172,6 +204,45 @@ namespace SuperSmart.Core.Persistence.Implementation
                 at.Status = saveTaskStatusViewModel.Status;
 
                 db.SaveChanges();
+            }
+        }
+
+        public OverviewTaskViewModel GetOverview(string loginToken, long subjectId)
+        {
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                if (string.IsNullOrWhiteSpace(loginToken))
+                    throw new PropertyExceptionCollection(nameof(loginToken), "LoginToken cannot be empty");
+
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Your account couldn't be found. Pleas try to relogin");
+
+
+                var tasksQuery = db.Tasks.Where(t => t.Subject.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) && t.Subject.Id == subjectId);
+
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Task, TaskViewModel>();
+                });
+
+                IMapper mapper = config.CreateMapper();
+
+
+                List<TaskViewModel> tasks = mapper.Map<List<TaskViewModel>>(tasksQuery);
+
+                ITaskPersistence taskPersistence = new TaskPersistence();
+
+                tasks.ForEach(itm =>
+                {
+                    itm.Status = taskPersistence.GetTaskStatus(itm.Id, account.Id);
+                });
+
+                return new OverviewTaskViewModel()
+                {
+                    Tasks = tasks
+                };
             }
         }
     }

@@ -179,6 +179,7 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Controllers\TeachingClassController.cs" />
     <Compile Include="Controllers\VerificationController.cs" />
     <Compile Include="Global.asax.cs">
@@ -209,6 +210,9 @@
     <Content Include="Views\TeachingClass\ManageTeachingClass.cshtml" />
     <Content Include="Views\Home\GetFullNameFromAuthorizedUser.cshtml" />
     <Content Include="Views\TeachingClass\OverviewTeachingClass.cshtml" />
+    <Content Include="Views\Task\CreateTask.cshtml" />
+    <Content Include="Views\Task\ManageTask.cshtml" />
+    <Content Include="Views\Task\OverviewTask.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
