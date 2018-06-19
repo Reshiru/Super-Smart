@@ -4,6 +4,8 @@ namespace SuperSmart.Core.Persistence.Interface
 {
     public interface IDocumentPersistence
     {
+        void Create(CreateDocumentViewModel createDocumentViewModel, string loginToken);
+
         /// <summary>
         /// Sets an existing document for a given task on inactive
         /// </summary>
