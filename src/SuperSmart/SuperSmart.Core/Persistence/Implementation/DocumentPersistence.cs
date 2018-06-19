@@ -16,7 +16,7 @@ using System.Linq;
 
 namespace SuperSmart.Core.Persistence.Implementation
 {
-    class DocumentPersistence : IDocumentPersistence
+    public class DocumentPersistence : IDocumentPersistence
     {
         public void Create(CreateDocumentViewModel createDocumentViewModel, string loginToken)
         {
@@ -79,8 +79,8 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
-            public void Delete(int id, string loginToken)
-            {
+        public void Delete(int id, string loginToken)
+        {
             using (var db = new SuperSmartDb())
             {
                 var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
