@@ -45,5 +45,11 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="id">teaching class id</param>
         /// <param name="loginToken"></param>
         void ChangeReferral(int id, string loginToken);
+
+        /// <summary>
+        /// Get teachingClasses for user by loginToken
+        /// </summary>
+        /// <param name="loginToken"></param>
+        OverviewTeachingClassViewModel GetOverview(string loginToken);
     }
 }

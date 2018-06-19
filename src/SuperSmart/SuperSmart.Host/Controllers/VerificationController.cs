@@ -37,8 +37,15 @@ namespace SuperSmart.Host.Controllers
         [HttpGet]
         public ActionResult Login()
         {
-            return View("Login");
+            if (this.User.Identity.IsAuthenticated)
+                if (!string.IsNullOrWhiteSpace(Request.Form["ReturnUrl"]) && Request.Form["ReturnUrl"] != "/")
+                    return Redirect("~/" + Request.Form["ReturnUrl"]);
+                else
+                    return RedirectToAction("Home");
+            else
+                return View("Login");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel loginViewModel)
@@ -46,20 +53,23 @@ namespace SuperSmart.Host.Controllers
             try
             {
                 FormsAuthentication.SetAuthCookie(verificationPersistence.Login(loginViewModel), true);
-                return Redirect(Request?.UrlReferrer?.ToString() ?? "/");
             }
             catch (Exception ex)
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
-            return View("Login");
+            
+            if (!string.IsNullOrWhiteSpace(Request.Form["ReturnUrl"]) && Request.Form["ReturnUrl"] != "/")
+                return Redirect("~/" + Request.Form["ReturnUrl"]);
+            else
+                return RedirectToAction("Index","Home");
         }
 
         [HttpGet]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            return Redirect(Request?.UrlReferrer?.ToString() ?? "/");
+            return RedirectToAction("Login");
         }
     }
 }

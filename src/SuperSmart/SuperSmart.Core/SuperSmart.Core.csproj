@@ -148,11 +148,14 @@
     <Compile Include="Data\ViewModels\CreateTaskViewModel.cs" />
     <Compile Include="Data\ViewModels\CreateTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\OverviewSubjectViewModel.cs" />
+    <Compile Include="Data\ViewModels\OverviewTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\RemoveUserFromTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\LoginViewModel.cs" />
     <Compile Include="Data\ViewModels\ManageTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\RegisterViewModel.cs" />
     <Compile Include="Data\ViewModels\SaveTaskStatusViewModel.cs" />
+    <Compile Include="Data\ViewModels\TeachingClassViewModel.cs" />
+    <Compile Include="Data\ViewModels\UserNameViewModel.cs" />
     <Compile Include="Data\ViewModels\UserViewModel.cs" />
     <Compile Include="Extension\IntExtension.cs" />
     <Compile Include="Extension\PropertyExceptionCollection.cs" />

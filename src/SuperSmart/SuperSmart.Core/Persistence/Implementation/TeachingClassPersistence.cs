@@ -1,4 +1,5 @@
-﻿using SuperSmart.Core.Data.Connection;
+﻿using AutoMapper;
+using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
@@ -24,7 +25,7 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
 
             var validationResults = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(createTeachingClassViewModel, new ValidationContext(createTeachingClassViewModel, serviceProvider: null, items: null), validationResults, true))
+            if (!Validator.TryValidateObject(createTeachingClassViewModel, new System.ComponentModel.DataAnnotations.ValidationContext(createTeachingClassViewModel, serviceProvider: null, items: null), validationResults, true))
             {
                 throw new PropertyExceptionCollection(validationResults);
             }
@@ -102,7 +103,7 @@ namespace SuperSmart.Core.Persistence.Implementation
             if (removeUserFromTeachingClassViewModel == null)
             {
                 throw new PropertyExceptionCollection(nameof(removeUserFromTeachingClassViewModel), "Parameter cannot be null or empty");
-            }         
+            }
             if (string.IsNullOrEmpty(loginToken))
             {
                 throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null or empty");
@@ -194,7 +195,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 {
                     throw new PropertyExceptionCollection(nameof(account), "You are not permitted to this changes");
                 }
-                
+
                 teachingClass.Designation = manageTeachingClassViewModel.Designation;
                 teachingClass.Started = manageTeachingClassViewModel.Started;
 
@@ -233,6 +234,32 @@ namespace SuperSmart.Core.Persistence.Implementation
                 } while (db.TeachingClasses.SingleOrDefault(t => t.Referral == referralLink) != null);
 
                 db.SaveChanges();
+            }
+        }
+
+        public OverviewTeachingClassViewModel GetOverview(string loginToken)
+        {
+            if (string.IsNullOrEmpty(loginToken))
+            {
+                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
+            }
+
+            using (var db = new SuperSmartDb())
+            {
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<TeachingClass, TeachingClassViewModel>();
+                });
+
+                IMapper mapper = config.CreateMapper();
+
+
+                List<TeachingClass> teachingClasses = db.TeachingClasses.Where(tc => tc.AssignedAccounts.Any(a => a.LoginToken == loginToken)).ToList();
+
+                return new OverviewTeachingClassViewModel()
+                {
+                    TeachingClasses = mapper.Map<List<TeachingClassViewModel>>(teachingClasses)
+                };
             }
         }
     }
