@@ -1,13 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SuperSmart.Core.Data.Connection;
-using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
-using SuperSmart.Test.Helper;
+using SuperSmart.Test.Builder;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SuperSmart.Test
@@ -20,11 +18,13 @@ namespace SuperSmart.Test
         [TestMethod]
         public void AddNullSubjectThrowPropertyExceptionCollection()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .Build();
 
             try
             {
                 subjectPersistence.Create(null, null);
+
                 Assert.IsTrue(false);
             }
             catch (Exception ex)
@@ -36,15 +36,20 @@ namespace SuperSmart.Test
         [TestMethod]
         public void AddNullLoginTokenSubjectThrowPropertyExceptionCollection()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var designation = "Test";
+            var teachingClassId = 1;
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .Build();
 
             try
             {
                 subjectPersistence.Create(new CreateSubjectViewModel()
                 {
-                    Designation = "Test",
-                    TeachingClassId = 1,
+                    Designation = designation,
+                    TeachingClassId = teachingClassId,
                 }, null);
+
                 Assert.IsTrue(false);
             }
             catch (Exception ex)
@@ -56,41 +61,25 @@ namespace SuperSmart.Test
         [TestMethod]
         public void CreateTeachingClassSucceed()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var designation = "Test";
 
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .Build();
             try
             {
-                var token = "isvalidtoken";
-                var teachingClassId = 1;
-                using (var db = new SuperSmartDb())
-                {
-                    var acc = new Account()
-                    {
-                        Created = DateTime.Now,
-                        Email = "test@test.test",
-                        LoginToken = token
-                    };
-
-                    db.Accounts.Add(acc);
-
-                    var teachingClass = new TeachingClass()
-                    {
-                        Admin = acc,
-                        Started = DateTime.Now,
-                        Referral = "reff",
-                    };
-
-                    acc.AssignedClasses.Add(teachingClass);
-                    db.TeachingClasses.Add(teachingClass);
-
-                    db.SaveChanges();
-                }
-
                 subjectPersistence.Create(new CreateSubjectViewModel()
                 {
-                    Designation = "Test",
-                    TeachingClassId = teachingClassId,
-                }, token);
+                    Designation = designation,
+                    TeachingClassId = teachingClass.Id,
+                }, account.LoginToken);
+
                 Assert.IsTrue(true);
             }
             catch
@@ -102,60 +91,29 @@ namespace SuperSmart.Test
         [TestMethod]
         public void GetSubjectOverview()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var secondSubject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithSubject(secondSubject)
+                                 .Build();
 
             try
             {
-                var token = "isvalidtoken";
-                var teachingClassId = 1;
-                using (var db = new SuperSmartDb())
-                {
-                    var acc = new Account()
-                    {
-                        Created = DateTime.Now,
-                        Email = "test@test.test",
-                        LoginToken = token
-                    };
+                var result = subjectPersistence.GetSubjectsForOverviewByClassId(teachingClass.Id);
 
-                    db.Accounts.Add(acc);
-
-                    var teachingClass = new TeachingClass()
-                    {
-                        Admin = acc,
-                        Started = DateTime.Now,
-                        Referral = "reff",
-                    };
-
-                    acc.AssignedClasses.Add(teachingClass);
-                    db.TeachingClasses.Add(teachingClass);
-
-                    Subject subject1 = new Subject
-                    {
-                        Designation = "Test1",
-                        TeachingClass = teachingClass,
-                    };
-
-                    db.Subjects.Add(subject1);
-
-                    Subject subject2 = new Subject
-                    {
-                        Designation = "Test2",
-                        TeachingClass = teachingClass,
-                    };
-
-                    db.Subjects.Add(subject2);
-
-                    db.SaveChanges();
-
-                    teachingClassId = (int)teachingClass.Id;
-                }
-
-                List<OverviewSubjectViewModel> result = subjectPersistence.GetSubjectsForOverviewByClassId(teachingClassId);
-
-                if (result.Count == 2)
-                    Assert.IsTrue(true);
-                else
-                    Assert.IsTrue(false);
+                Assert.IsTrue(result.Count == 2);
             }
             catch
             {
@@ -166,58 +124,32 @@ namespace SuperSmart.Test
         [TestMethod]
         public void ManageSubject()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var designation = "Test";
 
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .Build();
             try
             {
-                var token = "isvalidtoken";
-                var subjectId = 1;
-                using (var db = new SuperSmartDb())
-                {
-                    var acc = new Account()
-                    {
-                        Created = DateTime.Now,
-                        Email = "test@test.test",
-                        LoginToken = token
-                    };
-
-                    db.Accounts.Add(acc);
-
-                    var teachingClass = new TeachingClass()
-                    {
-                        Admin = acc,
-                        Started = DateTime.Now,
-                        Referral = "reff",
-                    };
-
-                    acc.AssignedClasses.Add(teachingClass);
-                    db.TeachingClasses.Add(teachingClass);
-
-                    var subject = new Subject()
-                    {
-                        Designation = "Test",
-                        TeachingClass = teachingClass
-                    };
-
-                    db.Subjects.Add(subject);
-
-                    db.SaveChanges();
-
-                    subjectId = (int)subject.Id;
-                }
-
                 subjectPersistence.Manage(new ManageSubjectViewModel()
                 {
-                    Designation = "TestBlaBla",
-                    Id = subjectId,
-                }, token);
+                    Designation = designation,
+                    Id = subject.Id,
+                }, account.LoginToken);
 
                 using (SuperSmartDb db = new SuperSmartDb())
                 {
-                    if (db.Subjects.SingleOrDefault(itm => itm.Id == subjectId)?.Designation == "TestBlaBla")
-                        Assert.IsTrue(true);
-                    else
-                        Assert.IsTrue(false);
+                    Assert.IsTrue(db.Subjects.SingleOrDefault(itm => itm.Id == subject.Id)?.Designation == designation);
                 }
             }
             catch

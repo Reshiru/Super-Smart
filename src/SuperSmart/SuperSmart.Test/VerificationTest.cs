@@ -4,7 +4,6 @@ using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Test.Builder;
-using SuperSmart.Test.Helper;
 using System;
 
 namespace SuperSmart.Test

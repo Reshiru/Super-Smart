@@ -43,6 +43,7 @@ namespace SuperSmart.Test
                     Finished = DateTime.Now.AddDays(10),
                     SubjectId = 1
                 }, null);
+
                 Assert.IsTrue(false);
             }
             catch (Exception ex)
