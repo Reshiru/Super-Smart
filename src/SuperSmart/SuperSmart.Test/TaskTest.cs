@@ -1,13 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Test.Helper;
 using System;
-using System.Linq;
-using SuperSmart.Core.Data.Connection;
-using SuperSmart.Core.Data.Implementation;
-using SuperSmart.Core.Data.ViewModels;
 
 namespace SuperSmart.Test
 {
@@ -24,6 +21,7 @@ namespace SuperSmart.Test
             try
             {
                 taskPersistence.Create(null, null);
+
                 Assert.IsTrue(false);
             }
             catch (Exception ex)
@@ -96,6 +94,7 @@ namespace SuperSmart.Test
                     TaskId = taskId,
                     Finished = DateTime.Now.AddDays(4)
                 }, token);
+
                 Assert.IsTrue(true);
             }
             catch

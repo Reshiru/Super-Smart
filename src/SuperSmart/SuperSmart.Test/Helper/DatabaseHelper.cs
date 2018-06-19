@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 
@@ -20,8 +21,8 @@ namespace SuperSmart.Test.Helper
             }
 #endif
         }
-
-        // ToDo: Implement this type of methods for testing, remove dependency on overlaying methods
+        
+        [Obsolete]
         public static string GenerateFakeAccount()
         {
             using (var db = new SuperSmartDb())
@@ -46,6 +47,7 @@ namespace SuperSmart.Test.Helper
             }
         }
 
+        [Obsolete]
         public static Int64 GenerateFakeTeachingClass(string loginToken)
         {
             using (var db = new SuperSmartDb())
@@ -73,7 +75,26 @@ namespace SuperSmart.Test.Helper
             }
         }
 
-        public static Int64 GenerateFakeSubject(Int64 teachingClassId)
+        [Obsolete]
+        public static void JoinFakeTeachingClass(long teachingClassId, string loginToken)
+        {
+            using (var db = new SuperSmartDb())
+            {
+                var account = db.Accounts.Include(a => a.AssignedClasses)
+                                          .SingleOrDefault(a => a.LoginToken == loginToken);
+
+                var teachingClass = db.TeachingClasses.Include(a => a.AssignedAccounts)
+                                                      .SingleOrDefault(t => t.Id == teachingClassId);
+
+                teachingClass.AssignedAccounts.Add(account);
+                account.AssignedClasses.Add(teachingClass);
+
+                db.SaveChanges();
+            }
+        }
+
+        [Obsolete]
+        public static Int64 GenerateFakeSubject(long teachingClassId)
         {
             using (var db = new SuperSmartDb())
             {
@@ -94,7 +115,8 @@ namespace SuperSmart.Test.Helper
             }
         }
 
-        public static Int64 GenerateFakeTask(Int64 subjectId, string ownerToken)
+        [Obsolete]
+        public static Int64 GenerateFakeTask(long subjectId, string ownerToken)
         {
             using (var db = new SuperSmartDb())
             {

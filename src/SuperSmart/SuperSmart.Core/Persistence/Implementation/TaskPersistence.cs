@@ -103,7 +103,9 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
                 }
 
-                var subject = db.Subjects.SingleOrDefault(s => s.Tasks.Any(t => t.Id == manageTaskViewModel.TaskId));
+                var subject = db.Subjects.Include(s => s.TeachingClass)
+                                         .ThenInclude(t => t.AssignedAccounts)
+                                         .SingleOrDefault(s => s.Tasks.Any(t => t.Id == manageTaskViewModel.TaskId));
 
 
                 if (subject == null)
