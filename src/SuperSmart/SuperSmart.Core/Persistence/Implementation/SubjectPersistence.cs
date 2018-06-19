@@ -116,7 +116,7 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
-        public List<OverviewSubjectViewModel> GetSubjectsForOverviewByClassId(int classId)
+        public List<OverviewSubjectViewModel> GetSubjectsForOverviewByClassId(long classId)
         {
             if (classId == 0)
             {

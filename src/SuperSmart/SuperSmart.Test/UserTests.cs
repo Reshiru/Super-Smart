@@ -4,7 +4,6 @@ using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Test.Builder;
-using SuperSmart.Test.Helper;
 using System;
 
 namespace SuperSmart.Test
@@ -18,9 +17,13 @@ namespace SuperSmart.Test
         [TestMethod]
         public void GetUserByLoginTokenValidTest()
         {
-            var account = new AccountBuilder().WithEmail("test@test.test")
-                                              .WithFirstname("User")
-                                              .WithLastname("Test")
+            var email = "test@test.test";
+            var firstname = "User";
+            var lastname = "Test";
+
+            var account = new AccountBuilder().WithEmail(email)
+                                              .WithFirstname(firstname)
+                                              .WithLastname(lastname)
                                               .Build();
 
             new DatabaseBuilder().WithSecureDatabaseDeleted(true)
@@ -29,10 +32,10 @@ namespace SuperSmart.Test
 
             try
             {
-                UserViewModel user = userPersistence.GetUserByLoginToken(account.LoginToken);
+                var user = userPersistence.GetUserByLoginToken(account.LoginToken);
 
-                if (user == null || user.Email != "test@test.test" || user.Firstname != "User" ||
-                    user.Lastname != "Test")
+                if (user == null || user.Email != email || user.Firstname != firstname ||
+                    user.Lastname != lastname)
                 {
                     Assert.IsTrue(false);
                 }
@@ -50,16 +53,13 @@ namespace SuperSmart.Test
             try
             {
                 userPersistence.GetUserByLoginToken(null);
+
+                Assert.IsTrue(false);
             }
             catch (Exception ex)
             {
-                if (ex is PropertyExceptionCollection)
-                {
-                    Assert.IsTrue(true);
-                    return;
-                }
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
-            Assert.IsTrue(false);
         }
 
         [TestMethod]

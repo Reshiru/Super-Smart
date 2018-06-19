@@ -45,6 +45,7 @@ namespace SuperSmart.Test
                     Finished = DateTime.Now.AddDays(10),
                     SubjectId = 1
                 }, null);
+
                 Assert.IsTrue(false);
             }
             catch (Exception ex)
@@ -140,7 +141,9 @@ namespace SuperSmart.Test
             {
                 taskPersistence.SaveTaskStatus(new SaveTaskStatusViewModel()
                 {
-                    AccountId = account.Id, Status = TaskStatus.Done, TaskId = task.Id
+                    AccountId = account.Id,
+                    Status = TaskStatus.Done,
+                    TaskId = task.Id
                 });
                 Assert.IsTrue(true);
             }

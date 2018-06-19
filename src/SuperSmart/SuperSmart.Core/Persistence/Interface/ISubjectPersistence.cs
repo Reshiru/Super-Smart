@@ -23,6 +23,6 @@ namespace SuperSmart.Core.Persistence.Interface
         /// Get subjects for a overview by Id of a teaching class
         /// </summary>
         /// <param name="classId"></param>
-        List<OverviewSubjectViewModel> GetSubjectsForOverviewByClassId(int classId);
+        List<OverviewSubjectViewModel> GetSubjectsForOverviewByClassId(long classId);
     }
 }
