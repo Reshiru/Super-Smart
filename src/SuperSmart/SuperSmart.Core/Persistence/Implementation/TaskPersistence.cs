@@ -15,7 +15,7 @@ namespace SuperSmart.Core.Persistence.Implementation
 {
     public class TaskPersistence : ITaskPersistence
     {
-        public void Create(CreateTaskViewModel createTaskViewModel, string loginToken)
+        public long Create(CreateTaskViewModel createTaskViewModel, string loginToken)
         {
             if (createTaskViewModel == null)
             {
@@ -72,10 +72,12 @@ namespace SuperSmart.Core.Persistence.Implementation
                 db.Tasks.Add(task);
 
                 db.SaveChanges();
+
+                return task.Id;
             }
         }
 
-        public bool HasAccountRightsForTask(long id ,string loginToken)
+        public bool HasAccountRightsForTask(long id, string loginToken)
         {
             if (string.IsNullOrEmpty(loginToken))
             {

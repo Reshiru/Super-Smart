@@ -4,6 +4,8 @@ using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Host.Helper;
 using System;
+using System.IO;
+using System.Web;
 using System.Web.Mvc;
 
 namespace SuperSmart.Host.Controllers
@@ -12,6 +14,7 @@ namespace SuperSmart.Host.Controllers
     public class TaskController : Controller
     {
         private readonly ITaskPersistence taskPersistence = new TaskPersistence();
+        private readonly IDocumentPersistence documentPersistence = new DocumentPersistence();
 
         [HttpGet]
         public ActionResult Create(long subjectId)
@@ -24,11 +27,27 @@ namespace SuperSmart.Host.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateTaskViewModel createTaskViewModel)
+        public ActionResult Create(CreateTaskViewModel createTaskViewModel, HttpPostedFileBase file)
         {
             try
             {
-                taskPersistence.Create(createTaskViewModel, User.Identity.Name);
+                long taskId = taskPersistence.Create(createTaskViewModel, User.Identity.Name);
+
+                if (file != null && file.ContentLength > 0)
+                {
+                    try
+                    {
+                        MemoryStream target = new MemoryStream();
+                        file.InputStream.CopyTo(target);
+                        byte[] data = target.ToArray();
+
+                        documentPersistence.Create(new CreateDocumentViewModel { DocumentType = Core.Data.Enumeration.DocumentType.Document, File = data, FileName = file.FileName, TaskId = taskId }, this.User.Identity.Name }
+                    catch (Exception ex)
+                    {
+                        throw new PropertyExceptionCollection("FileUpload", ex.Message);
+                    }
+                }
+
             }
             catch (Exception ex)
             {
