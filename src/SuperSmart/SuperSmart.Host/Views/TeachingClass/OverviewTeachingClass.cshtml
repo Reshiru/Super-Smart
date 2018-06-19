@@ -1,0 +1,36 @@
+﻿@model OverviewTeachingClassViewModel
+
+@{
+    ViewBag.Title = "Class Overview";
+}
+@using (Html.BeginForm("Overview", "TeachingClass"))
+{
+    <box class="no-padding w-60 float-left">
+        <table class="clean-table">
+            <tr>
+                <th>Designation</th>
+                <th>Started</th>
+                <th>NumberOfEducationYears</th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.TeachingClasses)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Designation)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Started)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumberOfEducationYears)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Manage",new {teachingClassId =item.Id })"><i class="fa fa-pencil"></i></a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </box>
+}

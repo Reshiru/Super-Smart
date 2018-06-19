@@ -73,5 +73,13 @@ namespace SuperSmart.Host.Controllers
             }
             return View("ManageTeachingClass");
         }
+
+        [HttpGet]
+        public ActionResult Overview()
+        {
+            OverviewTeachingClassViewModel vm = teachingClassPersistence.GetOverview(User.Identity.Name);
+            return View("OverviewTeachingClass", vm);
+        }
+        
     }
 }
