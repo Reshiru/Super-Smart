@@ -79,24 +79,18 @@ namespace SuperSmart.Test.Builder
 
         public TeachingClass Build()
         {
-            using (var db = new SuperSmartDb())
+            var teachingClass = new TeachingClass()
             {
-                var teachingClass = new TeachingClass()
-                {
-                    AssignedAccounts = this.assignedAccounts,
-                    Admin = this.admin,
-                    Active = this.active,
-                    Designation = this.designation,
-                    NumberOfEducationYears = this.numberOfEducationYears,
-                    Referral = this.referral,
-                    Started = this.started
-                };
+                AssignedAccounts = this.assignedAccounts,
+                Admin = this.admin,
+                Active = this.active,
+                Designation = this.designation,
+                NumberOfEducationYears = this.numberOfEducationYears,
+                Referral = this.referral,
+                Started = this.started
+            };
 
-                db.TeachingClasses.Add(teachingClass);
-                db.SaveChanges();
-
-                return teachingClass;
-            }
+            return teachingClass;
         }
     }
 }
