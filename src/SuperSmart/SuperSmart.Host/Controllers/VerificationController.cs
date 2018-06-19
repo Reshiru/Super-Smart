@@ -39,27 +39,31 @@ namespace SuperSmart.Host.Controllers
         {
             return View("Login");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginViewModel loginViewModel)
+        public ActionResult Login(LoginViewModel loginViewModel, string returnUrl)
         {
             try
             {
                 FormsAuthentication.SetAuthCookie(verificationPersistence.Login(loginViewModel), true);
-                return Redirect(Request?.UrlReferrer?.ToString() ?? "/");
             }
             catch (Exception ex)
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
-            return View("Login");
+
+            if (!string.IsNullOrWhiteSpace(Request.Form["ReturnUrl"]) && Request.Form["ReturnUrl"] != "/")
+                return Redirect("~/"+Request.Form["ReturnUrl"]);
+            else
+                return View("Login");
         }
 
         [HttpGet]
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            return Redirect(Request?.UrlReferrer?.ToString() ?? "/");
+            return View("Login");
         }
     }
 }

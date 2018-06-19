@@ -37,5 +37,31 @@ namespace SuperSmart.Core.Persistence.Implementation
                 };
             }
         }
+
+        public UserNameViewModel GetFullNameFromUser(string loginToken)
+        {
+            if (loginToken == null)
+            {
+                throw new PropertyExceptionCollection(nameof(loginToken), "Not logged in");
+            }
+
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                var user = db.Accounts.SingleOrDefault(u => u.LoginToken == loginToken);
+
+                if (user == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not be found");
+                }
+
+                return new UserNameViewModel()
+                {
+                    Firstname = user.FirstName,
+                    Lastname = user.LastName
+                };
+            }
+        }
+
+
     }
 }
