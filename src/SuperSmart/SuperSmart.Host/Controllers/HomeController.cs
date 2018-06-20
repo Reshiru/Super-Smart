@@ -1,7 +1,9 @@
 ﻿using SuperSmart.Core.Data.ViewModels;
+using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Host.Authentication;
+using SuperSmart.Host.Helper;
 using System;
 using System.Web.Mvc;
 
@@ -15,8 +17,18 @@ namespace SuperSmart.Host.Controllers
         
         public ActionResult Index()
         {
-            DashboardViewModel vm = dashboardPersistence.GetDashboardData(User.Identity.Name);
-            return View("Index", vm);
+            try
+            {
+                var dashboardViewModel = dashboardPersistence.GetDashboardData(User.Identity.Name);
+
+                return View(nameof(Index), dashboardViewModel);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+
+                return View(nameof(Index));
+            }
         }
 
         [ChildActionOnly]
@@ -28,9 +40,9 @@ namespace SuperSmart.Host.Controllers
 
                 return PartialView(userNameViewModel);
             }
-            catch (Exception ex)
-            {                
-                return PartialView(new UserNameViewModel());
+            catch
+            {
+                return null;
             }
         }
     }

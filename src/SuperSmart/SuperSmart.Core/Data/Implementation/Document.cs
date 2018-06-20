@@ -1,13 +1,11 @@
 ﻿using SuperSmart.Core.Data.Enumeration;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperSmart.Core.Data.Implementation
 {
+    /// <summary>
+    /// Represents a document database entry
+    /// </summary>
     public class Document
     {
         /// <summary>

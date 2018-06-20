@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace SuperSmart.Core.Data.Implementation
 {
     /// <summary>
-    /// A task for a subject which is created by an account
+    /// Represents a task database entry
     /// </summary>
     public class Task
     {
