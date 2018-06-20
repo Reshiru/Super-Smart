@@ -23,21 +23,22 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.DisplayFinished)
                     </td>
+
+                    <td>
+                        <a href="@Url.Action("Manage",new {taskId =item.Id })"><i title="Manage Task" class="fa fa-pencil"></i></a>
+                    </td>
                     @if (item.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done)
                     {
-                        <td class="task-done">
-                            <i class="fa fa-check-circle"></i>
+                        <td>
+                            <a href="#"><i title="Set TaskStatus to Done" class="fa fa-check-circle"></i></a>
                         </td>
                     }
                     else
                     {
-                        <td class="task-todo">
-                            <i class="fa fa-check-circle"></i>
+                        <td>
+                            <a href="#"><i title="Set TaskStatus to ToDo" class="fa fa-check-circle"></i></a>
                         </td>
                     }
-                    <td>
-                        <a href="@Url.Action("Manage",new {taskId =item.Id })"><i title="Manage Task" class="fa fa-pencil"></i></a>
-                    </td>
                 </tr>
             }
         </table>
