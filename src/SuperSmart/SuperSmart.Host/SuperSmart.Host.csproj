@@ -213,6 +213,7 @@
     <Content Include="Views\Task\CreateTask.cshtml" />
     <Content Include="Views\Task\ManageTask.cshtml" />
     <Content Include="Views\Task\OverviewTask.cshtml" />
+    <Content Include="Views\Shared\_VerificationLayout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
