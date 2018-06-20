@@ -16,20 +16,27 @@
 
             @foreach (var item in Model.TeachingClasses)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Designation)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Started)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.NumberOfEducationYears)
-                    </td>
-                    <td>
-                        <a href="@Url.Action("Manage",new {teachingClassId =item.Id })"><i class="fa fa-pencil"></i></a>
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Designation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Started)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumberOfEducationYears)
+                </td>
+                <td>
+                    <a href="@Url.Action("Manage",new {teachingClassId =item.Id })"><i title="Manage Class" class="fa fa-pencil"></i></a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Overview","Subject",new {classId =item.Id })"><i title="Subject Overview" class="fa fa-globe"></i></a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Create","Subject",new {classId =item.Id })"><i title="Add Subject" class="fa fa-plus"></i></a>
+                </td>
+
+            </tr>
             }
         </table>
     </box>

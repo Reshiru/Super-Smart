@@ -111,9 +111,9 @@ namespace SuperSmart.Test
 
             try
             {
-                var result = subjectPersistence.GetSubjectsForOverviewByClassId(teachingClass.Id);
+                var result = subjectPersistence.GetOverview(account.LoginToken, teachingClass.Id);
 
-                Assert.IsTrue(result.Count == 2);
+                Assert.IsTrue(result.Subjects.Count == 2);
             }
             catch (Exception ex)
             {

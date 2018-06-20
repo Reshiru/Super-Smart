@@ -14,7 +14,7 @@ namespace SuperSmart.Core.Data.ViewModels
         [Required(ErrorMessage = "Please enter a filename")]
         public string FileName { get; set; }
         [Required(ErrorMessage = "Please enter a taskid")]
-        public long TaskId { get; set; }
+        public Int64 TaskId { get; set; }
     }
 }
 

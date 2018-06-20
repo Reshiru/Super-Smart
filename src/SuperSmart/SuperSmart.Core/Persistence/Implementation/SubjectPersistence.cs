@@ -6,6 +6,7 @@ using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Helper;
 using SuperSmart.Core.Persistence.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,7 +27,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         {
             Guard.ModelStateCheck(createSubjectViewModel);
             Guard.NotNullOrEmpty(loginToken);
-            
+
             using (var db = new SuperSmartDb())
             {
                 var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
@@ -88,7 +89,7 @@ namespace SuperSmart.Core.Persistence.Implementation
             {
                 var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
 
-                if(account == null)
+                if (account == null)
                 {
                     throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
                 }
@@ -110,33 +111,73 @@ namespace SuperSmart.Core.Persistence.Implementation
                 subject.Designation = manageSubjectViewModel.Designation;
 
                 db.SaveChanges();
+
+                manageSubjectViewModel.TeachingClassId = subject.TeachingClass.Id;
             }
         }
 
-        /// <summary>
-        /// Get subjects for a overview by Id of a teaching class
-        /// </summary>
-        /// <param name="classId"></param>
-        public List<OverviewSubjectViewModel> GetSubjectsForOverviewByClassId(long classId)
-        {
-            if (classId == 0)
-            {
-                throw new PropertyExceptionCollection(nameof(classId), "Parameter cannot be 0");
-            }
 
-            Mapper.Initialize(cfg =>
-            {
-                cfg.CreateMap<Subject, OverviewSubjectViewModel>()
-                 .ForMember(vm => vm.Id, map => map.MapFrom(m => m.Id))
-                 .ForMember(vm => vm.Designation, map => map.MapFrom(m => m.Designation));
-            });
+        /// <summary>
+        /// Get Overview of subjects
+        /// </summary>
+        /// <param name="loginToken"></param>
+        /// <param name="classId"></param>
+        public OverviewSubjectViewModel GetOverview(string loginToken, Int64 classId)
+        {
+            Guard.NotNullOrEmpty(loginToken);
 
             using (SuperSmartDb db = new SuperSmartDb())
             {
-                //TODO: Mapper
-                var result = db.Subjects.Where(itm => itm.TeachingClass.Id == classId);
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
 
-                return Mapper.Map<List<OverviewSubjectViewModel>>(result);
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                }
+
+                var subjectQuery = db.Subjects.Where(s => s.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) && s.TeachingClass.Id == classId);
+
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Subject, SubjectViewModel>();
+                });
+
+                IMapper mapper = config.CreateMapper();
+
+                List<SubjectViewModel> subjects = mapper.Map<List<SubjectViewModel>>(subjectQuery);
+
+                OverviewSubjectViewModel overviewSubjectViewModel = new OverviewSubjectViewModel()
+                {
+                    Subjects = subjects
+                };
+
+                return overviewSubjectViewModel;
+            }
+        }
+
+        public bool IsAccountClassAdminOfSubject(Int64 subjectId, string loginToken)
+        {
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (var db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
+                }
+
+                var subject = db.Subjects.SingleOrDefault(s => s.Id == subjectId);
+
+                if (subject == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(subject), "Subject not found");
+                }
+
+                var hasPermissions = subject.TeachingClass.Admin == account;
+
+                return hasPermissions;
             }
         }
     }

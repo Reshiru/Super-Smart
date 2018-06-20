@@ -155,6 +155,7 @@
     <Compile Include="Data\ViewModels\ManageTeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\RegisterViewModel.cs" />
     <Compile Include="Data\ViewModels\SaveTaskStatusViewModel.cs" />
+    <Compile Include="Data\ViewModels\SubjectViewModel.cs" />
     <Compile Include="Data\ViewModels\TaskViewModel.cs" />
     <Compile Include="Data\ViewModels\TeachingClassViewModel.cs" />
     <Compile Include="Data\ViewModels\UserNameViewModel.cs" />

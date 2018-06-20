@@ -7,6 +7,7 @@ using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Helper;
 using SuperSmart.Core.Persistence.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +24,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// </summary>
         /// <param name="createTaskViewModel"></param>
         /// <param name="loginToken"></param>
-        public long Create(CreateTaskViewModel createTaskViewModel, string loginToken)
+        public void Create(CreateTaskViewModel createTaskViewModel, string loginToken)
         {
             Guard.ModelStateCheck(createTaskViewModel);
             Guard.NotNullOrEmpty(loginToken);
@@ -66,8 +67,6 @@ namespace SuperSmart.Core.Persistence.Implementation
                 db.Tasks.Add(task);
 
                 db.SaveChanges();
-
-                return task.Id;
             }
         }
 
@@ -116,6 +115,8 @@ namespace SuperSmart.Core.Persistence.Implementation
                 task.Finished = manageTaskViewModel.Finished;
 
                 db.SaveChanges();
+
+                manageTaskViewModel.SubjectId = task.Subject.Id;
             }
         }
 
@@ -124,7 +125,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// </summary>
         /// <param name="id"></param>
         /// <param name="loginToken"></param>
-        public bool HasAccountRightsForTask(long id, string loginToken)
+        public bool HasAccountRightsForTask(Int64 id, string loginToken)
         {
             Guard.NotNullOrEmpty(loginToken);
 
@@ -196,7 +197,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// </summary>
         /// <param name="taskId"></param>
         /// <param name="accountId"></param>
-        public TaskStatus GetTaskStatus(long taskId, long accountId)
+        public TaskStatus GetTaskStatus(Int64 taskId, Int64 accountId)
         {
             using (var db = new SuperSmartDb())
             {
@@ -216,7 +217,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// Get Overview of tasks
         /// </summary>
         /// <param name="loginToken"></param>
-        public OverviewTaskViewModel GetOverview(string loginToken, long subjectId)
+        public OverviewTaskViewModel GetOverview(string loginToken, Int64 subjectId)
         {
             Guard.NotNullOrEmpty(loginToken);
 
