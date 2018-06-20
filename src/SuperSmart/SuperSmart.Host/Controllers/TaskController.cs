@@ -2,6 +2,7 @@
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
+using SuperSmart.Host.Authentication;
 using SuperSmart.Host.Helper;
 using System;
 using System.IO;
@@ -10,7 +11,7 @@ using System.Web.Mvc;
 
 namespace SuperSmart.Host.Controllers
 {
-    [BasicAuthorize]
+    [DbAuthorize]
     public class TaskController : Controller
     {
         private readonly ITaskPersistence taskPersistence = new TaskPersistence();
