@@ -119,6 +119,7 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -139,6 +140,7 @@
     <Compile Include="Data\Implementation\Task.cs" />
     <Compile Include="Data\Implementation\TeachingClass.cs" />
     <Compile Include="Data\ViewModels\CreateDocumentViewModel.cs" />
+    <Compile Include="Data\ViewModels\DocumentViewModel.cs" />
     <Compile Include="Data\ViewModels\ManageTaskViewModel.cs" />
     <Compile Include="Data\ViewModels\DashboardAppointmentViewModel.cs" />
     <Compile Include="Data\ViewModels\DashboardTaskViewModel.cs" />
@@ -147,6 +149,7 @@
     <Compile Include="Data\ViewModels\CreateSubjectViewModel.cs" />
     <Compile Include="Data\ViewModels\CreateTaskViewModel.cs" />
     <Compile Include="Data\ViewModels\CreateTeachingClassViewModel.cs" />
+    <Compile Include="Data\ViewModels\OverviewDocumentViewModel.cs" />
     <Compile Include="Data\ViewModels\OverviewSubjectViewModel.cs" />
     <Compile Include="Data\ViewModels\OverviewTaskViewModel.cs" />
     <Compile Include="Data\ViewModels\OverviewTeachingClassViewModel.cs" />

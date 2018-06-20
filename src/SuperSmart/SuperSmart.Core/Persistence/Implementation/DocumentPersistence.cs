@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
@@ -6,6 +7,7 @@ using SuperSmart.Core.Extension;
 using SuperSmart.Core.Helper;
 using SuperSmart.Core.Persistence.Interface;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SuperSmart.Core.Persistence.Implementation
@@ -105,6 +107,50 @@ namespace SuperSmart.Core.Persistence.Implementation
                 document.Active = false;
 
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Get Document Overview for a given task
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="loginToken"></param>
+        public OverviewDocumentViewModel GetOverview(Int64 taskId, string loginToken)
+        {
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                }
+
+                var documentQuery = db.Documents.Where(d => d.Task.Subject.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) && d.Task.Id == taskId);
+
+                var config = new MapperConfiguration(cfg =>
+                {
+                    cfg.CreateMap<Document, DocumentViewModel>()
+                   .ForMember(vm => vm.File, map => map.MapFrom(m => m.File))
+                   .ForMember(vm => vm.Filename, map => map.MapFrom(m => m.FileName))
+                   .ForMember(vm => vm.DocumentType, map => map.MapFrom(m => m.DocumentType))
+                   .ForMember(vm => vm.Uploaded, map => map.MapFrom(m => m.Uploaded))
+                   .ForMember(vm => vm.Uploader, map => map.MapFrom(m => m.Uploader.FirstName + " " + m.Uploader.LastName));
+
+                });
+
+                IMapper mapper = config.CreateMapper();
+
+                List<DocumentViewModel> documents = mapper.Map<List<DocumentViewModel>>(documentQuery);
+
+                OverviewDocumentViewModel overviewDocumentViewModel = new OverviewDocumentViewModel()
+                {
+                    Documents = documents
+                };
+
+                return overviewDocumentViewModel;
             }
         }
     }

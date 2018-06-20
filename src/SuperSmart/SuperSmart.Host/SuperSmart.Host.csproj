@@ -181,6 +181,7 @@
     <Compile Include="Authentication\DbAuthorizeAttribute.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SubjectController.cs" />
+    <Compile Include="Controllers\DocumentController.cs" />
     <Compile Include="Controllers\TaskController.cs" />
     <Compile Include="Controllers\TeachingClassController.cs" />
     <Compile Include="Controllers\VerificationController.cs" />
@@ -217,6 +218,8 @@
     <Content Include="Views\Subject\CreateSubject.cshtml" />
     <Content Include="Views\Subject\ManageSubject.cshtml" />
     <Content Include="Views\Subject\OverviewSubject.cshtml" />
+    <Content Include="Views\Document\CreateDocument.cshtml" />
+    <Content Include="Views\Document\OverviewDocument.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
