@@ -24,7 +24,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// </summary>
         /// <param name="createTaskViewModel"></param>
         /// <param name="loginToken"></param>
-        public Int64 Create(CreateTaskViewModel createTaskViewModel, string loginToken)
+        public void Create(CreateTaskViewModel createTaskViewModel, string loginToken)
         {
             Guard.ModelStateCheck(createTaskViewModel);
             Guard.NotNullOrEmpty(loginToken);
@@ -67,8 +67,6 @@ namespace SuperSmart.Core.Persistence.Implementation
                 db.Tasks.Add(task);
 
                 db.SaveChanges();
-
-                return task.Id;
             }
         }
 

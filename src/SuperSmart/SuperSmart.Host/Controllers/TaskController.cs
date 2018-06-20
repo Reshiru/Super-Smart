@@ -28,34 +28,12 @@ namespace SuperSmart.Host.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateTaskViewModel createTaskViewModel, HttpPostedFileBase file)
+        public ActionResult Create(CreateTaskViewModel createTaskViewModel)
         {
             try
             {
-                Int64 taskId = taskPersistence.Create(createTaskViewModel, User.Identity.Name);
-
-                if (file != null && file.ContentLength > 0)
-                {
-                    try
-                    {
-                        MemoryStream target = new MemoryStream();
-                        file.InputStream.CopyTo(target);
-                        byte[] data = target.ToArray();
-
-                        documentPersistence.Create(new CreateDocumentViewModel()
-                        {
-                            DocumentType = Core.Data.Enumeration.DocumentType.Document,
-                            File = data,
-                            FileName = file.FileName,
-                            TaskId = taskId
-                        }, this.User.Identity.Name);
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new PropertyExceptionCollection("FileUpload", ex.Message);
-                    }
-                }
-
+                taskPersistence.Create(createTaskViewModel, User.Identity.Name);
+                
                 return RedirectToAction("Overview", new { subjectId = createTaskViewModel.SubjectId });
 
             }

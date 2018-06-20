@@ -15,7 +15,7 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="createTaskViewModel"></param>
         /// <param name="loginToken"></param>
-        Int64 Create(CreateTaskViewModel createTaskViewModel, string loginToken);
+        void Create(CreateTaskViewModel createTaskViewModel, string loginToken);
 
         /// <summary>
         /// Changes properties from a given task
