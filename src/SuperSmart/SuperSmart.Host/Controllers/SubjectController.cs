@@ -5,8 +5,6 @@ using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Host.Authentication;
 using SuperSmart.Host.Helper;
 using System;
-using System.IO;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SuperSmart.Host.Controllers
@@ -19,10 +17,12 @@ namespace SuperSmart.Host.Controllers
         [HttpGet]
         public ActionResult Create(Int64 classId)
         {
-            return View("CreateSubject", new CreateSubjectViewModel()
+            var createSubjectViewModel = new CreateSubjectViewModel()
             {
                 TeachingClassId = classId
-            });
+            };
+
+            return View("CreateSubject", createSubjectViewModel);
         }
 
         [HttpPost]
@@ -32,12 +32,16 @@ namespace SuperSmart.Host.Controllers
             try
             {
                 subjectPersistence.Create(createSubjectViewModel, User.Identity.Name);
-                return RedirectToAction("Overview",new {classId = createSubjectViewModel.TeachingClassId });
+
+                var classId = new { classId = createSubjectViewModel.TeachingClassId };
+
+                return RedirectToAction("Overview", classId);
             }
             catch (Exception ex)
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
+
             return View("CreateSubject");
         }
 
@@ -47,8 +51,10 @@ namespace SuperSmart.Host.Controllers
         {
             try
             {
-                if (!subjectPersistence.IsAccountClassAdminOfSubject(subjectId, this.User.Identity.Name))
+                if (!subjectPersistence.IsAccountClassAdminOfSubject(subjectId, User.Identity.Name))
+                {
                     throw new PropertyExceptionCollection(nameof(subjectId), "User has no rights to manage subject");
+                }
             }
             catch (Exception ex)
             {
@@ -80,9 +86,18 @@ namespace SuperSmart.Host.Controllers
         [HttpGet]
         public ActionResult Overview(int classId)
         {
-            OverviewSubjectViewModel vm = subjectPersistence.GetOverview(User.Identity.Name, classId);
-            return View("OverviewSubject", vm);
-        }
+            OverviewSubjectViewModel overviewSubjectViewModel = null;
 
+            try
+            {
+                overviewSubjectViewModel = subjectPersistence.GetOverview(User.Identity.Name, classId);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+
+            return View("OverviewSubject", overviewSubjectViewModel);
+        }
     }
 }

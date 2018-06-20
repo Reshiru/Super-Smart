@@ -116,7 +116,6 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
-
         /// <summary>
         /// Get Overview of subjects
         /// </summary>
@@ -155,6 +154,10 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
+        /// <summary>
+        /// Check if account has rights to manage subject
+        /// </summary>
+        /// <param name="subjectId"></param>
         public bool IsAccountClassAdminOfSubject(Int64 subjectId, string loginToken)
         {
             Guard.NotNullOrEmpty(loginToken);

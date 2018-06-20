@@ -3,8 +3,19 @@ using System.Security.Cryptography;
 
 namespace SuperSmart.Core.Extension
 {
+    /// <summary>
+    /// Represents the string extenstion class
+    /// to add extra methods to the string class
+    /// </summary>
     public static class StringExtension
     {
+        /// <summary>
+        /// Generates a new hash value for the 
+        /// given value with a given extra value (salt)
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
         public static string GenerateHash(this string value, string salt)
         {
             var hash = value.GetHashCode().ToString();
