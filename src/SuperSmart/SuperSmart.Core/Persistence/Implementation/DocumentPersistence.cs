@@ -26,7 +26,7 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
 
             var validationResults = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(createDocumentViewModel, new System.ComponentModel.DataAnnotations.ValidationContext(createDocumentViewModel, serviceProvider: null, items: null), validationResults, true))
+            if (!Validator.TryValidateObject(createDocumentViewModel, new ValidationContext(createDocumentViewModel, serviceProvider: null, items: null), validationResults, true))
             {
                 throw new PropertyExceptionCollection(validationResults);
             }

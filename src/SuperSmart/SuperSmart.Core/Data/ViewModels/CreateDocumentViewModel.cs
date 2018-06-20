@@ -6,7 +6,8 @@ namespace SuperSmart.Core.Data.ViewModels
 {
     public class CreateDocumentViewModel
     {
-        [Required(ErrorMessage = "Please uploda a File")]
+        [Required(ErrorMessage = "Please upload a File")]
+        [MinLength(1, ErrorMessage = "Please upload a File")]
         public byte[] File { get; set; }
         [Required(ErrorMessage = "Please enter a documenttype")]
         public DocumentType DocumentType { get; set; }
