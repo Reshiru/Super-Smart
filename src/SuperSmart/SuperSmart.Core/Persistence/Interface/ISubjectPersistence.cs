@@ -1,4 +1,5 @@
 ﻿using SuperSmart.Core.Data.ViewModels;
+using System;
 using System.Collections.Generic;
 
 namespace SuperSmart.Core.Persistence.Interface
@@ -22,11 +23,18 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="manageSubjectViewModel"></param>
         /// <param name="loginToken"></param>
         void Manage(ManageSubjectViewModel manageSubjectViewModel, string loginToken);
+             
+        /// <summary>
+        /// Get Overview of subjects
+        /// </summary>
+        /// <param name="loginToken"></param>
+        /// <param name="classId"></param>
+        OverviewSubjectViewModel GetOverview(string loginToken, Int64 classId);
 
         /// <summary>
-        /// Get subjects for a overview by Id of a teaching class
+        /// Check if account has rights to manage subject
         /// </summary>
-        /// <param name="classId"></param>
-        List<OverviewSubjectViewModel> GetSubjectsForOverviewByClassId(long classId);
+        /// <param name="subjectId"></param>
+        bool IsAccountClassAdminOfSubject(Int64 subjectId, string loginToken);
     }
 }

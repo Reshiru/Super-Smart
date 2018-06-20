@@ -1,0 +1,35 @@
+﻿@model OverviewSubjectViewModel
+
+@{
+    ViewBag.Title = "Class Overview";
+}
+
+@using (Html.BeginForm("Overview", "Subject"))
+{
+    <box class="no-padding w-60 float-left">
+        <table class="clean-table">
+            <tr>
+                <th>Designation</th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.Subjects)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Designation)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Manage",new {subjectId = item.Id })"><i title="Manage Class" class="fa fa-pencil"></i></a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Overview","Task",new {subjectId =item.Id })"><i title="Task Overview" class="fa fa-globe"></i></a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Create","Task",new {subjectId = item.Id })" title="Create Task"><i class="fa fa-plus"></i></a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </box>
+}

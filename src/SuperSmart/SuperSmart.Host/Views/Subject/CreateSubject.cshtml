@@ -1,0 +1,14 @@
+﻿@model CreateSubjectViewModel
+
+@using (Html.BeginForm("Create", "Subject"))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.TeachingClassId)
+
+    @Html.LabelFor(m => m.Designation)
+    @Html.TextBoxFor(m => m.Designation)
+    @Html.ValidationMessageFor(m => m.Designation)
+
+    <input type="submit" value="Submit" />
+}

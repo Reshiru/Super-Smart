@@ -10,7 +10,7 @@ namespace SuperSmart.Core.Data.ViewModels
     {
         public int Id { get; set; }
         public string Designation { get; set; }
-        public int Referral { get; set; }
+        public string Referral { get; set; }
         public int NumberOfEducationYears { get; set; }
         public DateTime Started { get; set; }
         public string DisplayStarted { get => this.Started.ToString("dd.mm.yyyy"); }

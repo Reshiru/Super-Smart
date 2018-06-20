@@ -27,6 +27,7 @@ namespace SuperSmart.Host.Controllers
             try
             {
                 teachingClassPersistence.Create(createTeachingClassViewModel, User.Identity.Name);
+                return RedirectToAction("Overview");
             }
             catch (Exception ex)
             {
@@ -67,6 +68,7 @@ namespace SuperSmart.Host.Controllers
             try
             {
                 teachingClassPersistence.Manage(manageTeachingClassViewModel, User.Identity.Name);
+                return RedirectToAction("Overview");
             }
             catch (Exception ex)
             {

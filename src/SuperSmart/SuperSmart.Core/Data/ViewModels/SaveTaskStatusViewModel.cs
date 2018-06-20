@@ -8,8 +8,8 @@ namespace SuperSmart.Core.Data.ViewModels
 {
     public class SaveTaskStatusViewModel
     {
-        public long AccountId { get; set; }
-        public long TaskId { get; set; }
+        public Int64 AccountId { get; set; }
+        public Int64 TaskId { get; set; }
         public TaskStatus Status { get; set; }
     }
 }

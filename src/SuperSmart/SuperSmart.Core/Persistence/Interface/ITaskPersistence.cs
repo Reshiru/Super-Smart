@@ -1,5 +1,6 @@
 ﻿using SuperSmart.Core.Data.Enumeration;
 using SuperSmart.Core.Data.ViewModels;
+using System;
 
 namespace SuperSmart.Core.Persistence.Interface
 {
@@ -14,7 +15,7 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="createTaskViewModel"></param>
         /// <param name="loginToken"></param>
-        long Create(CreateTaskViewModel createTaskViewModel, string loginToken);
+        Int64 Create(CreateTaskViewModel createTaskViewModel, string loginToken);
 
         /// <summary>
         /// Changes properties from a given task
@@ -34,19 +35,19 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="id"></param>
         /// <param name="loginToken"></param>
-        bool HasAccountRightsForTask(long id, string loginToken);
+        bool HasAccountRightsForTask(Int64 id, string loginToken);
 
         /// <summary>
         /// Get Overview of tasks
         /// </summary>
         /// <param name="loginToken"></param>
-        OverviewTaskViewModel GetOverview(string loginToken, long subjectId);
+        OverviewTaskViewModel GetOverview(string loginToken, Int64 subjectId);
 
         /// <summary>
         /// Get TaskStatus by taskId and accountId
         /// </summary>
         /// <param name="taskId"></param>
         /// <param name="accountId"></param>
-        TaskStatus GetTaskStatus(long taskId, long accountId);
+        TaskStatus GetTaskStatus(Int64 taskId, Int64 accountId);
     }
 }

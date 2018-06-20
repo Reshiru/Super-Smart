@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace SuperSmart.Core.Data.ViewModels
 {
-   public class OverviewSubjectViewModel
+    public class OverviewSubjectViewModel
     {
-        public int Id { get; set; }
 
-        public string Designation { get; set; }
+        public List<SubjectViewModel> Subjects { get; set; }
     }
 }

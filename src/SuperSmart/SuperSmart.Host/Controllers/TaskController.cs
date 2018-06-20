@@ -18,7 +18,7 @@ namespace SuperSmart.Host.Controllers
         private readonly IDocumentPersistence documentPersistence = new DocumentPersistence();
 
         [HttpGet]
-        public ActionResult Create(long subjectId)
+        public ActionResult Create(Int64 subjectId)
         {
             return View("CreateTask", new CreateTaskViewModel()
             {
@@ -32,7 +32,7 @@ namespace SuperSmart.Host.Controllers
         {
             try
             {
-                long taskId = taskPersistence.Create(createTaskViewModel, User.Identity.Name);
+                Int64 taskId = taskPersistence.Create(createTaskViewModel, User.Identity.Name);
 
                 if (file != null && file.ContentLength > 0)
                 {
@@ -55,6 +55,8 @@ namespace SuperSmart.Host.Controllers
                         throw new PropertyExceptionCollection("FileUpload", ex.Message);
                     }
                 }
+
+                return RedirectToAction("Overview", new { subjectId = createTaskViewModel.SubjectId });
 
             }
             catch (Exception ex)
@@ -91,6 +93,7 @@ namespace SuperSmart.Host.Controllers
             try
             {
                 taskPersistence.Manage(manageTaskViewModel, User.Identity.Name);
+                return RedirectToAction("Overview", new { subjectId = manageTaskViewModel.SubjectId });
             }
             catch (Exception ex)
             {
