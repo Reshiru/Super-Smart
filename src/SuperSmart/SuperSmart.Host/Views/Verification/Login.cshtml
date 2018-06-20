@@ -1,21 +1,31 @@
 ﻿@model LoginViewModel
 
-@using (Html.BeginForm("Login", "Verification"))
-{
-    @Html.AntiForgeryToken()
-
-    @Html.LabelFor(m => m.Email)
-    @Html.TextBoxFor(m => m.Email, new { id = "mailInput", type = "email", required = "required" })
-    @Html.ValidationMessageFor(m => m.Email)<br />
-
-
-    @Html.LabelFor(m => m.Password)
-    @Html.PasswordFor(m => m.Password, new { id = "passwordInput", type = "password", required = "required" })<br />
-    @Html.ValidationMessageFor(m => m.Password)
-
-    <input type="hidden" name="ReturnUrl" value="@Request.QueryString["ReturnUrl"]" />
-
-    <input type="submit" value="Submit" />
-    <p>Not registred? @Html.ActionLink("Create an account", "Register")</p>
-
+@{
+    Layout = "~/Views/Shared/_VerificationLayout.cshtml";
 }
+
+<div class="box">
+    @using (Html.BeginForm("Login", "Verification"))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="input-wrapper">
+            @Html.LabelFor(m => m.Email)
+            <i class="fa fa-envelope-o"></i>
+            @Html.TextBoxFor(m => m.Email, new { id = "mailInput", type = "email", required = "required" })
+            <p>@Html.ValidationMessageFor(m => m.Email)</p>
+        </div>
+
+        <div class="input-wrapper">
+            @Html.LabelFor(m => m.Password)
+            <i class="fa fa-lock"></i>
+            @Html.PasswordFor(m => m.Password, new { id = "passwordInput", type = "password", required = "required" })
+            <p>@Html.ValidationMessageFor(m => m.Password)</p>
+        </div>
+
+        <input type="hidden" name="ReturnUrl" value="@Request.QueryString["ReturnUrl"]" />
+        <button type="submit"><i class="fa fa-paper-plane-o"></i> Login</button>
+
+        <p>Not registred? @Html.ActionLink("Create an account", "Register")</p>
+    }
+</div>
