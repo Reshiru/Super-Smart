@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
@@ -79,7 +78,7 @@ namespace SuperSmart.Test
                                  .Build();
 
             try
-            { 
+            {
                 var user = userPersistence.GetFullNameFromUser(account.LoginToken);
 
                 if (user == null || user.Firstname != firstname && user.Lastname != lastname)
@@ -100,17 +99,13 @@ namespace SuperSmart.Test
             try
             {
                 var user = userPersistence.GetFullNameFromUser(null);
+
+                Assert.IsTrue(false);
             }
             catch (Exception ex)
             {
-                if (ex is PropertyExceptionCollection)
-                {
-                    Assert.IsTrue(true);
-                    return;
-                }
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
-
-            Assert.IsTrue(false);
         }
 
         [TestMethod]
@@ -119,17 +114,13 @@ namespace SuperSmart.Test
             try
             {
                 var user = userPersistence.GetFullNameFromUser(string.Empty);
+
+                Assert.IsTrue(false);
             }
             catch (Exception ex)
             {
-                if (ex is PropertyExceptionCollection)
-                {
-                    Assert.IsTrue(true);
-                    return;
-                }
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
-
-            Assert.IsTrue(false);
         }
     }
 }

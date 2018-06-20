@@ -69,9 +69,9 @@ namespace SuperSmart.Test
 
                 Assert.IsTrue(true);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.IsTrue(false);
+                Assert.IsTrue(false, ex?.Message);
             }
         }
 
@@ -226,9 +226,9 @@ namespace SuperSmart.Test
 
                 Assert.IsTrue(true);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.IsTrue(false);
+                Assert.IsTrue(false, ex?.Message);
             }
         }
     }

@@ -82,9 +82,9 @@ namespace SuperSmart.Test
 
                 Assert.IsTrue(true);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.IsTrue(false);
+                Assert.IsTrue(false, ex?.Message);
             }
         }
 
@@ -115,9 +115,9 @@ namespace SuperSmart.Test
 
                 Assert.IsTrue(result.Count == 2);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.IsTrue(false);
+                Assert.IsTrue(false, ex?.Message);
             }
         }
 
@@ -152,9 +152,9 @@ namespace SuperSmart.Test
                     Assert.IsTrue(db.Subjects.SingleOrDefault(itm => itm.Id == subject.Id)?.Designation == designation);
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.IsTrue(false);
+                Assert.IsTrue(false, ex?.Message);
             }
         }
     }

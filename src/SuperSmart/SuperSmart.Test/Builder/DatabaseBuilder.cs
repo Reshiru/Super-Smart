@@ -1,6 +1,5 @@
 ﻿using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
-using SuperSmart.Test.Helper;
 using System.Collections.Generic;
 
 namespace SuperSmart.Test.Builder
@@ -69,10 +68,15 @@ namespace SuperSmart.Test.Builder
 
         public void Build()
         {
+#if TEST
             if (secureDatabaseDeleted)
             {
-                DatabaseHelper.SecureDeleteDatabase();
+                using (var db = new SuperSmartDb())
+                {
+                    db.Database.EnsureDeleted();
+                }
             }
+#endif
 
             using (var db = new SuperSmartDb())
             using (var transaction = db.Database.BeginTransaction())

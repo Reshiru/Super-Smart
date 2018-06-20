@@ -5,7 +5,6 @@ using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Test.Builder;
-using SuperSmart.Test.Helper;
 using System;
 
 namespace SuperSmart.Test
@@ -18,7 +17,8 @@ namespace SuperSmart.Test
         [TestMethod]
         public void AddNullTaskThrowPropertyExceptionCollection()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .Build();
 
             try
             {
@@ -35,15 +35,20 @@ namespace SuperSmart.Test
         [TestMethod]
         public void AddNullLoginTokenTaskThrowPropertyExceptionCollection()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var designation = "Test task";
+            var finished = DateTime.Now.AddDays(10);
+            var fakeSubjectId = 1;
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .Build();
 
             try
             {
                 taskPersistence.Create(new CreateTaskViewModel()
                 {
-                    Designation = "Task xy",
-                    Finished = DateTime.Now.AddDays(10),
-                    SubjectId = 1
+                    Designation = designation,
+                    Finished = finished,
+                    SubjectId = fakeSubjectId
                 }, null);
 
                 Assert.IsTrue(false);
@@ -57,99 +62,124 @@ namespace SuperSmart.Test
         [TestMethod]
         public void CreateTaskSucceed()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var designation = "Test";
+            var finished = DateTime.Now.AddDays(2);
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .Build();
 
             try
             {
-                var token = DatabaseHelper.GenerateFakeAccount();
-                var teachingClassId = DatabaseHelper.GenerateFakeTeachingClass(token);
-                var subjectId = DatabaseHelper.GenerateFakeSubject(teachingClassId);
-
                 taskPersistence.Create(new CreateTaskViewModel()
                 {
-                    Designation = "Test",
-                    SubjectId = subjectId,
-                    Finished = DateTime.Now.AddDays(2)
-                }, token);
+                    Designation = designation,
+                    SubjectId = subject.Id,
+                    Finished = finished,
+                }, account.LoginToken);
+
                 Assert.IsTrue(true);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.IsTrue(false);
+                Assert.IsTrue(false, ex?.Message);
             }
         }
 
         [TestMethod]
         public void ManageTaskSucceed()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var designation = "Test";
+            var finished = DateTime.Now.AddDays(4);
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                           .WithSubject(subject)
+                                           .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithTask(task)
+                                 .Build();
 
             try
             {
-                var token = DatabaseHelper.GenerateFakeAccount();
-                var teachingClassId = DatabaseHelper.GenerateFakeTeachingClass(token);
-                var subjectId = DatabaseHelper.GenerateFakeSubject(teachingClassId);
-                var taskId = DatabaseHelper.GenerateFakeTask(subjectId, token);
-
                 taskPersistence.Manage(new ManageTaskViewModel()
                 {
-                    Designation = "Test",
-                    TaskId = taskId,
-                    Finished = DateTime.Now.AddDays(4)
-                }, token);
+                    Designation = designation,
+                    TaskId = task.Id,
+                    Finished = finished,
+                }, account.LoginToken);
 
                 Assert.IsTrue(true);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.IsTrue(false);
+                Assert.IsTrue(false, ex?.Message);
             }
         }
 
         [TestMethod]
         public void SaveValidTaskStatusTest()
         {
+            var state = TaskStatus.Done;
+
             var account = new AccountBuilder().Build();
 
-            var teachingClass = new TeachingClassBuilder()
-                .WithAdmin(account)
-                .Build();
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
 
-            var subject = new SubjectBuilder()
-                .WithTeachingClass(teachingClass)
-                .Build();
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
 
-            var task = new TaskBuilder()
-                .WithOwner(account)
-                .WithSubject(subject)
-                .Build();
+            var task = new TaskBuilder().WithOwner(account)
+                                        .WithSubject(subject)
+                                        .Build();
 
-            var appointment = new AppointmentBuilder()
-                .WithSubject(subject)
-                .Build();
+            var appointment = new AppointmentBuilder().WithSubject(subject)
+                                                      .Build();
             
-            new DatabaseBuilder()
-                .WithTask(task)
-                .WithAppointment(appointment)
-                .WithSubject(subject)
-                .WithSecureDatabaseDeleted(true)
-                .WithAccount(account)
-                .WithTeachingClass(teachingClass)
-                .Build();
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithTask(task)
+                                 .WithAppointment(appointment)
+                                 .WithSubject(subject)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .Build();
            
             try
             {
                 taskPersistence.SaveTaskStatus(new SaveTaskStatusViewModel()
                 {
                     AccountId = account.Id,
-                    Status = TaskStatus.Done,
-                    TaskId = task.Id
+                    Status = state,
+                    TaskId = task.Id,
                 });
+
                 Assert.IsTrue(true);
             }
             catch (Exception ex)
             {
-                Assert.IsTrue(false);
+                Assert.IsTrue(false, ex?.Message);
             }
         }
 
@@ -159,6 +189,7 @@ namespace SuperSmart.Test
             try
             {
                 taskPersistence.SaveTaskStatus(null);
+
                 Assert.IsTrue(false);
             }
             catch (Exception ex)

@@ -119,7 +119,6 @@
     <Compile Include="Builder\TaskBuilder.cs" />
     <Compile Include="Builder\TeachingClassBuilder.cs" />
     <Compile Include="DocumentTest.cs" />
-    <Compile Include="Helper\DatabaseHelper.cs" />
     <Compile Include="DashboardTest.cs" />
     <Compile Include="SubjectTest.cs" />
     <Compile Include="TaskTest.cs" />

@@ -2,6 +2,7 @@
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Test.Builder;
+using System;
 using System.Linq;
 
 namespace SuperSmart.Test
@@ -40,9 +41,16 @@ namespace SuperSmart.Test
                                  .WithTask(task)
                                  .Build();
 
-            var result = dashboardPersistence.GetDashboardData(account.LoginToken);
+            try
+            {
+                var result = dashboardPersistence.GetDashboardData(account.LoginToken);
 
-            Assert.IsTrue(result.Appointments.Any() && result.Tasks.Any());
+                Assert.IsTrue(result.Appointments.Any() && result.Tasks.Any());
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(false, ex?.Message);
+            }
         }
     }
 }
