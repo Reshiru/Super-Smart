@@ -1,13 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SuperSmart.Core.Data.Enumeration;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
-using SuperSmart.Test.Helper;
+using SuperSmart.Test.Builder;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperSmart.Test
 {
@@ -19,27 +16,44 @@ namespace SuperSmart.Test
         [TestMethod]
         public void CreateDocumentSucceed()
         {
-            DatabaseHelper.SecureDeleteDatabase();
+            var filename = "Testfile";
+            var file = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 };
+            var documenType = DocumentType.Document;
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                        .WithSubject(subject)
+                                        .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithTask(task)
+                                 .Build();
 
             try
             {
-                var token = DatabaseHelper.GenerateFakeAccount();
-                var teachingClassId = DatabaseHelper.GenerateFakeTeachingClass(token);
-                var subjectId = DatabaseHelper.GenerateFakeSubject(teachingClassId);
-                var taskId = DatabaseHelper.GenerateFakeTask(subjectId, token);
-
                 documentPersistence.Create(new CreateDocumentViewModel()
                 {
-                    File = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 },
-                    DocumentType = Core.Data.Enumeration.DocumentType.Document,
-                    FileName = "Testfile",
-                    TaskId = 1
-                }, token);
+                    File = file,
+                    DocumentType = documenType,
+                    FileName = filename,
+                    TaskId = task.Id
+                }, account.LoginToken);
+
                 Assert.IsTrue(true);
             }
-            catch
+            catch (Exception ex)
             {
-                Assert.IsTrue(false);
+                Assert.IsTrue(false, ex?.Message);
             }
         }
     }

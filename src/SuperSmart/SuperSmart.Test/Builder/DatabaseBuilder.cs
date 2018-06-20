@@ -75,6 +75,7 @@ namespace SuperSmart.Test.Builder
             }
 
             using (var db = new SuperSmartDb())
+            using (var transaction = db.Database.BeginTransaction())
             {
                 accounts.ForEach(a => db.Accounts.Add(a));
                 teachingClasses.ForEach(t => db.TeachingClasses.Add(t));
@@ -83,6 +84,18 @@ namespace SuperSmart.Test.Builder
                 tasks.ForEach(a => db.Tasks.Add(a));
 
                 db.SaveChanges();
+
+                teachingClasses.ForEach(t =>
+                {
+                    var admin = t.Admin;
+
+                    t.AssignedAccounts.Add(admin);
+                    admin.AssignedClasses.Add(t);
+                });
+
+                db.SaveChanges();
+
+                transaction.Commit();
             }
         }
     }

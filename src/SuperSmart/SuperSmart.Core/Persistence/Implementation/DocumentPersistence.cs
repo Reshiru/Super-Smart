@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Interface;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -46,7 +41,11 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
                 }
 
-                var task = db.Tasks.SingleOrDefault(t => t.Id == createDocumentViewModel.TaskId);
+                var task = db.Tasks.Include(t => t.Documents)
+                                   .Include(t => t.Subject)
+                                   .ThenInclude(s => s.TeachingClass)
+                                   .ThenInclude(t => t.AssignedAccounts)
+                                   .SingleOrDefault(t => t.Id == createDocumentViewModel.TaskId);
 
 
                 if (task == null)
@@ -55,7 +54,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                         "Subject not found");
                 }
 
-                if (task.Subject.TeachingClass.AssignedAccounts.All(a => a != account))
+                if (!task.Subject.TeachingClass.AssignedAccounts.Contains(account))
                 {
                     throw new PropertyExceptionCollection(nameof(task),
                         "No permissions granted");
