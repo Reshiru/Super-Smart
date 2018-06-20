@@ -1,49 +1,53 @@
 ﻿using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
+using SuperSmart.Core.Helper;
 using SuperSmart.Core.Persistence.Interface;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperSmart.Core.Persistence.Implementation
 {
+    /// <summary>
+    /// The user persistence to manage user data
+    /// </summary>
     public class UserPersistence : IUserPersistence
     {
+        /// <summary>
+        /// Get user by loginToken
+        /// </summary>
+        /// <param name="loginToken"></param>
         public UserViewModel GetUserByLoginToken(string loginToken)
         {
-
-            if (string.IsNullOrEmpty(loginToken))
-            {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null or empty");
-            }
+            Guard.NotNullOrEmpty(loginToken);
 
             using (var db = new SuperSmartDb())
             {
                 var user = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
                 if (user == null)
                 {
-                    throw new PropertyExceptionCollection(nameof(user), "User not found");
+                    throw new PropertyExceptionCollection(nameof(user), "Account not found");
                 }
 
-                return new UserViewModel()
+                var userViewModel = new UserViewModel()
                 {
                     Id = user.Id,
                     Email = user.Email,
                     Firstname = user.FirstName,
                     Lastname = user.LastName
                 };
+
+                return userViewModel;
             }
         }
 
+        /// <summary>
+        /// Get full name by loginToken
+        /// </summary>
+        /// <param name="loginToken"></param>
         public UserNameViewModel GetFullNameFromUser(string loginToken)
         {
-            if (loginToken == null)
-            {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Not logged in");
-            }
+            Guard.NotNullOrEmpty(loginToken);
 
             using (SuperSmartDb db = new SuperSmartDb())
             {
@@ -51,17 +55,17 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 if (user == null)
                 {
-                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not be found");
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
                 }
 
-                return new UserNameViewModel()
+                var userNameViewModel = new UserNameViewModel()
                 {
                     Firstname = user.FirstName,
                     Lastname = user.LastName
                 };
+
+                return userNameViewModel;
             }
         }
-
-
     }
 }

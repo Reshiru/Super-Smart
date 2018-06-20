@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace SuperSmart.Core.Persistence.Interface
 {
+    /// <summary>
+    /// The subject persistence to manage subject
+    /// data
+    /// </summary>
     public interface ISubjectPersistence
     {
         /// <summary>

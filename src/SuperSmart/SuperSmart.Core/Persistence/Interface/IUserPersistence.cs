@@ -1,12 +1,10 @@
 ﻿using SuperSmart.Core.Data.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SuperSmart.Core.Persistence.Interface
 {
+    /// <summary>
+    /// The user persistence to manage user data
+    /// </summary>
     public interface IUserPersistence
     {
         /// <summary>

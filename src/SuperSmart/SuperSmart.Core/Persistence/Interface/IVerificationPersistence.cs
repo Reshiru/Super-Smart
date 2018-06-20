@@ -13,6 +13,7 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="loginViewModel"></param>
         /// <returns>The login token</returns>
         string Login(LoginViewModel loginViewModel);
+
         /// <summary>
         /// Registers a new user with the given data if model is valid
         /// </summary>

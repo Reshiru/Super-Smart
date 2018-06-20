@@ -4,33 +4,29 @@ using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
+using SuperSmart.Core.Helper;
 using SuperSmart.Core.Persistence.Interface;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace SuperSmart.Core.Persistence.Implementation
 {
+    /// <summary>
+    /// The subject persistence to manage subject
+    /// data
+    /// </summary>
     public class SubjectPersistence : ISubjectPersistence
     {
+        /// <summary>
+        /// Creates a new subject for a given teaching class
+        /// </summary>
+        /// <param name="createSubjectViewModel"></param>
+        /// <param name="loginToken"></param>
         public void Create(CreateSubjectViewModel createSubjectViewModel, string loginToken)
         {
-            if (createSubjectViewModel == null)
-            {
-                throw new PropertyExceptionCollection(nameof(createSubjectViewModel), "Parameter cannot be null");
-            }
-
-            if (string.IsNullOrEmpty(loginToken))
-            {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
-            }
-
-            var validationResults = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(createSubjectViewModel, new System.ComponentModel.DataAnnotations.ValidationContext(createSubjectViewModel, serviceProvider: null, items: null), validationResults, true))
-            {
-                throw new PropertyExceptionCollection(validationResults);
-            }
-
+            Guard.ModelStateCheck(createSubjectViewModel);
+            Guard.NotNullOrEmpty(loginToken);
+            
             using (var db = new SuperSmartDb())
             {
                 var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
@@ -41,7 +37,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 }
 
                 var teachingClass = db.TeachingClasses
-                    .Include("Subjects")
+                    .Include(t => t.Subjects)
                     .SingleOrDefault(t => t.Id == createSubjectViewModel.TeachingClassId);
 
                 if (teachingClass == null)
@@ -78,32 +74,33 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
+        /// <summary>
+        /// Changes properties from a given subject class
+        /// </summary>
+        /// <param name="manageSubjectViewModel"></param>
+        /// <param name="loginToken"></param>
         public void Manage(ManageSubjectViewModel manageSubjectViewModel, string loginToken)
         {
-            if (manageSubjectViewModel == null)
-            {
-                throw new PropertyExceptionCollection(nameof(manageSubjectViewModel), "Parameter cannot be null");
-            }
-
-            if (manageSubjectViewModel.Id == 0)
-            {
-                throw new PropertyExceptionCollection(nameof(manageSubjectViewModel.Id), "Parameter cannot be null");
-            }
-
-            if (string.IsNullOrEmpty(loginToken))
-            {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
-            }
-
-            var validationResults = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(manageSubjectViewModel, new System.ComponentModel.DataAnnotations.ValidationContext(manageSubjectViewModel, serviceProvider: null, items: null), validationResults, true))
-            {
-                throw new PropertyExceptionCollection(validationResults);
-            }
+            Guard.ModelStateCheck(manageSubjectViewModel);
+            Guard.NotNullOrEmpty(loginToken);
 
             using (var db = new SuperSmartDb())
             {
-                var subject = db.Subjects.SingleOrDefault(itm => itm.Id == manageSubjectViewModel.Id);
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if(account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
+                }
+
+                var subject = db.Subjects.Include(s => s.TeachingClass)
+                                         .ThenInclude(t => t.AssignedAccounts)
+                                         .SingleOrDefault(itm => itm.Id == manageSubjectViewModel.Id);
+
+                if (!subject.TeachingClass.AssignedAccounts.Contains(account))
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "No permissions granted");
+                }
 
                 if (subject == null)
                 {
@@ -116,6 +113,10 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
+        /// <summary>
+        /// Get subjects for a overview by Id of a teaching class
+        /// </summary>
+        /// <param name="classId"></param>
         public List<OverviewSubjectViewModel> GetSubjectsForOverviewByClassId(long classId)
         {
             if (classId == 0)

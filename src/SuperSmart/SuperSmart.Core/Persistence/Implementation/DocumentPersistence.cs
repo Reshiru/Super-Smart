@@ -3,34 +3,28 @@ using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
+using SuperSmart.Core.Helper;
 using SuperSmart.Core.Persistence.Interface;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace SuperSmart.Core.Persistence.Implementation
 {
+    /// <summary>
+    /// The document persistence to manage 
+    /// document data
+    /// </summary>
     public class DocumentPersistence : IDocumentPersistence
     {
+        /// <summary>
+        /// Sets an existing document for a given task on inactive
+        /// </summary>
+        /// <param name="createTaskViewModel"></param>
+        /// <param name="loginToken"></param>
         public void Create(CreateDocumentViewModel createDocumentViewModel, string loginToken)
         {
-            if (createDocumentViewModel == null)
-            {
-                throw new PropertyExceptionCollection(nameof(createDocumentViewModel), "Parameter cannot be null");
-            }
-
-            if (string.IsNullOrEmpty(loginToken))
-            {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
-            }
-
-            var validationResults = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(createDocumentViewModel, new ValidationContext(createDocumentViewModel, serviceProvider: null, items: null), validationResults, true))
-            {
-                throw new PropertyExceptionCollection(validationResults);
-            }
-
+            Guard.ModelStateCheck(createDocumentViewModel);
+            Guard.NotNullOrEmpty(loginToken);
 
             using (var db = new SuperSmartDb())
             {
@@ -78,15 +72,22 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
+        /// <summary>
+        /// Sets an existing document for a given task on inactive
+        /// </summary>
+        /// <param name="createTaskViewModel"></param>
+        /// <param name="loginToken"></param>
         public void Delete(int id, string loginToken)
         {
+            Guard.NotNullOrEmpty(loginToken);
+
             using (var db = new SuperSmartDb())
             {
                 var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
 
                 if (account == null)
                 {
-                    throw new PropertyExceptionCollection(nameof(loginToken), "Your account couldn't be found. Pleas try to relogin");
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
                 }
 
                 var document = db.Documents.SingleOrDefault(a => a.Id == id);

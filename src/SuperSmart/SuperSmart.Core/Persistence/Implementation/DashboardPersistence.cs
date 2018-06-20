@@ -1,31 +1,40 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
+using SuperSmart.Core.Helper;
 using SuperSmart.Core.Persistence.Interface;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace SuperSmart.Core.Persistence.Implementation
 {
+    /// <summary>
+    /// The dashboard persistence to manage 
+    /// the dashboard data
+    /// </summary>
     public class DashboardPersistence : IDashboardPersistence
     {
+        private ITaskPersistence taskPersistence = new TaskPersistence();
+
+        /// <summary>
+        /// Get DashboardData for given User
+        /// </summary>
+        /// <param name="loginToken"></param>
         public DashboardViewModel GetDashboardData(string loginToken)
         {
+            Guard.NotNullOrEmpty(loginToken);
+
             using (SuperSmartDb db = new SuperSmartDb())
             {
-                if (string.IsNullOrWhiteSpace(loginToken))
-                    throw new PropertyExceptionCollection(nameof(loginToken), "LoginToken cannot be empty");
-
                 var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
 
                 if (account == null)
-                    throw new PropertyExceptionCollection(nameof(loginToken), "Your account couldn't be found. Pleas try to relogin");
-
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                }
 
                 var appointmentsQuery = from appointment in db.Appointments
                                         where appointment.Subject.TeachingClass.AssignedAccounts.Any(itm => itm.LoginToken == loginToken)
@@ -57,19 +66,19 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 List<DashboardAppointmentViewModel> appointments = mapper.Map<List<DashboardAppointmentViewModel>>(appointmentsQuery);
                 List<DashboardTaskViewModel> tasks = mapper.Map<List<DashboardTaskViewModel>>(taskQuery);
-
-                ITaskPersistence taskPersistence = new TaskPersistence();
-
+                
                 tasks.ForEach(itm =>
                 {
                     itm.Status = taskPersistence.GetTaskStatus(itm.TaskId, account.Id);
                 });
 
-                return new DashboardViewModel()
+                var dashboardViewModel = new DashboardViewModel()
                 {
                     Appointments = appointments,
                     Tasks = tasks
                 };
+
+                return dashboardViewModel;
             }
         }
     }

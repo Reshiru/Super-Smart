@@ -1,11 +1,13 @@
 ﻿using SuperSmart.Core.Data.ViewModels;
-using System.Collections.Generic;
 
 namespace SuperSmart.Core.Persistence.Interface
 {
+    /// <summary>
+    /// The dashboard persistence to manage 
+    /// the dashboard data
+    /// </summary>
     public interface IDashboardPersistence
     {
-
         /// <summary>
         /// Get DashboardData for given User
         /// </summary>

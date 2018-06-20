@@ -2,6 +2,9 @@
 
 namespace SuperSmart.Core.Persistence.Interface
 {
+    /// <summary>
+    /// The teaching class persistence to manage teaching classes
+    /// </summary>
     public interface ITeachingClassPersistence
     {
         /// <summary>

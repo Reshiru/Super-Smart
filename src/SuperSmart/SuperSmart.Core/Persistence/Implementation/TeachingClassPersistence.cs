@@ -3,32 +3,27 @@ using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
+using SuperSmart.Core.Helper;
 using SuperSmart.Core.Persistence.Interface;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace SuperSmart.Core.Persistence.Implementation
 {
+    /// <summary>
+    /// The teaching class persistence to manage teaching classes
+    /// </summary>
     public class TeachingClassPersistence : ITeachingClassPersistence
     {
+        /// <summary>
+        /// Creates a new teaching class for the given model if valid
+        /// </summary>
+        /// <param name="createTeachingClassViewModel"></param>
+        /// <param name="loginToken"></param>
         public void Create(CreateTeachingClassViewModel createTeachingClassViewModel, string loginToken)
         {
-            if (createTeachingClassViewModel == null)
-            {
-                throw new PropertyExceptionCollection(nameof(createTeachingClassViewModel), "Parameter cannot be null");
-            }
-
-            if (string.IsNullOrEmpty(loginToken))
-            {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
-            }
-
-            var validationResults = new List<ValidationResult>();
-            if (!Validator.TryValidateObject(createTeachingClassViewModel, new System.ComponentModel.DataAnnotations.ValidationContext(createTeachingClassViewModel, serviceProvider: null, items: null), validationResults, true))
-            {
-                throw new PropertyExceptionCollection(validationResults);
-            }
+            Guard.ModelStateCheck(createTeachingClassViewModel);
+            Guard.NotNullOrEmpty(loginToken);
 
             using (var db = new SuperSmartDb())
             {
@@ -63,117 +58,15 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
-        public void Join(string referral, string loginToken)
-        {
-            if (string.IsNullOrEmpty(referral))
-            {
-                throw new PropertyExceptionCollection(nameof(referral), "Parameter cannot be null or empty");
-            }
-
-            if (string.IsNullOrEmpty(loginToken))
-            {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null or empty");
-            }
-
-            using (var db = new SuperSmartDb())
-            {
-                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
-
-                if (account == null)
-                {
-                    throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
-                }
-
-                var teachingClass = db.TeachingClasses.SingleOrDefault(c => c.Referral == referral);
-
-                if (teachingClass == null)
-                {
-                    throw new PropertyExceptionCollection(nameof(referral), "Referral invalid");
-                }
-
-                account.AssignedClasses.Add(teachingClass);
-                teachingClass.AssignedAccounts.Add(account);
-
-                db.SaveChanges();
-            }
-        }
-
-        public void RemoveUser(RemoveUserFromTeachingClassViewModel removeUserFromTeachingClassViewModel, string loginToken)
-        {
-            if (removeUserFromTeachingClassViewModel == null)
-            {
-                throw new PropertyExceptionCollection(nameof(removeUserFromTeachingClassViewModel), "Parameter cannot be null or empty");
-            }
-            if (string.IsNullOrEmpty(loginToken))
-            {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null or empty");
-            }
-            using (var db = new SuperSmartDb())
-            {
-                var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == removeUserFromTeachingClassViewModel.TeachingClassId);
-                if (teachingClass == null)
-                {
-                    throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
-                }
-
-                var user = db.Accounts.SingleOrDefault(a => a.Id == removeUserFromTeachingClassViewModel.UserId);
-                if (user == null)
-                {
-                    throw new PropertyExceptionCollection(nameof(teachingClass), "User not found");
-                }
-
-                var admin = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
-                if (admin == null)
-                {
-                    throw new PropertyExceptionCollection(nameof(teachingClass), "User not found");
-                }
-
-                if (teachingClass.Admin.Id != admin.Id)
-                {
-                    throw new PropertyExceptionCollection(nameof(admin), "User hasn't the permissions to remove a user from this class");
-                }
-
-                user.AssignedClasses.Remove(teachingClass);
-                teachingClass.AssignedAccounts.Remove(user);
-                db.SaveChanges();
-            }
-        }
-
-        public void Delete(int id, string loginToken)
-        {
-            using (var db = new SuperSmartDb())
-            {
-                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
-
-                if (account == null)
-                {
-                    throw new PropertyExceptionCollection(nameof(loginToken), "Your account couldn't be found. Pleas try to relogin");
-                }
-
-                var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == id);
-
-                if (teachingClass == null)
-                {
-                    throw new PropertyExceptionCollection(nameof(teachingClass), "The given teaching class couldn't be found");
-                }
-
-                if (teachingClass.Admin != account)
-                {
-                    throw new PropertyExceptionCollection(nameof(account), "You are not permitted to this changes");
-                }
-
-                teachingClass.Active = false;
-
-                db.SaveChanges();
-            }
-        }
-
+        /// <summary>
+        /// Changes properties from a given teaching class
+        /// </summary>
+        /// <param name="manageTeachingClassViewModel"></param>
+        /// <param name="loginToken"></param>
         public void Manage(ManageTeachingClassViewModel manageTeachingClassViewModel, string loginToken)
         {
-            if (string.IsNullOrEmpty(loginToken))
-            {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
-            }
+            Guard.ModelStateCheck(manageTeachingClassViewModel);
+            Guard.NotNullOrEmpty(loginToken);
 
             using (var db = new SuperSmartDb())
             {
@@ -203,8 +96,128 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
+        /// <summary>
+        /// Joins the given class (referral) with the given account
+        /// </summary>
+        /// <param name="referral"></param>
+        /// <param name="loginToken"></param>
+        public void Join(string referral, string loginToken)
+        {
+            Guard.NotNullOrEmpty(referral);
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (var db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
+                }
+
+                var teachingClass = db.TeachingClasses.SingleOrDefault(c => c.Referral == referral);
+
+                if (teachingClass == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(referral), "Referral invalid");
+                }
+
+                account.AssignedClasses.Add(teachingClass);
+                teachingClass.AssignedAccounts.Add(account);
+
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Remove a user from a teaching class
+        /// </summary>
+        /// <param name="removeUserFromTeachingClassViewModel"></param>
+        /// <param name="loginToken"></param>
+        public void RemoveUser(RemoveUserFromTeachingClassViewModel removeUserFromTeachingClassViewModel, string loginToken)
+        {
+            Guard.ModelStateCheck(removeUserFromTeachingClassViewModel);
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (var db = new SuperSmartDb())
+            {
+                var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == removeUserFromTeachingClassViewModel.TeachingClassId);
+
+                if (teachingClass == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
+                }
+
+                var user = db.Accounts.SingleOrDefault(a => a.Id == removeUserFromTeachingClassViewModel.UserId);
+
+                if (user == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "User not found");
+                }
+
+                var admin = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (admin == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "User not found");
+                }
+
+                if (teachingClass.Admin.Id != admin.Id)
+                {
+                    throw new PropertyExceptionCollection(nameof(admin), "User hasn't the permissions to remove a user from this class");
+                }
+
+                user.AssignedClasses.Remove(teachingClass);
+                teachingClass.AssignedAccounts.Remove(user);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Delete a existing teaching class with id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="loginToken"></param>
+        public void Delete(int id, string loginToken)
+        {
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (var db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Your account couldn't be found. Pleas try to relogin");
+                }
+
+                var teachingClass = db.TeachingClasses.SingleOrDefault(a => a.Id == id);
+
+                if (teachingClass == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "The given teaching class couldn't be found");
+                }
+
+                if (teachingClass.Admin != account)
+                {
+                    throw new PropertyExceptionCollection(nameof(account), "You are not permitted to this changes");
+                }
+
+                teachingClass.Active = false;
+
+                db.SaveChanges();
+            }
+        }
+        
+        /// <summary>
+        /// Changes the referral from the given teaching class id
+        /// </summary>
+        /// <param name="id">teaching class id</param>
+        /// <param name="loginToken"></param>
         public void ChangeReferral(int id, string loginToken)
         {
+            Guard.NotNullOrEmpty(loginToken);
+
             using (var db = new SuperSmartDb())
             {
                 var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
@@ -237,30 +250,37 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
+        /// <summary>
+        /// Get teachingClasses for user by loginToken
+        /// </summary>
+        /// <param name="loginToken"></param>
         public OverviewTeachingClassViewModel GetOverview(string loginToken)
         {
-            if (string.IsNullOrEmpty(loginToken))
-            {
-                throw new PropertyExceptionCollection(nameof(loginToken), "Parameter cannot be null");
-            }
+            Guard.NotNullOrEmpty(loginToken);
 
             using (var db = new SuperSmartDb())
             {
-                var config = new MapperConfiguration(cfg =>
+                var teachingClasses = db.TeachingClasses.Where(tc => tc.AssignedAccounts.Any(a => a.LoginToken == loginToken));
+
+                var mappedTeachingClasses = GetOverviewMapper().Map<List<TeachingClassViewModel>>(teachingClasses);
+
+                var overviewTeachingClassViewModel = new OverviewTeachingClassViewModel()
                 {
-                    cfg.CreateMap<TeachingClass, TeachingClassViewModel>();
-                });
-
-                IMapper mapper = config.CreateMapper();
-
-
-                List<TeachingClass> teachingClasses = db.TeachingClasses.Where(tc => tc.AssignedAccounts.Any(a => a.LoginToken == loginToken)).ToList();
-
-                return new OverviewTeachingClassViewModel()
-                {
-                    TeachingClasses = mapper.Map<List<TeachingClassViewModel>>(teachingClasses)
+                    TeachingClasses = mappedTeachingClasses,
                 };
+
+                return overviewTeachingClassViewModel;
             }
+        }
+
+        private IMapper GetOverviewMapper()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TeachingClass, TeachingClassViewModel>();
+            }).CreateMapper();
+            
+            return mapper;
         }
     }
 }
