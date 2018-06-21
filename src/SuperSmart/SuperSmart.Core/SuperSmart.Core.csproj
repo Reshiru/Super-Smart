@@ -143,6 +143,7 @@
     <Compile Include="Data\ViewModels\CreateDocumentViewModel.cs" />
     <Compile Include="Data\ViewModels\DocumentViewModel.cs" />
     <Compile Include="Data\ViewModels\DownloadDocumentViewModel.cs" />
+    <Compile Include="Data\ViewModels\ManageAccountViewModel.cs" />
     <Compile Include="Data\ViewModels\ManageDocumentViewModel.cs" />
     <Compile Include="Data\ViewModels\ManageTaskViewModel.cs" />
     <Compile Include="Data\ViewModels\DashboardAppointmentViewModel.cs" />

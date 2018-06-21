@@ -18,5 +18,17 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="loginToken"></param>
         UserNameViewModel GetFullNameFromUser(string loginToken);
+
+        /// <summary>
+        /// Get Account by loginToken
+        /// </summary>
+        /// <param name="loginToken"></param>
+        ManageAccountViewModel GetManagedAccount(string loginToken);
+
+        /// <summary>
+        /// Manage acccount
+        /// </summary>
+        /// <param name="loginToken"></param>
+        void Manage(ManageAccountViewModel manageAccountViewModel, string loginToken);
     }
 }

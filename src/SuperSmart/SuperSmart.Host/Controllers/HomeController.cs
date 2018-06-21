@@ -14,7 +14,7 @@ namespace SuperSmart.Host.Controllers
     {
         private readonly IDashboardPersistence dashboardPersistence = new DashboardPersistence();
         private readonly IUserPersistence userPersistence = new UserPersistence();
-        
+
         public ActionResult Index()
         {
             try
@@ -44,6 +44,36 @@ namespace SuperSmart.Host.Controllers
             {
                 return null;
             }
+        }
+
+        [HttpGet]
+        public ActionResult Profile()
+        {
+            ManageAccountViewModel vm = new ManageAccountViewModel();
+            try
+            {
+                vm = userPersistence.GetManagedAccount(User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+            return View("Profile", vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Profile(ManageAccountViewModel manageAccountViewModel)
+        {
+            try
+            {
+                userPersistence.Manage(manageAccountViewModel, User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+            return View("Profile");
         }
     }
 }

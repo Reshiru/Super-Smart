@@ -32,7 +32,7 @@
                 <div class="mdl-layout-spacer"></div>
                 <!-- Navigation -->
                 <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href=""><i class="material-icons">person</i> @{Html.RenderAction("GetFullNameFromAuthorizedUser", "Home");}</a> 
+                    <a class="mdl-navigation__link" href="@Url.Action("Profile","Home")"><i class="material-icons">person</i> @{Html.RenderAction("GetFullNameFromAuthorizedUser", "Home");}</a>
                     <a class="mdl-navigation__link" href="@Url.Action("Logout","Verification")">Logout</a>
                 </nav>
             </div>
@@ -45,7 +45,7 @@
             </nav>
         </div>
         <main class="mdl-layout__content">
-                @RenderBody()
+            @RenderBody()
         </main>
         <footer class="mdl-mini-footer">
             <div class="mdl-mini-footer__left-section">
