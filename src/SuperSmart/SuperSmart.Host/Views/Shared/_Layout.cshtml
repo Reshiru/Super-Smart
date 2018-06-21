@@ -32,16 +32,15 @@
                 <div class="mdl-layout-spacer"></div>
                 <!-- Navigation -->
                 <nav class="mdl-navigation">
-                    <a class="mdl-navigation__link" href="">Link</a>
+                    <a class="mdl-navigation__link" href=""><i class="material-icons">person</i> @{Html.RenderAction("GetFullNameFromAuthorizedUser", "Home");}</a> 
                 </nav>
             </div>
         </header>
         <div class="mdl-layout__drawer">
             <span class="mdl-layout-title">Menu</span>
             <nav class="mdl-navigation">
-                <a class="mdl-navigation__link" href="/TeachingClass/Overview">Class</a>
-                <a class="mdl-navigation__link" href="">Link</a>
-                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="/Home/Index"><i class="material-icons">home</i> Home</a>
+                <a class="mdl-navigation__link" href="/TeachingClass/Overview"><i class="material-icons">class</i> Class</a>
             </nav>
         </div>
         <main class="mdl-layout__content">
