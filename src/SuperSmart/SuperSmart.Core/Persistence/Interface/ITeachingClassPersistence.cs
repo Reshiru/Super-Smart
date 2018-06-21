@@ -62,5 +62,12 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="loginToken"></param>
         OverviewTeachingClassViewModel GetOverview(string loginToken);
+
+        /// <summary>
+        /// Get all accounts from a teaching class
+        /// </summary>
+        /// <param name="classId"></param>
+        /// <param name="loginToken"></param>
+        OverviewStudentsViewModel GetStudents(Int64 classId, string loginToken);
     }
 }
