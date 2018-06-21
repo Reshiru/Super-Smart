@@ -25,5 +25,12 @@ namespace SuperSmart.Core.Data.ViewModels
         /// </summary>
         [Required(ErrorMessage = "Please enter the time when the education started")]
         public DateTime Started { get; set; }
+
+        /// <summary>
+        /// The Number of the Education Years
+        /// </summary>
+        [Required(ErrorMessage = "Please enter a number of education years")]
+        [Range(1, Int64.MaxValue, ErrorMessage = "Please enter a number of education years")]
+        public Int64 NumberOfEducationYears { get; set; }
     }
 }

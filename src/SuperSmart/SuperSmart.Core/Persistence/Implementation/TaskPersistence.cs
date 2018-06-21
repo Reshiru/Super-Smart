@@ -157,37 +157,6 @@ namespace SuperSmart.Core.Persistence.Implementation
         }
 
         /// <summary>
-        /// Has account rights to manage task
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="loginToken"></param>
-        public bool HasAccountRightsForTask(Int64 id, string loginToken)
-        {
-            Guard.NotNullOrEmpty(loginToken);
-
-            using (var db = new SuperSmartDb())
-            {
-                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
-
-                if (account == null)
-                {
-                    throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
-                }
-
-                var task = db.Tasks.SingleOrDefault(t => t.Id == id);
-
-                if (task == null)
-                {
-                    throw new PropertyExceptionCollection(nameof(task), "Task not found");
-                }
-
-                var hasPermissions = task.Owner == account && task.Subject.TeachingClass.Admin == account;
-
-                return hasPermissions;
-            }
-        }
-
-        /// <summary>
         /// Switches the state from a task
         /// </summary>
         /// <param name="taskId"></param>
@@ -273,7 +242,8 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 var config = new MapperConfiguration(cfg =>
                 {
-                    cfg.CreateMap<Task, TaskViewModel>();
+                    cfg.CreateMap<Task, TaskViewModel>()
+                       .ForMember(vm => vm.IsOwner, map => map.MapFrom(m => m.Owner == account));
                 });
 
                 IMapper mapper = config.CreateMapper();

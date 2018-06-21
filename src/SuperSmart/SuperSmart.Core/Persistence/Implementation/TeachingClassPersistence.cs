@@ -129,6 +129,7 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 teachingClass.Designation = manageTeachingClassViewModel.Designation;
                 teachingClass.Started = manageTeachingClassViewModel.Started;
+                teachingClass.NumberOfEducationYears = manageTeachingClassViewModel.NumberOfEducationYears;
 
                 db.SaveChanges();
             }
@@ -345,7 +346,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 if (teachingClass == null)
                 {
                     throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
-                }             
+                }
 
                 var accounts = GetAccountMapper().Map<List<AccountViewModel>>(teachingClass.AssignedAccounts);
 

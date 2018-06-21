@@ -1,18 +1,29 @@
 ﻿@model CreateTaskViewModel
 
-@using (Html.BeginForm("Create", "Task"))
-{
-    @Html.AntiForgeryToken()
+<div id="createClassWrap" class="centerMiddleWrap">
+    <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+        <h4>Create new task</h4>
+        @using (Html.BeginForm("Create", "Task"))
+        {
+            @Html.AntiForgeryToken()
 
-    @Html.HiddenFor(m => m.SubjectId)
+            @Html.HiddenFor(m => m.SubjectId)
 
-    @Html.LabelFor(m => m.Designation)
-    @Html.TextBoxFor(m => m.Designation)
-    @Html.ValidationMessageFor(m => m.Designation)
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Designation, new { @class = "mdl-textfield__input", id = "Designation", required = "true" })
+                <label class="mdl-textfield__label" for="Designation">Designation</label>
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Designation)</span>
+            </div>
 
-    @Html.LabelFor(m => m.Finished)
-    @Html.TextBoxFor(m => m.Finished, new { type = "Date" })
-    @Html.ValidationMessageFor(m => m.Finished)
-    
-    <input type="submit" value="Submit" />
-}
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Finished, new { @class = "mdl-textfield__input", id = "Finished", required = "true", type = "date" })
+                <label class="mdl-textfield__label" for="Designation">Finished</label>
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Finished)</span>
+            </div>
+
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                Add
+            </button>
+        }
+    </div>
+</div>

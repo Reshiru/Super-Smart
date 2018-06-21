@@ -30,7 +30,12 @@ namespace SuperSmart.Core.Data.ViewModels
         /// The State of the Task
         /// </summary>
         public TaskStatus Status { get; set; }
-        
+
+        /// <summary>
+        /// Is owner of the Task
+        /// </summary>
+        public bool IsOwner { get; set; }
+
         /// <summary>
         /// Displaying when the Task is finished
         /// </summary>

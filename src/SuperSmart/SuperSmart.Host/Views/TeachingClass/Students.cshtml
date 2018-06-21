@@ -9,7 +9,7 @@
 <div class="mdl-grid">
     <div class="mdl-cell mdl-cell--2-col"></div>
 
-    <div class="mdl-cell mdl-cell--8-col mdl-shadow--4dp">
+    <div class="mdl-cell mdl-cell--8-col mdl-shadow--4dp table-wrap">
         <h3>Students</h3>
 
         <h4>Link to join this class: @(this.Request.Url.Scheme + "://" + this.Request.Url.Authority + "/TeachingClass" + Url.Action("Join", new { referral = Model.Referral }))</h4>

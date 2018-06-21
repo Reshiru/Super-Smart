@@ -96,7 +96,7 @@ namespace SuperSmart.Host.Controllers
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
 
-            return RedirectToAction(nameof(Overview), subjectId);
+            return RedirectToAction(nameof(Overview),new { @subjectId = subjectId });
         }
     }
 }

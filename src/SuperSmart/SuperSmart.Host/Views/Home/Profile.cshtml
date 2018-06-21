@@ -9,19 +9,19 @@
             @Html.HiddenFor(m => m.Id)
 
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                @Html.TextBoxFor(m => m.Firstname, new { @class = "mdl-textfield__input", id = "Firstname" })
+                @Html.TextBoxFor(m => m.Firstname, new { @class = "mdl-textfield__input", id = "Firstname", required = "true" })
                 <label class="mdl-textfield__label" for="Designation">Firstname</label>
                 <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Firstname)</span>
             </div>
 
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                @Html.TextBoxFor(m => m.Lastname, new { @class = "mdl-textfield__input", id = "Lastname" })
+                @Html.TextBoxFor(m => m.Lastname, new { @class = "mdl-textfield__input", id = "Lastname", required = "true" })
                 <label class="mdl-textfield__label" for="Designation">Lastname</label>
                 <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Lastname)</span>
             </div>
 
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                @Html.TextBoxFor(m => m.Email, new { @class = "mdl-textfield__input", id = "Email" })
+                @Html.TextBoxFor(m => m.Email, new { @class = "mdl-textfield__input", id = "Email", required = "true" })
                 <label class="mdl-textfield__label" for="Designation">Email</label>
                 <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Email)</span>
             </div>

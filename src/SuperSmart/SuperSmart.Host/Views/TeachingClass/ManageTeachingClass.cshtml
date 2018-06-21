@@ -1,18 +1,34 @@
 ﻿@model ManageTeachingClassViewModel
 
-@using (Html.BeginForm("Manage", "TeachingClass"))
-{
-    @Html.AntiForgeryToken()
+<div id="createClassWrap" class="centerMiddleWrap">
+    <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+        <h4>Edit class</h4>
+        @using (Html.BeginForm("Manage", "TeachingClass"))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
 
-    @Html.HiddenFor(m => m.Id)
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Designation, new { @class = "mdl-textfield__input", id = "Designation", required = "true" })
+                <label class="mdl-textfield__label" for="Designation">Designation</label>
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Designation)</span>
+            </div>
 
-    @Html.LabelFor(m => m.Designation)
-    @Html.TextBoxFor(m => m.Designation)
-    @Html.ValidationMessageFor(m => m.Designation)
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.NumberOfEducationYears, new { @class = "mdl-textfield__input", id = "NumberOfEducationYears", required = "true" })
+                <label class="mdl-textfield__label" for="NumberOfEducationYears">Years of Education</label>
+                <span class="mdl-textfield__error">Input is not a number!</span>
+            </div>
 
-    @Html.LabelFor(m => m.Started)
-    @Html.TextBoxFor(m => m.Started, new { type = "date" })
-    @Html.ValidationMessageFor(m => m.Started)
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Started, new { @class = "mdl-textfield__input", id = "Started", required = "true", type = "date" })
+                <label class="mdl-textfield__label" for="Started">Start date</label>
+                <span class="mdl-textfield__error">Input is not a date!</span>
+            </div>
 
-    <input type="submit" value="Submit" />
-}
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                Save
+            </button>
+        }
+    </div>
+</div>

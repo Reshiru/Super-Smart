@@ -39,13 +39,6 @@ namespace SuperSmart.Core.Persistence.Interface
         void InvertTaskStatus(Int64 taskId, string loginToken);
 
         /// <summary>
-        /// Has accoutn rights to manage task
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="loginToken"></param>
-        bool HasAccountRightsForTask(Int64 id, string loginToken);
-
-        /// <summary>
         /// Get Overview of tasks
         /// </summary>
         /// <param name="loginToken"></param>
