@@ -4,12 +4,52 @@
     ViewBag.Title = "Class Overview";
 }
 
+
+
+<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+    <thead>
+        <tr>
+            <th class="mdl-data-table__cell--non-numeric">Designation</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Subjects)
+        {
+            <tr>
+                <td class="mdl-data-table__cell--non-numeric">@item.Designation</td>
+                <td>
+                    <a href="@Url.Action("Manage",new {subjectId = item.Id })"><i class="material-icons">edit</i></a>
+
+
+                    <a href="@Url.Action("Overview","Subject",new {classId =item.Id })"><i class="material-icons">visibility</i></a>
+                    <a href="@Url.Action("Create","Subject",new {classId =item.Id })"><i class="material-icons">add</i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@if (Model.IsClassAdmin)
+{
+    <button onclick="location.href='/Subject/Create'" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+        <i class="material-icons">add</i>
+    </button>
+}
+
+
+
+
+
+
+
+
+
+
 @using (Html.BeginForm("Overview", "Subject"))
 {
-    if (Model.IsClassAdmin)
-    {
-        @Html.ActionLink("Create new task", "Create", "TeachingClass")
-    }
+
 
     <box class="no-padding w-60 float-left">
         <table class="clean-table">
@@ -25,7 +65,7 @@
                         @Html.DisplayFor(modelItem => item.Designation)
                     </td>
                     <td>
-                        <a href="@Url.Action("Manage",new {subjectId = item.Id })"><i title="Manage Class" class="fa fa-pencil"></i></a>
+                        
                     </td>
                     <td>
                         <a href="@Url.Action("Overview","Task",new {subjectId =item.Id })"><i title="Task Overview" class="fa fa-globe"></i></a>
