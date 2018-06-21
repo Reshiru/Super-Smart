@@ -112,6 +112,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder\DocumentBuilder.cs" />
     <Compile Include="Builder\AccountBuilder.cs" />
     <Compile Include="Builder\AppointmentBuilder.cs" />
     <Compile Include="Builder\DatabaseBuilder.cs" />

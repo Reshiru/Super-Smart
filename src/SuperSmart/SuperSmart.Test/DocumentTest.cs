@@ -6,6 +6,7 @@ using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Test.Builder;
 using System;
+using System.Linq;
 
 namespace SuperSmart.Test
 {
@@ -59,6 +60,7 @@ namespace SuperSmart.Test
                 Assert.IsTrue(false, ex?.Message);
             }
         }
+
 
         [TestMethod]
         public void CreateDocumentWithNullParameterPropertyException()
@@ -121,6 +123,49 @@ namespace SuperSmart.Test
             catch (Exception ex)
             {
                 Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void OverviewDocumentSucceed()
+        {
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                        .WithSubject(subject)
+                                        .Build();
+
+            var document = new DocumentBuilder().WithOwner(account)
+                                                .WithTask(task)
+                                                .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithTask(task)
+                                 .WithDocument(document)
+                                 .Build();
+
+            try
+            {
+                OverviewDocumentViewModel vm = documentPersistence.GetOverview(task.Id, account.LoginToken);
+
+                if (vm.Documents.Any(d => d.IsOwner))
+                    Assert.IsTrue(true);
+                else
+                    Assert.IsTrue(false, "User is not owner of document");
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(false, ex?.Message);
             }
         }
     }
