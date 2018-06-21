@@ -5,6 +5,7 @@ using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Helper;
 using SuperSmart.Core.Persistence.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -55,6 +56,42 @@ namespace SuperSmart.Core.Persistence.Implementation
                 db.TeachingClasses.Add(teachingClass);
 
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// Get teaching class to manage
+        /// </summary>
+        /// <param name="teachingClassId"></param>
+        /// <param name="loginToken"></param>
+        public ManageTeachingClassViewModel GetManagedTeachingClass(Int64 teachingClassId, string loginToken)
+        {
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                }
+
+                var teachingClass = db.TeachingClasses.SingleOrDefault(s => s.Id == teachingClassId);
+
+                if (teachingClass == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
+                }
+
+                if (teachingClass.Admin != account)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "User has no permissions to manage class");
+                }
+
+                var manageTeachingClassViewModel = this.GetTeachingClassManageMapper().Map<ManageTeachingClassViewModel>(teachingClass);
+
+                return manageTeachingClassViewModel;
             }
         }
 
@@ -281,6 +318,20 @@ namespace SuperSmart.Core.Persistence.Implementation
                 cfg.CreateMap<TeachingClass, TeachingClassViewModel>();
             }).CreateMapper();
             
+            return mapper;
+        }
+
+        /// <summary>
+        /// Map teaching class to manage teaching class view model
+        /// </summary>
+        /// <returns></returns>
+        private IMapper GetTeachingClassManageMapper()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<TeachingClass, ManageTeachingClassViewModel>();
+            }).CreateMapper();
+
             return mapper;
         }
     }

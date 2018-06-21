@@ -71,6 +71,7 @@ namespace SuperSmart.Core.Persistence.Implementation
 
             using (var db = new SuperSmartDb())
             {
+
                 if (db.Accounts.SingleOrDefault(a => a.Email == registerViewModel.Email.ToLower()) != null)
                 {
                     throw new PropertyExceptionCollection(nameof(registerViewModel.Email), "This email address is already in use");

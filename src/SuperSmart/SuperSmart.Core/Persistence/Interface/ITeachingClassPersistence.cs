@@ -1,4 +1,5 @@
 ﻿using SuperSmart.Core.Data.ViewModels;
+using System;
 
 namespace SuperSmart.Core.Persistence.Interface
 {
@@ -13,6 +14,13 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="createTeachingClassViewModel"></param>
         /// <param name="loginToken"></param>
         void Create(CreateTeachingClassViewModel createTeachingClassViewModel, string loginToken);
+
+        /// <summary>
+        /// Get teaching class to manage
+        /// </summary>
+        /// <param name="teachingClassId"></param>
+        /// <param name="loginToken"></param>
+        ManageTeachingClassViewModel GetManagedTeachingClass(Int64 teachingClassId, string loginToken);
 
         /// <summary>
         /// Changes properties from a given teaching class

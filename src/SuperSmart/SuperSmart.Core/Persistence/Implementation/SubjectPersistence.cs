@@ -78,7 +78,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// <summary>
         /// Get subject to manage
         /// </summary>
-        /// <param name="documentId"></param>
+        /// <param name="subjectId"></param>
         /// <param name="loginToken"></param>
         public ManageSubjectViewModel GetManagedSubject(Int64 subjectId, string loginToken)
         {
@@ -216,7 +216,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// Map subjects to manage subject view model
         /// </summary>
         /// <returns></returns>
-        public IMapper GetSubjectManageMapper()
+        private IMapper GetSubjectManageMapper()
         {
             var mapper = new MapperConfiguration(cfg =>
             {

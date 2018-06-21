@@ -4,70 +4,43 @@
     ViewBag.Title = "Class Overview";
 }
 
-<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
-    <thead>
-        <tr>
-            <th class="mdl-data-table__cell--non-numeric">Designation</th>
-            <th>Started</th>
-            <th>Number of years</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.TeachingClasses)
-        {
-            <tr>
-                <td class="mdl-data-table__cell--non-numeric">@item.Designation</td>
-                <td>@item.Started</td>
-                <td>@item.NumberOfEducationYears</td>
-                <td>
-                    <a href="@Url.Action("Manage",new {teachingClassId =item.Id })"><i class="material-icons">edit</i></a>
-                    <a href="@Url.Action("Overview","Subject",new {classId =item.Id })"><i class="material-icons">visibility</i></a>
-                    <a href="@Url.Action("Create","Subject",new {classId =item.Id })"><i class="material-icons">add</i></a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--2-col"></div>
 
-<button onclick="location.href='/TeachingClass/Create'" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-    <i class="material-icons">add</i>
-</button>
-@Html.ActionLink("Create new class", "Create", "TeachingClass")
+    <div id="teachingClassTableWrap" class="mdl-cell mdl-cell--8-col mdl-shadow--4dp">
+        <h3>Classes</h3>
+
+        <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-cell--12-col">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Designation</th>
+                    <th>Started</th>
+                    <th>Number of years</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.TeachingClasses)
+                {
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">@item.Designation</td>
+                        <td>@item.Started</td>
+                        <td>@item.NumberOfEducationYears</td>
+                        <td>
+                            <a href="@Url.Action("Manage",new {teachingClassId =item.Id })"><i class="material-icons">edit</i></a>
+                            <a href="@Url.Action("Overview","Subject",new {classId =item.Id })"><i class="material-icons">visibility</i></a>
+                            <a href="@Url.Action("Create","Subject",new {classId =item.Id })"><i class="material-icons">add</i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <button onclick="location.href='/TeachingClass/Create'" id="add-button" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+            <i class="material-icons">add</i>
+        </button>
+
+    </div>
+</div>
 
 
-<box class="no-padding w-60 float-left">
-    <table class="clean-table">
-        <tr>
-            <th>Designation</th>
-            <th>Started</th>
-            <th>NumberOfEducationYears</th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model.TeachingClasses)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Designation)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Started)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumberOfEducationYears)
-                </td>
-                <td>
-                    <a href="@Url.Action("Manage",new {teachingClassId =item.Id })"><i title="Manage Class" class="fa fa-pencil"></i></a>
-                </td>
-                <td>
-                    <a href="@Url.Action("Overview","Subject",new {classId =item.Id })"><i title="Subject Overview" class="fa fa-globe"></i></a>
-                </td>
-                <td>
-                    <a href="@Url.Action("Create","Subject",new {classId =item.Id })"><i title="Add Subject" class="fa fa-plus"></i></a>
-                </td>
-
-            </tr>
-        }
-    </table>
-</box>
