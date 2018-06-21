@@ -48,17 +48,25 @@ namespace SuperSmart.Host.Controllers
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
-            return Redirect(Request?.UrlReferrer?.ToString() ?? "/");
+            return View("OverviewTeachingClass");
         }
 
 
         [HttpGet]
         public ActionResult Manage(int teachingClassId)
         {
-            return View("ManageTeachingClass", new ManageTeachingClassViewModel()
+            ManageTeachingClassViewModel vm = new ManageTeachingClassViewModel();
+
+            try
             {
-                Id = teachingClassId
-            });
+                vm = teachingClassPersistence.GetManagedTeachingClass(teachingClassId, this.User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+
+            return View("ManageTeachingClass", vm);
         }
 
         [HttpPost]
