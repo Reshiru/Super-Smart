@@ -97,15 +97,15 @@ namespace SuperSmart.Core.Persistence.Implementation
                 var subject = db.Subjects.Include(s => s.TeachingClass)
                                          .ThenInclude(t => t.AssignedAccounts)
                                          .SingleOrDefault(itm => itm.Id == manageSubjectViewModel.Id);
+                
+                if (subject == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(subject), "Subject not found");
+                }
 
                 if (!subject.TeachingClass.AssignedAccounts.Contains(account))
                 {
                     throw new PropertyExceptionCollection(nameof(loginToken), "No permissions granted");
-                }
-
-                if (subject == null)
-                {
-                    throw new PropertyExceptionCollection(nameof(subject), "Subject not found");
                 }
 
                 subject.Designation = manageSubjectViewModel.Designation;
