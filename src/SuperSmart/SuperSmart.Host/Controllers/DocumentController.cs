@@ -37,6 +37,7 @@ namespace SuperSmart.Host.Controllers
                     createDocumentViewModel.FileUpload.InputStream.CopyTo(target);
                     createDocumentViewModel.File = target.ToArray();
                     createDocumentViewModel.FileName = createDocumentViewModel.FileUpload.FileName;
+                    createDocumentViewModel.ContentType = createDocumentViewModel.FileUpload.ContentType;
                 }
                 else
                 {
@@ -50,7 +51,7 @@ namespace SuperSmart.Host.Controllers
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
-            return View("CreateDocument");
+            return RedirectToAction("OverviewDocument", new { taskId = createDocumentViewModel.TaskId});
         }
 
         [HttpGet]
@@ -64,7 +65,15 @@ namespace SuperSmart.Host.Controllers
         [HttpGet]
         public FileResult Download(Int64 documentId)
         {
-            // Rechte check und FileDownload einbauen
+            try
+            {
+                DocumentViewModel document = documentPersistence.GetDocument(documentId, this.User.Identity.Name);
+                return File(document.File, document.ContentType, document.Filename);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
             return null;
         }
     }
