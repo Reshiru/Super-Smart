@@ -317,8 +317,7 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 var overviewTeachingClassViewModel = new OverviewTeachingClassViewModel()
                 {
-                    TeachingClasses = mappedTeachingClasses,
-
+                    TeachingClasses = mappedTeachingClasses,                                          
                 };
 
                 return overviewTeachingClassViewModel;

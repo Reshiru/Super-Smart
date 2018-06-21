@@ -271,13 +271,27 @@ main {
 
     }
 
-
 .mdl-button--accent.mdl-button--accent.mdl-button--raised, .mdl-button--accent.mdl-button--accent.mdl-button--fab{
     float:left;
     margin:10px 0 10px 10px;
 }
 
 
+#teachingClassTableWrap{
+    padding: 0 15px 15px 15px;
+}
 
+#teachingClassTableWrap #add-button {
+    float: right;
+    margin-right: 22px;
+    margin-top: 10px;
+}
 
-   
+#teachingClassTableWrap h3{
+    padding-left:40px;
+}
+
+#add-ClassButtonIndex{
+    margin-left: 15px;
+    margin-bottom:20px;
+}

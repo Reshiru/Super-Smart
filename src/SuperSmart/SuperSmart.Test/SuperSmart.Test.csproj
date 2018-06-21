@@ -121,6 +121,8 @@
     <Compile Include="Builder\TeachingClassBuilder.cs" />
     <Compile Include="DocumentTest.cs" />
     <Compile Include="DashboardTest.cs" />
+    <Compile Include="ExtensionTest.cs" />
+    <Compile Include="GuardTest.cs" />
     <Compile Include="SubjectTest.cs" />
     <Compile Include="TaskTest.cs" />
     <Compile Include="UserTests.cs" />

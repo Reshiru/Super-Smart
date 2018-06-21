@@ -188,41 +188,44 @@ namespace SuperSmart.Core.Persistence.Implementation
         }
 
         /// <summary>
-        /// Save status of a task
+        /// Switches the state from a task
         /// </summary>
-        /// <param name="saveTaskStatusViewModel"></param>
-        public void SaveTaskStatus(SaveTaskStatusViewModel saveTaskStatusViewModel)
+        /// <param name="taskId"></param>
+        /// <param name="loginToken"></param>
+        public void InvertTaskStatus(Int64 taskId, string loginToken)
         {
-            Guard.ModelStateCheck(saveTaskStatusViewModel);
-
             using (var db = new SuperSmartDb())
             {
-                Account account = db.Accounts.SingleOrDefault(itm => itm.Id == saveTaskStatusViewModel.AccountId);
+                var account = db.Accounts.SingleOrDefault(itm => itm.LoginToken == loginToken);
 
                 if (account == null)
                 {
                     throw new PropertyExceptionCollection(nameof(account), "Account not found");
                 }
 
-                var task = db.Tasks.SingleOrDefault(itm => itm.Id == saveTaskStatusViewModel.TaskId);
+                var task = db.Tasks.SingleOrDefault(itm => itm.Id == taskId);
 
                 if (task == null)
                 {
                     throw new PropertyExceptionCollection(nameof(task), "Task not found");
                 }
 
-                var accountTask = db.AccountTask.SingleOrDefault(itm => itm.Account == account && itm.Task == task);
+                var accountTask = db.AccountTask.Include(t => t.Account)
+                                                .Include(t => t.Task)
+                                                .SingleOrDefault(itm => itm.Account == account && itm.Task == task);
 
                 if (accountTask == null)
                 {
-                    accountTask = new AccountTask();
-                    db.AccountTask.Add(accountTask);
+                    accountTask = new AccountTask()
+                    {
+                        Account = account,
+                        Task = task
+                    };
 
-                    accountTask.Account = account;
-                    accountTask.Task = task;
+                    db.AccountTask.Add(accountTask);
                 }
 
-                accountTask.Status = saveTaskStatusViewModel.Status;
+                accountTask.Status = accountTask.Status == TaskStatus.ToDo ? TaskStatus.Done : TaskStatus.ToDo;
 
                 db.SaveChanges();
             }

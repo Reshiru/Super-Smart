@@ -18,6 +18,7 @@ namespace SuperSmart.Host.Controllers
         {
             return View("Register");
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Register(RegisterViewModel registerViewModel)

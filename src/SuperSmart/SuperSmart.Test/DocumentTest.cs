@@ -400,7 +400,7 @@ namespace SuperSmart.Test
             {
                 var downloadDocumentViewModel = documentPersistence.Download(document.Id, account.LoginToken);
                 
-                Assert.IsTrue(downloadDocumentViewModel.File == document.File);
+                Assert.IsTrue(downloadDocumentViewModel.File.SequenceEqual(document.File));
             }
             catch (Exception ex)
             {
