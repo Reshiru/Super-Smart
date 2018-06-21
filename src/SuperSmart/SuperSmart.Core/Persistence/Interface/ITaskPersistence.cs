@@ -18,6 +18,13 @@ namespace SuperSmart.Core.Persistence.Interface
         void Create(CreateTaskViewModel createTaskViewModel, string loginToken);
 
         /// <summary>
+        /// Get task to manage
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="loginToken"></param>
+        ManageTaskViewModel GetManagedTask(Int64 taskId, string loginToken);
+
+        /// <summary>
         /// Changes properties from a given task
         /// </summary>
         /// <param name="manageTaskViewModel"></param>

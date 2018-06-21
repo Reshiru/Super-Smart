@@ -46,22 +46,21 @@ namespace SuperSmart.Host.Controllers
 
 
         [HttpGet]
-        public ActionResult Manage(int taskId)
+        public ActionResult Manage(Int64 taskId)
         {
+            ManageTaskViewModel vm = new ManageTaskViewModel();
+
             try
             {
-                if (!taskPersistence.HasAccountRightsForTask(taskId, this.User.Identity.Name))
-                    throw new PropertyExceptionCollection(nameof(taskId), "User has no rights to manage task");
+
+                vm = taskPersistence.GetManagedTask(taskId, this.User.Identity.Name);
             }
             catch (Exception ex)
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
 
-            return View("ManageTask", new ManageTaskViewModel()
-            {
-                TaskId = taskId
-            });
+            return View("ManageTask", vm);
         }
 
         [HttpPost]

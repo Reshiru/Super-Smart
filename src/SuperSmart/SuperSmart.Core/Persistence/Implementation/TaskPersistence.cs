@@ -71,6 +71,42 @@ namespace SuperSmart.Core.Persistence.Implementation
         }
 
         /// <summary>
+        /// Get task to manage
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="loginToken"></param>
+        public ManageTaskViewModel GetManagedTask(Int64 taskId, string loginToken)
+        {
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                }
+
+                var task = db.Tasks.SingleOrDefault(s => s.Id == taskId);
+
+                if (task == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(task), "Task not found");
+                }
+
+                if (task.Owner != account)
+                {
+                    throw new PropertyExceptionCollection(nameof(task), "User has no permissions to manage task");
+                }
+
+                var manageTaskViewModel = this.GetTaskManageMapper().Map<ManageTaskViewModel>(task);
+
+                return manageTaskViewModel;
+            }
+        }
+
+        /// <summary>
         /// Changes properties from a given task
         /// </summary>
         /// <param name="manageTaskViewModel"></param>
@@ -254,6 +290,20 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 return overviewTaskViewModel;
             }
+        }
+
+        /// <summary>
+        /// Map task to manage task view model
+        /// </summary>
+        /// <returns></returns>
+        private IMapper GetTaskManageMapper()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Task, ManageTaskViewModel>();
+            }).CreateMapper();
+
+            return mapper;
         }
     }
 }
