@@ -12,6 +12,7 @@ namespace SuperSmart.Core.Data.Implementation
         /// <summary>
         /// The database generated identifier
         /// </summary>
+        /// ToDo: replace with int64
         public int Id { get; set; }
 
         /// <summary>

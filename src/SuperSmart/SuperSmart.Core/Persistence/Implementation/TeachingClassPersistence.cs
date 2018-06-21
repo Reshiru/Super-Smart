@@ -221,7 +221,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// </summary>
         /// <param name="id"></param>
         /// <param name="loginToken"></param>
-        public void Delete(int id, string loginToken)
+        public void Delete(Int64 id, string loginToken)
         {
             Guard.NotNullOrEmpty(loginToken);
 
@@ -257,7 +257,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// </summary>
         /// <param name="id">teaching class id</param>
         /// <param name="loginToken"></param>
-        public void ChangeReferral(int id, string loginToken)
+        public void ChangeReferral(Int64 id, string loginToken)
         {
             Guard.NotNullOrEmpty(loginToken);
 
