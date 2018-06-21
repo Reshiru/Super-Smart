@@ -1,4 +1,5 @@
 ﻿using SuperSmart.Core.Data.ViewModels;
+using System;
 
 namespace SuperSmart.Core.Persistence.Interface
 {
@@ -21,5 +22,19 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="createTaskViewModel"></param>
         /// <param name="loginToken"></param>
         void Delete(int id, string loginToken);
+
+        /// <summary>
+        /// Get Document Overview for a given task
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="loginToken"></param>
+        OverviewDocumentViewModel GetOverview(Int64 taskId, string loginToken);
+        
+        /// <summary>
+        /// Get document to download
+        /// </summary>
+        /// <param name="documentId"></param>
+        /// <param name="loginToken"></param>
+        DownloadDocumentViewModel Download(Int64 documentId, string loginToken);
     }
 }

@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace SuperSmart.Core.Data.ViewModels
 {
-    public class OverviewSubjectViewModel
+    public class OverviewDocumentViewModel
     {
-
-        public List<SubjectViewModel> Subjects { get; set; }
-
-        public bool IsClassAdmin { get; set; }
+        public List<DocumentViewModel> Documents { get; set; }
     }
 }

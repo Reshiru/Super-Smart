@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace SuperSmart.Core.Data.ViewModels
 {
-    public class OverviewSubjectViewModel
+    public class DownloadDocumentViewModel
     {
-
-        public List<SubjectViewModel> Subjects { get; set; }
-
-        public bool IsClassAdmin { get; set; }
+        public string FileName { get; set; }
+        public byte[] File { get; set; }
+        public string ContentType { get; set; }
     }
 }

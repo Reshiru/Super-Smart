@@ -150,7 +150,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 return hasPermissions;
             }
         }
-        
+
         /// <summary>
         /// Save status of a task
         /// </summary>
@@ -238,14 +238,12 @@ namespace SuperSmart.Core.Persistence.Implementation
                 });
 
                 IMapper mapper = config.CreateMapper();
-                
-                List<TaskViewModel> tasks = mapper.Map<List<TaskViewModel>>(tasksQuery);
 
-                ITaskPersistence taskPersistence = new TaskPersistence();
+                List<TaskViewModel> tasks = mapper.Map<List<TaskViewModel>>(tasksQuery);
 
                 tasks.ForEach(itm =>
                 {
-                    itm.Status = taskPersistence.GetTaskStatus(itm.Id, account.Id);
+                    itm.Status = this.GetTaskStatus(itm.Id, account.Id);
                 });
 
                 var overviewTaskViewModel = new OverviewTaskViewModel()

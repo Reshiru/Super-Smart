@@ -4,12 +4,12 @@ using System.Collections.Generic;
 namespace SuperSmart.Core.Data.Implementation
 {
     /// <summary>
-    /// A task for a subject which is created by an account
+    /// Represents a task database entry
     /// </summary>
     public class Task
     {
         /// <summary>
-        /// The dataabse generated identifier for the task
+        /// The database generated identifier for the task
         /// </summary>
         public Int64 Id { get; set; }
 

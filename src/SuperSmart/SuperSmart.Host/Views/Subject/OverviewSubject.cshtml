@@ -6,6 +6,11 @@
 
 @using (Html.BeginForm("Overview", "Subject"))
 {
+    if (Model.IsClassAdmin)
+    {
+        @Html.ActionLink("Create new task", "Create", "TeachingClass")
+    }
+
     <box class="no-padding w-60 float-left">
         <table class="clean-table">
             <tr>

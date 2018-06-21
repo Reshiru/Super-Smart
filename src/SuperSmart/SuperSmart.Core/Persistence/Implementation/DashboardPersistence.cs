@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
@@ -35,51 +36,67 @@ namespace SuperSmart.Core.Persistence.Implementation
                 {
                     throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
                 }
-
-                var appointmentsQuery = from appointment in db.Appointments
-                                        where appointment.Subject.TeachingClass.AssignedAccounts.Any(itm => itm.LoginToken == loginToken)
-                                        select appointment;
-
-                var taskQuery = from task in db.Tasks
-                                where task.Subject.TeachingClass.AssignedAccounts.Any(itm => itm.LoginToken == loginToken) &&
-                                task.Finished > DateTime.Now &&
-                                task.Finished < DateTime.Now.AddDays(7)
-                                select task;
-
-                var config = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<Appointment, DashboardAppointmentViewModel>()
-                     .ForMember(vm => vm.Classroom, map => map.MapFrom(m => m.Classroom))
-                     .ForMember(vm => vm.From, map => map.MapFrom(m => m.From))
-                     .ForMember(vm => vm.Until, map => map.MapFrom(m => m.Until))
-                     .ForMember(vm => vm.SubjectId, map => map.MapFrom(m => m.Subject.Id))
-                     .ForMember(vm => vm.Day, map => map.MapFrom(m => m.Day));
-
-                    cfg.CreateMap<Task, DashboardTaskViewModel>()
-                     .ForMember(vm => vm.Designation, map => map.MapFrom(m => m.Designation))
-                     .ForMember(vm => vm.Finished, map => map.MapFrom(m => m.Finished))
-                     .ForMember(vm => vm.SubjectName, map => map.MapFrom(m => m.Subject.Designation))
-                     .ForMember(vm => vm.TaskId, map => map.MapFrom(m => m.Id));
-                });
-
-                IMapper mapper = config.CreateMapper();
-
-                List<DashboardAppointmentViewModel> appointments = mapper.Map<List<DashboardAppointmentViewModel>>(appointmentsQuery);
-                List<DashboardTaskViewModel> tasks = mapper.Map<List<DashboardTaskViewModel>>(taskQuery);
                 
-                tasks.ForEach(itm =>
-                {
-                    itm.Status = taskPersistence.GetTaskStatus(itm.TaskId, account.Id);
-                });
+                var appointments = db.Appointments.Include(a => a.Subject)
+                                                  .ThenInclude(s => s.TeachingClass)
+                                                  .ThenInclude(t => t.AssignedAccounts)
+                                                  .Where(appointment => appointment.Subject.TeachingClass.AssignedAccounts
+                                                        .Any(itm => itm.LoginToken == loginToken));
+
+                var tasks = db.Tasks.Include(t => t.Subject)
+                                    .ThenInclude(s => s.TeachingClass)
+                                    .ThenInclude(t => t.AssignedAccounts)
+                                    .Where(task => task.Subject.TeachingClass.AssignedAccounts
+                                        .Any(itm => itm.LoginToken == loginToken) && 
+                                            task.Finished > DateTime.Now && task.Finished < DateTime.Now.AddDays(7) && task.Active);
+
+
+                var convertedAppointments = GetDashboardAppointmentMapper().Map<List<DashboardAppointmentViewModel>>(appointments);
+                var convertedTasks = GetDashboardTaskMapper(account.Id).Map<List<DashboardTaskViewModel>>(tasks);
 
                 var dashboardViewModel = new DashboardViewModel()
                 {
-                    Appointments = appointments,
-                    Tasks = tasks
+                    Appointments = convertedAppointments,
+                    Tasks = convertedTasks
                 };
 
                 return dashboardViewModel;
             }
+        }
+
+        /// <summary>
+        /// Gets the mapper to map an appointment to a dashboard 
+        /// appointment view model
+        /// </summary>
+        /// <returns></returns>
+        private IMapper GetDashboardAppointmentMapper()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Appointment, DashboardAppointmentViewModel>()
+                 .ForMember(vm => vm.SubjectId, map => map.MapFrom(m => m.Subject.Id));
+            }).CreateMapper();
+
+            return mapper;
+        }
+
+        /// <summary>
+        /// Gets the mapper to map an task to a dashboard 
+        /// task view model
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <returns></returns>
+        private IMapper GetDashboardTaskMapper(long accountId)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Task, DashboardTaskViewModel>()
+                 .ForMember(vm => vm.SubjectName, map => map.MapFrom(m => m.Subject.Designation))
+                 .ForMember(vm => vm.TaskId, map => map.MapFrom(m => m.Id))
+                 .ForMember(vm => vm.Status, map => map.MapFrom(task => taskPersistence.GetTaskStatus(task.Id, accountId)));
+            }).CreateMapper();
+
+            return mapper;
         }
     }
 }

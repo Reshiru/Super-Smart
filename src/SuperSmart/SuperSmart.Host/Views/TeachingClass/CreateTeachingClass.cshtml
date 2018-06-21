@@ -13,7 +13,7 @@
     @Html.ValidationMessageFor(m => m.NumberOfEducationYears)
 
     @Html.LabelFor(m => m.Started)
-    @Html.TextBoxFor(m => m.Started)
+    @Html.TextBoxFor(m => m.Started, new { type = "date" })
     @Html.ValidationMessageFor(m => m.Started)
 
     <input type="submit" value="Submit" />

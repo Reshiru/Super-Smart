@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using SuperSmart.Core.Data.Enumeration;
 
 namespace SuperSmart.Core.Data.Implementation
 {
+    /// <summary>
+    /// Represents a teaching class database entry
+    /// </summary>
     public class TeachingClass
     {
+        /// <summary>
+        /// Initializes a new instance for a teaching class
+        /// </summary>
         public TeachingClass()
         {
             this.Subjects = new List<Subject>();

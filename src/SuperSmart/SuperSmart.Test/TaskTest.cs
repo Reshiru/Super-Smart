@@ -15,7 +15,7 @@ namespace SuperSmart.Test
         ITaskPersistence taskPersistence = new TaskPersistence();
 
         [TestMethod]
-        public void AddNullTaskThrowPropertyExceptionCollection()
+        public void CreateTaskNullParameterThrowPropertyExceptionCollection()
         {
             new DatabaseBuilder().WithSecureDatabaseDeleted(true)
                                  .Build();
@@ -33,7 +33,7 @@ namespace SuperSmart.Test
         }
 
         [TestMethod]
-        public void AddNullLoginTokenTaskThrowPropertyExceptionCollection()
+        public void CreateTaskNullLoginTokenThrowPropertyExceptionCollection()
         {
             var designation = "Test task";
             var finished = DateTime.Now.AddDays(10);
@@ -139,6 +139,87 @@ namespace SuperSmart.Test
         }
 
         [TestMethod]
+        public void ManageTaskSucceedInvalidTaskIdThrowPropertyExceptionCollection()
+        {
+            var designation = "Test";
+            var finished = DateTime.Now.AddDays(4);
+            var invalidTaskId = 1;
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .Build();
+
+            try
+            {
+                taskPersistence.Manage(new ManageTaskViewModel()
+                {
+                    Designation = designation,
+                    TaskId = invalidTaskId,
+                    Finished = finished,
+                }, account.LoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void ManageTaskSucceedInvalidLoginTokenThrowPropertyExceptionCollection()
+        {
+            var designation = "Test";
+            var finished = DateTime.Now.AddDays(4);
+            var invalidLoginToken = "loginToken";
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                           .WithSubject(subject)
+                                           .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithTask(task)
+                                 .Build();
+
+            try
+            {
+                taskPersistence.Manage(new ManageTaskViewModel()
+                {
+                    Designation = designation,
+                    TaskId = task.Id,
+                    Finished = finished,
+                }, invalidLoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
         public void SaveValidTaskStatusTest()
         {
             var state = TaskStatus.Done;
@@ -180,6 +261,93 @@ namespace SuperSmart.Test
             catch (Exception ex)
             {
                 Assert.IsTrue(false, ex?.Message);
+            }
+        }
+
+        [TestMethod]
+        public void SaveTaskStatusInvalidTaskIdThrowPropertyExceptionCollection()
+        {
+            var state = TaskStatus.Done;
+            var invalidTaskId = 1;
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var appointment = new AppointmentBuilder().WithSubject(subject)
+                                                      .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAppointment(appointment)
+                                 .WithSubject(subject)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .Build();
+
+            try
+            {
+                taskPersistence.SaveTaskStatus(new SaveTaskStatusViewModel()
+                {
+                    AccountId = account.Id,
+                    Status = state,
+                    TaskId = invalidTaskId,
+                });
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void SaveTaskStatusInvalidAccountIdThrowPropertyExceptionCollection()
+        {
+            var state = TaskStatus.Done;
+            var accountId = 2;
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                        .WithSubject(subject)
+                                        .Build();
+
+            var appointment = new AppointmentBuilder().WithSubject(subject)
+                                                      .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithTask(task)
+                                 .WithAppointment(appointment)
+                                 .WithSubject(subject)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .Build();
+
+            try
+            {
+                taskPersistence.SaveTaskStatus(new SaveTaskStatusViewModel()
+                {
+                    AccountId = accountId,
+                    Status = state,
+                    TaskId = task.Id,
+                });
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
         }
 

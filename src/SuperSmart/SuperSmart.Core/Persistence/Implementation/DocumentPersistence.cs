@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
@@ -6,6 +7,7 @@ using SuperSmart.Core.Extension;
 using SuperSmart.Core.Helper;
 using SuperSmart.Core.Persistence.Interface;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SuperSmart.Core.Persistence.Implementation
@@ -57,6 +59,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 var document = new Document()
                 {
                     File = createDocumentViewModel.File,
+                    ContentType = createDocumentViewModel.ContentType,
                     DocumentType = createDocumentViewModel.DocumentType,
                     FileName = createDocumentViewModel.FileName,
                     Uploaded = DateTime.Now,
@@ -90,7 +93,10 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
                 }
 
-                var document = db.Documents.SingleOrDefault(a => a.Id == id);
+                var document = db.Documents.Include(d => d.Task)
+                                           .ThenInclude(t => t.Subject)
+                                           .ThenInclude(t => t.TeachingClass)
+                                           .SingleOrDefault(a => a.Id == id);
 
                 if (document == null)
                 {
@@ -106,6 +112,102 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 db.SaveChanges();
             }
+        }
+
+        /// <summary>
+        /// Get Document Overview for a given task
+        /// </summary>
+        /// <param name="taskId"></param>
+        /// <param name="loginToken"></param>
+        public OverviewDocumentViewModel GetOverview(Int64 taskId, string loginToken)
+        {
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                }
+
+                var documents = db.Documents.Include(t => t.Task)
+                                            .ThenInclude(t => t.Subject)
+                                            .ThenInclude(t => t.TeachingClass)
+                                            .ThenInclude(t => t.AssignedAccounts)
+                                            .Where(d => d.Task.Subject.TeachingClass.AssignedAccounts
+                                                    .Any(a => a.LoginToken == loginToken) &&
+                                                         d.Task.Id == taskId &&
+                                                         d.Active);
+
+                var convertedDocuments = GetDocumentOverviewMapper(account).Map<List<DocumentViewModel>>(documents);
+
+                OverviewDocumentViewModel overviewDocumentViewModel = new OverviewDocumentViewModel()
+                {
+                    Documents = convertedDocuments
+                };
+
+                return overviewDocumentViewModel;
+            }
+        }
+
+        /// <summary>
+        /// Get document to download
+        /// </summary>
+        /// <param name="documentId"></param>
+        /// <param name="loginToken"></param>
+        public DownloadDocumentViewModel Download(Int64 documentId, string loginToken)
+        {
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                }
+
+                var document = db.Documents.Include(t => t.Task)
+                                           .ThenInclude(t => t.Subject)
+                                           .ThenInclude(s => s.TeachingClass)
+                                           .ThenInclude(t => t.AssignedAccounts)
+                                            .SingleOrDefault(d => d.Task.Subject.TeachingClass.AssignedAccounts
+                                                .Any(a => a.LoginToken == loginToken) && d.Id == documentId);
+
+                if (document == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(document), "Document not found");
+                }
+
+                if (document.Task.Subject.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken))
+                {
+                    throw new PropertyExceptionCollection(nameof(document), "User has no permissions to download document");
+                }
+
+                var downloadDocumentViewModel = Mapper.Map<DownloadDocumentViewModel>(document);
+
+                return downloadDocumentViewModel;
+            }
+        }
+
+        /// <summary>
+        /// Gets the document overview mapper to map documents to 
+        /// a overview view modle
+        /// </summary>
+        /// <returns></returns>
+        public IMapper GetDocumentOverviewMapper(Account account)
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Document, DocumentViewModel>()
+               .ForMember(vm => vm.Uploader, map => map.MapFrom(m => m.Uploader.FirstName + " " + m.Uploader.LastName))
+                .ForMember(vm => vm.IsOwner, map => map.MapFrom(m => m.Uploader == account));
+            }).CreateMapper();
+
+            return mapper;
         }
     }
 }

@@ -2,6 +2,9 @@
 
 namespace SuperSmart.Core.Data.Implementation
 {
+    /// <summary>
+    /// Represents an appointment database entry
+    /// </summary>
     public class Appointment
     {
         /// <summary>

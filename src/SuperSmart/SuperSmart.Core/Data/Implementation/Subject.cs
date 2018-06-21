@@ -4,15 +4,19 @@ using System.Collections.Generic;
 namespace SuperSmart.Core.Data.Implementation
 {
     /// <summary>
-    /// The subject
+    /// Represents a subject database entry
     /// </summary>
     public class Subject
     {
+        /// <summary>
+        /// Initializes a new subject instance
+        /// </summary>
         public Subject()
         {
             this.Appointments = new List<Appointment>();
             this.Tasks = new List<Task>();
         }
+
         /// <summary>
         /// The database generated id
         /// </summary>

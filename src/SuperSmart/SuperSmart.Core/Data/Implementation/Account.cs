@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SuperSmart.Core.Data.Implementation
 {
+    /// <summary>
+    /// Represents an account database entry
+    /// </summary>
     public class Account
     {
+        /// <summary>
+        /// Initializes a new account instance
+        /// </summary>
         public Account()
         {
             this.AssignedClasses = new List<TeachingClass>();

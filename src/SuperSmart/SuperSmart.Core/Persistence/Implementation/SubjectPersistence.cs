@@ -80,7 +80,8 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// </summary>
         /// <param name="manageSubjectViewModel"></param>
         /// <param name="loginToken"></param>
-        public void Manage(ManageSubjectViewModel manageSubjectViewModel, string loginToken)
+        /// <returns>The id of the TeachingClass</returns>
+        public Int64 Manage(ManageSubjectViewModel manageSubjectViewModel, string loginToken)
         {
             Guard.ModelStateCheck(manageSubjectViewModel);
             Guard.NotNullOrEmpty(loginToken);
@@ -98,24 +99,23 @@ namespace SuperSmart.Core.Persistence.Implementation
                                          .ThenInclude(t => t.AssignedAccounts)
                                          .SingleOrDefault(itm => itm.Id == manageSubjectViewModel.Id);
 
-                if (!subject.TeachingClass.AssignedAccounts.Contains(account))
-                {
-                    throw new PropertyExceptionCollection(nameof(loginToken), "No permissions granted");
-                }
-
                 if (subject == null)
                 {
                     throw new PropertyExceptionCollection(nameof(subject), "Subject not found");
+                }
+
+                if (!subject.TeachingClass.AssignedAccounts.Contains(account))
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "No permissions granted");
                 }
 
                 subject.Designation = manageSubjectViewModel.Designation;
 
                 db.SaveChanges();
 
-                manageSubjectViewModel.TeachingClassId = subject.TeachingClass.Id;
+                return subject.TeachingClass.Id;
             }
         }
-
 
         /// <summary>
         /// Get Overview of subjects
@@ -132,29 +132,38 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 if (account == null)
                 {
-                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                    throw new PropertyExceptionCollection(nameof(account), "Account not found");
                 }
 
-                var subjectQuery = db.Subjects.Where(s => s.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) && s.TeachingClass.Id == classId);
+                var teachingClass = db.TeachingClasses.SingleOrDefault(t => t.Id == classId);
 
-                var config = new MapperConfiguration(cfg =>
+                if (teachingClass == null)
                 {
-                    cfg.CreateMap<Subject, SubjectViewModel>();
-                });
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
+                }
 
-                IMapper mapper = config.CreateMapper();
+                var subjectQuery = db.Subjects.Include(s => s.TeachingClass)
+                                              .ThenInclude(t => t.AssignedAccounts)
+                                              .Where(s => s.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) &&
+                                                s.TeachingClass == teachingClass);
 
-                List<SubjectViewModel> subjects = mapper.Map<List<SubjectViewModel>>(subjectQuery);
 
-                OverviewSubjectViewModel overviewSubjectViewModel = new OverviewSubjectViewModel()
+                var subjects = GetSubjectOverviewMapper().Map<List<SubjectViewModel>>(subjectQuery);
+
+                var overviewSubjectViewModel = new OverviewSubjectViewModel()
                 {
-                    Subjects = subjects
+                    Subjects = subjects,
+                    IsClassAdmin = teachingClass.Admin == account
                 };
 
                 return overviewSubjectViewModel;
             }
         }
 
+        /// <summary>
+        /// Check if account has rights to manage subject
+        /// </summary>
+        /// <param name="subjectId"></param>
         public bool IsAccountClassAdminOfSubject(Int64 subjectId, string loginToken)
         {
             Guard.NotNullOrEmpty(loginToken);
@@ -179,6 +188,20 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 return hasPermissions;
             }
+        }
+
+        /// <summary>
+        /// Map subjects to subjects view model
+        /// </summary>
+        /// <returns></returns>
+        public IMapper GetSubjectOverviewMapper()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Subject, SubjectViewModel>();
+            }).CreateMapper();
+
+            return mapper;
         }
     }
 }
