@@ -12,7 +12,7 @@
     <div class="mdl-cell mdl-cell--8-col mdl-shadow--4dp">
         <h3>Students</h3>
 
-        <h4>Link to join this class: @(this.Request.Url.Scheme + "://" + this.Request.Url.Authority + Url.Action("Join","TeachingClass", new { referral = Model.Referral }))</h4>
+        <h4>Link to join this class: @(this.Request.Url.Scheme + "://" + this.Request.Url.Authority + "/TeachingClass" + Url.Action("Join", new { referral = Model.Referral }))</h4>
 
         <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-cell--12-col">
             <thead>
@@ -29,7 +29,7 @@
                         <td class="mdl-data-table__cell--non-numeric">@item.Firstname</td>
                         <td>@item.Lastname</td>
                         <td>
-                            @if (item.Id != Model.AdminId)
+                            @if (item.Id != Model.AdminId && Model.IsAdmin)
                             {
                                 <a href="@Url.Action("Kick", new RemoveUserFromTeachingClassViewModel { TeachingClassId = Model.TeachingClassId, UserId = item.Id })"><i class="material-icons">clear</i></a>
                             }

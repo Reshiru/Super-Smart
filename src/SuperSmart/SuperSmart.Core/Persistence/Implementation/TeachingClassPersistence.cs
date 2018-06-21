@@ -304,20 +304,18 @@ namespace SuperSmart.Core.Persistence.Implementation
             using (var db = new SuperSmartDb())
             {
 
-                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+                var account = db.Accounts.Include(a => a.AssignedClasses).SingleOrDefault(a => a.LoginToken == loginToken);
 
                 if (account == null)
                 {
                     throw new PropertyExceptionCollection(nameof(loginToken), "Your account couldn't be found. Pleas try to relogin");
                 }
 
-                var teachingClasses = db.TeachingClasses.Where(tc => tc.AssignedAccounts.Any(a => a.LoginToken == loginToken));
-
-                var mappedTeachingClasses = GetOverviewMapper(account).Map<List<TeachingClassViewModel>>(teachingClasses);
+                var mappedTeachingClasses = GetOverviewMapper(account).Map<List<TeachingClassViewModel>>(account.AssignedClasses);
 
                 var overviewTeachingClassViewModel = new OverviewTeachingClassViewModel()
                 {
-                    TeachingClasses = mappedTeachingClasses,                                          
+                    TeachingClasses = mappedTeachingClasses,
                 };
 
                 return overviewTeachingClassViewModel;
@@ -342,12 +340,12 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
                 }
 
-                var teachingClass = db.TeachingClasses.SingleOrDefault(s => s.Id == classId);
+                var teachingClass = db.TeachingClasses.Include(t => t.AssignedAccounts).SingleOrDefault(s => s.Id == classId);
 
                 if (teachingClass == null)
                 {
                     throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
-                }
+                }             
 
                 var accounts = GetAccountMapper().Map<List<AccountViewModel>>(teachingClass.AssignedAccounts);
 
