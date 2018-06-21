@@ -5,8 +5,6 @@ using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Host.Authentication;
 using SuperSmart.Host.Helper;
 using System;
-using System.IO;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SuperSmart.Host.Controllers
@@ -80,11 +78,25 @@ namespace SuperSmart.Host.Controllers
         }
 
         [HttpGet]
-        public ActionResult Overview(int subjectId)
+        public ActionResult Overview(Int64 subjectId)
         {
             OverviewTaskViewModel vm = taskPersistence.GetOverview(User.Identity.Name, subjectId);
             return View("OverviewTask", vm);
         }
 
+        [HttpGet]
+        public ActionResult InvertStatus(Int64 taskId, Int64 subjectId)
+        {
+            try
+            {
+                taskPersistence.InvertTaskStatus(taskId, User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+
+            return RedirectToAction(nameof(Overview), subjectId);
+        }
     }
 }

@@ -23,8 +23,31 @@
     @RenderSection("head", required: false)
 </head>
 <body>
-    <main>
-        @RenderBody()
-    </main>
+    <div class="mdl-layout mdl-js-layout">
+        <header class="mdl-layout__header mdl-layout__header--scroll">
+            <div class="mdl-layout__header-row">
+                <!-- Title -->
+                <span class="mdl-layout-title">TASKER</span>
+                <!-- Add spacer, to align navigation to the right -->
+                <div class="mdl-layout-spacer"></div>
+                <!-- Navigation -->
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href=""><i class="material-icons">person</i> @{Html.RenderAction("GetFullNameFromAuthorizedUser", "Home");}</a>
+                </nav>
+            </div>
+        </header>
+        <main class="mdl-layout__content">
+            @RenderBody()
+        </main>
+        <footer class="mdl-mini-footer">
+            <div class="mdl-mini-footer__left-section">
+                <div class="mdl-logo">TASKER</div>
+                <ul class="mdl-mini-footer__link-list">
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Privacy & Terms</a></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
 </body>
 </html>

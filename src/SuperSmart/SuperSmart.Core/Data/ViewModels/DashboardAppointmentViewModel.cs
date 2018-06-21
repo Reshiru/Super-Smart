@@ -30,6 +30,6 @@ namespace SuperSmart.Core.Data.ViewModels
         /// <summary>
         /// The subject id liked to the appointment
         /// </summary>
-        public int SubjectId { get; set; }
+        public Int64 SubjectId { get; set; }
     }
 }

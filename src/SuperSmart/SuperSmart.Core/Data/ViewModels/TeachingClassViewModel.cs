@@ -41,5 +41,7 @@ namespace SuperSmart.Core.Data.ViewModels
         /// </summary>
         public string DisplayStarted { get => this.Started.ToString("dd.mm.yyyy"); }
 
+        public bool IsAmdin { get; set; }
+
     }
 }

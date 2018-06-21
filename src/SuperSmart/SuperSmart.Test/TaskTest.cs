@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SuperSmart.Core.Data.Enumeration;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
@@ -220,10 +219,8 @@ namespace SuperSmart.Test
         }
 
         [TestMethod]
-        public void SaveValidTaskStatusTest()
+        public void InvertTaskStatusSucceed()
         {
-            var state = TaskStatus.Done;
-
             var account = new AccountBuilder().Build();
 
             var teachingClass = new TeachingClassBuilder().WithAdmin(account)
@@ -249,12 +246,7 @@ namespace SuperSmart.Test
            
             try
             {
-                taskPersistence.SaveTaskStatus(new SaveTaskStatusViewModel()
-                {
-                    AccountId = account.Id,
-                    Status = state,
-                    TaskId = task.Id,
-                });
+                taskPersistence.InvertTaskStatus(task.Id, account.LoginToken);
 
                 Assert.IsTrue(true);
             }
@@ -265,9 +257,8 @@ namespace SuperSmart.Test
         }
 
         [TestMethod]
-        public void SaveTaskStatusInvalidTaskIdThrowPropertyExceptionCollection()
+        public void InvertTaskStatusInvalidTaskIdThrowPropertyExceptionCollection()
         {
-            var state = TaskStatus.Done;
             var invalidTaskId = 1;
 
             var account = new AccountBuilder().Build();
@@ -290,12 +281,7 @@ namespace SuperSmart.Test
 
             try
             {
-                taskPersistence.SaveTaskStatus(new SaveTaskStatusViewModel()
-                {
-                    AccountId = account.Id,
-                    Status = state,
-                    TaskId = invalidTaskId,
-                });
+                taskPersistence.InvertTaskStatus(invalidTaskId, account.LoginToken);
 
                 Assert.IsTrue(false);
             }
@@ -306,10 +292,9 @@ namespace SuperSmart.Test
         }
 
         [TestMethod]
-        public void SaveTaskStatusInvalidAccountIdThrowPropertyExceptionCollection()
+        public void InvertTaskStatusInvalidLoginTokenThrowPropertyExceptionCollection()
         {
-            var state = TaskStatus.Done;
-            var accountId = 2;
+            var invalidLoginToken = "loginToken";
 
             var account = new AccountBuilder().Build();
 
@@ -336,27 +321,7 @@ namespace SuperSmart.Test
 
             try
             {
-                taskPersistence.SaveTaskStatus(new SaveTaskStatusViewModel()
-                {
-                    AccountId = accountId,
-                    Status = state,
-                    TaskId = task.Id,
-                });
-
-                Assert.IsTrue(false);
-            }
-            catch (Exception ex)
-            {
-                Assert.IsTrue(ex is PropertyExceptionCollection);
-            }
-        }
-
-        [TestMethod]
-        public void SaveNullTasktStatusTest()
-        {
-            try
-            {
-                taskPersistence.SaveTaskStatus(null);
+                taskPersistence.InvertTaskStatus(task.Id, invalidLoginToken);
 
                 Assert.IsTrue(false);
             }

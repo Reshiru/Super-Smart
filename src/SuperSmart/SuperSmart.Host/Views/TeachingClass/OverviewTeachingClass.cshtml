@@ -7,10 +7,10 @@
 <div class="mdl-grid">
     <div class="mdl-cell mdl-cell--2-col"></div>
 
-    <div class="mdl-cell mdl-cell--8-col mdl-shadow--4dp">
+    <div id="teachingClassTableWrap" class="mdl-cell mdl-cell--8-col mdl-shadow--4dp">
         <h3>Classes</h3>
 
-        <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-cell--12-col">
+        <table class="mdl-data-table mdl-js-data-table mdl-cell--12-col">
             <thead>
                 <tr>
                     <th class="mdl-data-table__cell--non-numeric">Designation</th>
@@ -27,9 +27,13 @@
                         <td>@item.Started</td>
                         <td>@item.NumberOfEducationYears</td>
                         <td>
-                            <a href="@Url.Action("Manage",new {teachingClassId =item.Id })"><i class="material-icons">edit</i></a>
                             <a href="@Url.Action("Overview","Subject",new {classId =item.Id })"><i class="material-icons">visibility</i></a>
-                            <a href="@Url.Action("Create","Subject",new {classId =item.Id })"><i class="material-icons">add</i></a>
+                            @if (item.IsAmdin)
+                            {
+                                <a href="@Url.Action("Manage", new { teachingClassId = item.Id })"><i class="material-icons">edit</i></a>
+                                <a href="@Url.Action("Create", "Subject", new { classId = item.Id })"><i class="material-icons">add</i></a>
+                            }
+                            <a href="@Url.Action("Students", new { classId = item.Id })"><i class="material-icons">group</i></a>
                         </td>
                     </tr>
                 }

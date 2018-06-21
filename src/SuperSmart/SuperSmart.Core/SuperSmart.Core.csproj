@@ -139,9 +139,11 @@
     <Compile Include="Data\Implementation\Subject.cs" />
     <Compile Include="Data\Implementation\Task.cs" />
     <Compile Include="Data\Implementation\TeachingClass.cs" />
+    <Compile Include="Data\ViewModels\AccountViewModel.cs" />
     <Compile Include="Data\ViewModels\CreateDocumentViewModel.cs" />
     <Compile Include="Data\ViewModels\DocumentViewModel.cs" />
     <Compile Include="Data\ViewModels\DownloadDocumentViewModel.cs" />
+    <Compile Include="Data\ViewModels\ManageAccountViewModel.cs" />
     <Compile Include="Data\ViewModels\ManageDocumentViewModel.cs" />
     <Compile Include="Data\ViewModels\ManageTaskViewModel.cs" />
     <Compile Include="Data\ViewModels\DashboardAppointmentViewModel.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Data\ViewModels\CreateSubjectViewModel.cs" />
     <Compile Include="Data\ViewModels\CreateTaskViewModel.cs" />
     <Compile Include="Data\ViewModels\CreateTeachingClassViewModel.cs" />
+    <Compile Include="Data\ViewModels\OverviewAccountViewModel.cs" />
     <Compile Include="Data\ViewModels\OverviewDocumentViewModel.cs" />
     <Compile Include="Data\ViewModels\OverviewSubjectViewModel.cs" />
     <Compile Include="Data\ViewModels\OverviewTaskViewModel.cs" />

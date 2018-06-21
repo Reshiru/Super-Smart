@@ -1,0 +1,40 @@
+﻿@model ManageAccountViewModel
+
+<div id="createClassWrap" class="centerMiddleWrap">
+    <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+        @using (Html.BeginForm("Profile", "Home"))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(m => m.Id)
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Firstname, new { @class = "mdl-textfield__input", id = "Firstname" })
+                <label class="mdl-textfield__label" for="Designation">Firstname</label>
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Firstname)</span>
+            </div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Lastname, new { @class = "mdl-textfield__input", id = "Lastname" })
+                <label class="mdl-textfield__label" for="Designation">Lastname</label>
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Lastname)</span>
+            </div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Email, new { @class = "mdl-textfield__input", id = "Email" })
+                <label class="mdl-textfield__label" for="Designation">Email</label>
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Email)</span>
+            </div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="password" name="Password" id="Password">
+                <label class="mdl-textfield__label" for="Designation">Password</label>
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Password)</span>
+            </div>
+
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                Save
+            </button>
+        }
+    </div>
+</div>

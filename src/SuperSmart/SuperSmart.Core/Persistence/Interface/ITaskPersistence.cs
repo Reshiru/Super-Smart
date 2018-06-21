@@ -32,10 +32,11 @@ namespace SuperSmart.Core.Persistence.Interface
         void Manage(ManageTaskViewModel manageTaskViewModel, string loginToken);
 
         /// <summary>
-        /// Save status of a task
+        /// Switches the state from a task
         /// </summary>
-        /// <param name="saveTaskStatusViewModel"></param>
-        void SaveTaskStatus(SaveTaskStatusViewModel saveTaskStatusViewModel);
+        /// <param name="taskId"></param>
+        /// <param name="loginToken"></param>
+        void InvertTaskStatus(Int64 taskId, string loginToken);
 
         /// <summary>
         /// Has accoutn rights to manage task
