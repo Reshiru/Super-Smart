@@ -61,6 +61,49 @@ namespace SuperSmart.Host.Controllers
             return View("OverviewDocument", vm);
         }
 
+        [HttpGet]
+        public ActionResult Manage(Int64 documentId)
+        {
+            ManageDocumentViewModel vm = new ManageDocumentViewModel();
+
+            try
+            {
+
+                vm = documentPersistence.GetManagedDocument(documentId, this.User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+
+            return View("ManageDocument", vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Manage(ManageDocumentViewModel manageDocumentViewModel)
+        {
+            try
+            {
+                if (manageDocumentViewModel.FileUpload != null && manageDocumentViewModel.FileUpload.ContentLength > 0)
+                {
+                    MemoryStream target = new MemoryStream();
+                    manageDocumentViewModel.FileUpload.InputStream.CopyTo(target);
+                    manageDocumentViewModel.File = target.ToArray();
+                    manageDocumentViewModel.FileName = manageDocumentViewModel.FileUpload.FileName;
+                    manageDocumentViewModel.ContentType = manageDocumentViewModel.FileUpload.ContentType;
+                }
+
+                documentPersistence.Manage(manageDocumentViewModel, User.Identity.Name);
+
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+            return RedirectToAction("Overview", new { taskId = manageDocumentViewModel.TaskId });
+        }
+
 
         [HttpGet]
         public FileResult Download(Int64 documentId)

@@ -4,6 +4,9 @@
     ViewBag.Title = "Document Overview";
 }
 <box class="no-padding w-60 float-left">
+
+    @Html.ActionLink(linkText: "Upload new document", actionName: "Create", controllerName: "Document", routeValues: new { taskId = Model.TaskId }, htmlAttributes: null)
+
     <table class="clean-table">
         <tr>
             <th>Filename</th>

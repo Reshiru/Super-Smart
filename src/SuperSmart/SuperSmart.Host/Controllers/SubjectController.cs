@@ -49,22 +49,19 @@ namespace SuperSmart.Host.Controllers
         [HttpGet]
         public ActionResult Manage(int subjectId)
         {
+            ManageSubjectViewModel vm = new ManageSubjectViewModel();
+
             try
             {
-                if (!subjectPersistence.IsAccountClassAdminOfSubject(subjectId, User.Identity.Name))
-                {
-                    throw new PropertyExceptionCollection(nameof(subjectId), "User has no rights to manage subject");
-                }
+
+                vm = subjectPersistence.GetManagedSubject(subjectId, this.User.Identity.Name);
             }
             catch (Exception ex)
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
 
-            return View("ManageSubject", new ManageSubjectViewModel()
-            {
-                Id = subjectId
-            });
+            return View("ManageSubject", vm);
         }
 
         [HttpPost]

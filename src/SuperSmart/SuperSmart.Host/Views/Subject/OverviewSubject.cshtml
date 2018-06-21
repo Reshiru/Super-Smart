@@ -1,7 +1,7 @@
 ﻿@model OverviewSubjectViewModel
 
 @{
-    ViewBag.Title = "Class Overview";
+    ViewBag.Title = "Subject Overview";
 }
 
 
@@ -24,7 +24,7 @@
                     @Html.DisplayFor(modelItem => item.Designation)
                 </td>
                 <td>
-                    <a href="@Url.Action("Manage",new {subjectId = item.Id })"><i title="Manage Class" class="fa fa-pencil"></i></a>
+                    <a href="@Url.Action("Manage",new {subjectId = item.Id })"><i title="Manage Subject" class="fa fa-pencil"></i></a>
                 </td>
                 <td>
                     <a href="@Url.Action("Overview","Task",new {subjectId =item.Id })"><i title="Task Overview" class="fa fa-globe"></i></a>
