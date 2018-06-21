@@ -22,7 +22,7 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="manageSubjectViewModel"></param>
         /// <param name="loginToken"></param>
-        void Manage(ManageSubjectViewModel manageSubjectViewModel, string loginToken);
+        Int64 Manage(ManageSubjectViewModel manageSubjectViewModel, string loginToken);
              
         /// <summary>
         /// Get Overview of subjects

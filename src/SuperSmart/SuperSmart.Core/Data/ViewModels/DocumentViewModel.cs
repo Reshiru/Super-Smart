@@ -6,7 +6,7 @@ namespace SuperSmart.Core.Data.ViewModels
     public class DocumentViewModel
     {
         public Int64 Id { get; set; }
-        public string Filename { get; set; }
+        public string FileName { get; set; }
         public DateTime Uploaded { get; set; }
         public string Uploader { get; set; }
         public bool IsOwner { get; set; }
