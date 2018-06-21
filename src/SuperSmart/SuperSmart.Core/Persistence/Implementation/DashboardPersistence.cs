@@ -48,7 +48,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                                     .ThenInclude(t => t.AssignedAccounts)
                                     .Where(task => task.Subject.TeachingClass.AssignedAccounts
                                         .Any(itm => itm.LoginToken == loginToken) && 
-                                            task.Finished > DateTime.Now && task.Finished < DateTime.Now.AddDays(7));
+                                            task.Finished > DateTime.Now && task.Finished < DateTime.Now.AddDays(7) && task.Active);
 
 
                 var convertedAppointments = GetDashboardAppointmentMapper().Map<List<DashboardAppointmentViewModel>>(appointments);
