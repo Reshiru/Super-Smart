@@ -298,8 +298,9 @@ namespace SuperSmart.Core.Persistence.Implementation
 
             using (var db = new SuperSmartDb())
             {
-                var teachingClasses = db.TeachingClasses.Include(t => t.AssignedAccounts)
-                                                        .Where(tc => tc.AssignedAccounts.Any(a => a.LoginToken == loginToken));
+                var teachingClasses = db.Accounts.Include(a => a.AssignedClasses)
+                                                                .SingleOrDefault(a => a.LoginToken == loginToken)
+                                                                .AssignedClasses;
 
                 var mappedTeachingClasses = GetOverviewMapper().Map<List<TeachingClassViewModel>>(teachingClasses);
 
