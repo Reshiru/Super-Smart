@@ -3,60 +3,69 @@
 @{
     ViewBag.Title = "Index";
 }
-@using (Html.BeginForm("Create", "TeachingClass"))
-{
-    <box class="no-padding w-60 float-left">
-        <table class="clean-table">
-            <tr>
-                <th>Status</th>
-                <th><i class="fa fa-question"></i> What</th>
-                <th><i class="fa fa-calendar-o"></i> Until</th>
-                <th><i class="fa fa-cloud-upload"></i> Solutions</th>
+
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--8-col">8</div>
+    <div class="mdl-cell mdl-cell--2-col">2</div>
+</div>
+
+<!-- Colored FAB button with ripple -->
+<button class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+    <i class="material-icons">add</i>
+</button>
+
+@Html.ActionLink("Create new class", "Create", "TeachingClass")
+
+<box class="no-padding w-60 float-left">
+    <table class="clean-table">
+        <tr>
+            <th>Status</th>
+            <th><i class="fa fa-question"></i> What</th>
+            <th><i class="fa fa-calendar-o"></i> Until</th>
+            <th><i class="fa fa-cloud-upload"></i> Solutions</th>
+        </tr>
+
+        @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.ToDo))
+        {
+            <tr class="task-todo">
+                <td>
+                    <i class="fa fa-check-circle"></i>
+                </td>
+                <td>
+                    <label class="task-header"> @Html.DisplayFor(modelItem => item.SubjectName)</label>
+                    <p class="task-content"> @Html.DisplayFor(modelItem => item.Designation)</p>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DisplayFinished)
+                </td>
+                <td><i class="fa fa-cloud-upload"></i></td>
             </tr>
+        }
+        <tr>
+            <th>Done</th>
+            <th></th>
+            <th></th>
+        </tr>
 
-            @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.ToDo))
-            {
-                <tr class="task-todo">
-                    <td>
-                        <i class="fa fa-check-circle"></i>
-                    </td>
-                    <td>
-                        <label class="task-header"> @Html.DisplayFor(modelItem => item.SubjectName)</label>
-                        <p class="task-content"> @Html.DisplayFor(modelItem => item.Designation)</p>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DisplayFinished)
-                    </td>
-                    <td><i class="fa fa-cloud-upload"></i></td>
-                </tr>
-            }
-            <tr>
-                <th>Done</th>
-                <th></th>
-                <th></th>
-            </tr>
+        @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done))
+        {
+            <tr class="task-done">
+                <td>
+                    <i class="fa fa-check-circle"></i>
+                </td>
+                <td>
+                    <label class="task-header"> @Html.DisplayFor(modelItem => item.SubjectName)</label>
+                    <p class="task-content"> @Html.DisplayFor(modelItem => item.Designation)</p>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DisplayFinished)
+                </td>
+                <td><i class="fa fa-cloud-upload"></i></td>
 
-            @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done))
-            {
-                <tr class="task-done">
-                    <td>
-                        <i class="fa fa-check-circle"></i>
-                    </td>
-                    <td>
-                        <label class="task-header"> @Html.DisplayFor(modelItem => item.SubjectName)</label>
-                        <p class="task-content"> @Html.DisplayFor(modelItem => item.Designation)</p>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DisplayFinished)
-                    </td>
-                    <td><i class="fa fa-cloud-upload"></i></td>
+            </tr>}
+    </table>
+</box>
 
-                </tr>}
-        </table>
-    </box>
-
-    <box class="w-40 float-left no-margin">
-        <table class="calendar"></table>
-    </box>
-
-}
+<box class="w-40 float-left no-margin">
+    <table class="calendar"></table>
+</box>

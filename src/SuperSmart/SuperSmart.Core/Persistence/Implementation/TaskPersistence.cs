@@ -248,7 +248,8 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 var overviewTaskViewModel = new OverviewTaskViewModel()
                 {
-                    Tasks = tasks
+                    Tasks = tasks,
+                    SubjectId = subjectId
                 };
 
                 return overviewTaskViewModel;

@@ -12,7 +12,7 @@
 
 
 /*<<---------- GLOBAL ---------->>*/
-*{
+/**{
     font-family: 'Roboto', sans-serif;
     box-sizing: border-box;
 }
@@ -21,10 +21,10 @@ body, html {
     background-color: #F9F9FC;
     margin: 0;
     padding: 0;
-}
+}*/
 
 /*<<---------- LAYOUT ---------->>*/
-#side-bar {
+/*#side-bar {
     height: 100%;
     width: 200px;
     position: fixed;
@@ -51,10 +51,10 @@ main {
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
     padding: 16px;
     background-color: #FFFFFF;
-}
+}*/
 
 /*<<---------- FORM ---------->>*/
-input {
+/*input {
     padding: 5px 6px;
     border-radius: 3px;
     border: 1px solid #616161;
@@ -78,10 +78,10 @@ input {
 
 input-wrapper p {
 
-}
+}*/
 
 /*<<---------- VALIDATION --------->>*/
-.field-validation-error {
+/*.field-validation-error {
     color: #CC0033;
 }
 
@@ -105,7 +105,7 @@ button {
     button:hover, button:focus {
         background-color: #fb2d60;
         cursor: pointer;
-    }
+    }*/
 
 
 

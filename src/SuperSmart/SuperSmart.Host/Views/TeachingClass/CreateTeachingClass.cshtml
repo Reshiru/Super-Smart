@@ -1,20 +1,31 @@
 ﻿@model CreateTeachingClassViewModel
 
-@using (Html.BeginForm("Create", "TeachingClass"))
-{
-    @Html.AntiForgeryToken()
+<div class="demo-card-wide mdl-card mdl-shadow--2dp">
+    @using (Html.BeginForm("Create", "TeachingClass"))
+    {
+        @Html.AntiForgeryToken()
 
-    @Html.LabelFor(m => m.Designation)
-    @Html.TextBoxFor(m => m.Designation)
-    @Html.ValidationMessageFor(m => m.Designation)
 
-    @Html.LabelFor(m => m.NumberOfEducationYears)
-    @Html.TextBoxFor(m => m.NumberOfEducationYears)
-    @Html.ValidationMessageFor(m => m.NumberOfEducationYears)
+        <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" name="Designation" id="Designation">
+            <label class="mdl-textfield__label" for="Designation">Designation</label>
+            <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Designation)</span>
+        </div>
 
-    @Html.LabelFor(m => m.Started)
-    @Html.TextBoxFor(m => m.Started, new { type = "date" })
-    @Html.ValidationMessageFor(m => m.Started)
+        <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="NumberOfEducationYears" name="NumberOfEducationYears">
+            <label class="mdl-textfield__label" for="NumberOfEducationYears">Years of Education</label>
+            <span class="mdl-textfield__error">Input is not a number!</span>
+        </div>
 
-    <input type="submit" value="Submit" />
-}
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input class="mdl-textfield__input" type="datetime" id="Started" name="Started">
+            <label class="mdl-textfield__label" for="Started">Start date</label>
+            <span class="mdl-textfield__error">Input is not a date!</span>
+        </div>
+
+        <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+            Add
+        </button>
+    }
+    </div>

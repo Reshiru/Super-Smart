@@ -18,23 +18,24 @@ namespace SuperSmart.Core.Persistence.Interface
         void Create(CreateSubjectViewModel createSubjectViewModel, string loginToken);
 
         /// <summary>
+        /// Get subject to manage
+        /// </summary>
+        /// <param name="documentId"></param>
+        /// <param name="loginToken"></param>
+        ManageSubjectViewModel GetManagedSubject(Int64 subjectId, string loginToken);
+
+        /// <summary>
         /// Changes properties from a given subject class
         /// </summary>
         /// <param name="manageSubjectViewModel"></param>
         /// <param name="loginToken"></param>
         Int64 Manage(ManageSubjectViewModel manageSubjectViewModel, string loginToken);
-             
+
         /// <summary>
         /// Get Overview of subjects
         /// </summary>
         /// <param name="loginToken"></param>
         /// <param name="classId"></param>
         OverviewSubjectViewModel GetOverview(string loginToken, Int64 classId);
-
-        /// <summary>
-        /// Check if account has rights to manage subject
-        /// </summary>
-        /// <param name="subjectId"></param>
-        bool IsAccountClassAdminOfSubject(Int64 subjectId, string loginToken);
     }
 }

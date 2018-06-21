@@ -8,6 +8,8 @@ namespace SuperSmart.Core.Data.ViewModels
 {
    public class OverviewTaskViewModel
     {
+        public Int64 SubjectId { get; set; }
+
         public List<TaskViewModel> Tasks { get; set; }
     }
 }
