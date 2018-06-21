@@ -32,8 +32,8 @@
                             {
                                 <a href="@Url.Action("Manage", new { teachingClassId = item.Id })"><i class="material-icons">edit</i></a>
                                 <a href="@Url.Action("Create", "Subject", new { classId = item.Id })"><i class="material-icons">add</i></a>
-                                <a href="@Url.Action("Students", new { classId = item.Id })"><i class="material-icons">group</i></a>
                             }
+                            <a href="@Url.Action("Students", new { classId = item.Id })"><i class="material-icons">group</i></a>
                         </td>
                     </tr>
                 }
