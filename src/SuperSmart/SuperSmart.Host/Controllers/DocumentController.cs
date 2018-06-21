@@ -51,7 +51,7 @@ namespace SuperSmart.Host.Controllers
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
-            return RedirectToAction("OverviewDocument", new { taskId = createDocumentViewModel.TaskId });
+            return RedirectToAction("Overview", new { taskId = createDocumentViewModel.TaskId });
         }
 
         [HttpGet]
@@ -59,6 +59,49 @@ namespace SuperSmart.Host.Controllers
         {
             OverviewDocumentViewModel vm = documentPersistence.GetOverview(taskId, this.User.Identity.Name);
             return View("OverviewDocument", vm);
+        }
+
+        [HttpGet]
+        public ActionResult Manage(Int64 documentId)
+        {
+            ManageDocumentViewModel vm = new ManageDocumentViewModel();
+
+            try
+            {
+
+                vm = documentPersistence.GetManagedDocument(documentId, this.User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+
+            return View("ManageDocument", vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Manage(ManageDocumentViewModel manageDocumentViewModel)
+        {
+            try
+            {
+                if (manageDocumentViewModel.FileUpload != null && manageDocumentViewModel.FileUpload.ContentLength > 0)
+                {
+                    MemoryStream target = new MemoryStream();
+                    manageDocumentViewModel.FileUpload.InputStream.CopyTo(target);
+                    manageDocumentViewModel.File = target.ToArray();
+                    manageDocumentViewModel.FileName = manageDocumentViewModel.FileUpload.FileName;
+                    manageDocumentViewModel.ContentType = manageDocumentViewModel.FileUpload.ContentType;
+                }
+
+                documentPersistence.Manage(manageDocumentViewModel, User.Identity.Name);
+
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+            return RedirectToAction("Overview", new { taskId = manageDocumentViewModel.TaskId });
         }
 
 

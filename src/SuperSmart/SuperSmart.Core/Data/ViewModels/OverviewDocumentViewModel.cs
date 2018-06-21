@@ -8,6 +8,7 @@ namespace SuperSmart.Core.Data.ViewModels
 {
     public class OverviewDocumentViewModel
     {
+        public Int64 TaskId { get; set; }
         public List<DocumentViewModel> Documents { get; set; }
     }
 }

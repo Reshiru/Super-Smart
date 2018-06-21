@@ -145,6 +145,7 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 OverviewDocumentViewModel overviewDocumentViewModel = new OverviewDocumentViewModel()
                 {
+                    TaskId = taskId,
                     Documents = convertedDocuments
                 };
 
@@ -182,14 +183,100 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(document), "Document not found");
                 }
 
-                if (document.Task.Subject.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken))
+                if (!document.Task.Subject.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken))
                 {
                     throw new PropertyExceptionCollection(nameof(document), "User has no permissions to download document");
                 }
 
-                var downloadDocumentViewModel = Mapper.Map<DownloadDocumentViewModel>(document);
+                var downloadDocumentViewModel = this.GetDocumentDownloadMapper().Map<DownloadDocumentViewModel>(document);
 
                 return downloadDocumentViewModel;
+            }
+        }
+
+
+        /// <summary>
+        /// Get document to manage
+        /// </summary>
+        /// <param name="documentId"></param>
+        /// <param name="loginToken"></param>
+        public ManageDocumentViewModel GetManagedDocument(Int64 documentId, string loginToken)
+        {
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                }
+
+                var document = db.Documents.Include(t => t.Task)
+                                           .ThenInclude(t => t.Subject)
+                                           .ThenInclude(s => s.TeachingClass)
+                                           .ThenInclude(t => t.AssignedAccounts)
+                                            .SingleOrDefault(d => d.Task.Subject.TeachingClass.AssignedAccounts
+                                                .Any(a => a.LoginToken == loginToken) && d.Id == documentId);
+
+                if (document == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(document), "Document not found");
+                }
+
+                if (document.Uploader != account)
+                {
+                    throw new PropertyExceptionCollection(nameof(document), "User has no permissions to manage document");
+                }
+
+                var manageDocumentViewModel = this.GetDocumentManageMapper().Map<ManageDocumentViewModel>(document);
+
+                return manageDocumentViewModel;
+            }
+        }
+
+        /// <summary>
+        /// Manage document
+        /// </summary>
+        /// <param name="manageDocumentViewModel"></param>
+        /// <param name="loginToken"></param>
+        public void Manage(ManageDocumentViewModel manageDocumentViewModel, string loginToken)
+        {
+            Guard.ModelStateCheck(manageDocumentViewModel);
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (var db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "User not found");
+                }
+
+                var document = db.Documents.SingleOrDefault(itm => itm.Id == manageDocumentViewModel.Id);
+
+                if (document == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(document), "Document not found");
+                }
+
+                if (document.Uploader != account)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "No permissions granted");
+                }
+
+                if (manageDocumentViewModel.File != null)
+                {
+                    document.File = manageDocumentViewModel.File;
+                    document.ContentType = manageDocumentViewModel.ContentType;
+                    document.FileName = manageDocumentViewModel.FileName;
+                }
+
+                document.DocumentType = manageDocumentViewModel.DocumentType;
+
+                db.SaveChanges();
             }
         }
 
@@ -198,13 +285,44 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// a overview view modle
         /// </summary>
         /// <returns></returns>
-        public IMapper GetDocumentOverviewMapper(Account account)
+        private IMapper GetDocumentOverviewMapper(Account account)
         {
             var mapper = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Document, DocumentViewModel>()
                .ForMember(vm => vm.Uploader, map => map.MapFrom(m => m.Uploader.FirstName + " " + m.Uploader.LastName))
                 .ForMember(vm => vm.IsOwner, map => map.MapFrom(m => m.Uploader == account));
+            }).CreateMapper();
+
+            return mapper;
+        }
+
+        /// <summary>
+        /// Gets the document manage mapper to map documents to 
+        /// a manage view modle
+        /// </summary>
+        /// <returns></returns>
+        private IMapper GetDocumentManageMapper()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Document, ManageDocumentViewModel>();
+            }).CreateMapper();
+
+            return mapper;
+        }
+
+        /// <summary>
+        /// Gets the document download mapper to map documents to 
+        /// a download view modle
+        /// </summary>
+        /// <returns></returns>
+        private IMapper GetDocumentDownloadMapper()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Document, DownloadDocumentViewModel>();
+
             }).CreateMapper();
 
             return mapper;

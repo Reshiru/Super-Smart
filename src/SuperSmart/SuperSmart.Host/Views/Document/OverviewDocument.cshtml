@@ -3,22 +3,23 @@
 @{
     ViewBag.Title = "Document Overview";
 }
-@using (Html.BeginForm("Overview", "Document"))
-{
-    <box class="no-padding w-60 float-left">
-        <table class="clean-table">
-            <tr>
-                <th>Filename</th>
-                <th>Uploaded at</th>
-                <th>Uploaded by</th>
-                <th></th>
-            </tr>
+<box class="no-padding w-60 float-left">
 
-            @foreach (var item in Model.Documents)
-            {
+    @Html.ActionLink(linkText: "Upload new document", actionName: "Create", controllerName: "Document", routeValues: new { taskId = Model.TaskId }, htmlAttributes: null)
+
+    <table class="clean-table">
+        <tr>
+            <th>Filename</th>
+            <th>Uploaded at</th>
+            <th>Uploaded by</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Documents)
+        {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Filename)
+                    @Html.DisplayFor(modelItem => item.FileName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Uploaded)
@@ -35,7 +36,6 @@
                     <a href="@Url.Action("Download",new {documentId =item.Id })"><i title="Download Document" class="fa fa-download"></i></a>
                 </td>
             </tr>
-            }
-        </table>
-    </box>
-}
+        }
+    </table>
+</box>
