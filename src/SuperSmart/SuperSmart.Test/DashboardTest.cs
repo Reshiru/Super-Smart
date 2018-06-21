@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SuperSmart.Core.Extension;
 using SuperSmart.Core.Persistence.Implementation;
 using SuperSmart.Core.Persistence.Interface;
 using SuperSmart.Test.Builder;
@@ -13,7 +14,7 @@ namespace SuperSmart.Test
         IDashboardPersistence dashboardPersistence = new DashboardPersistence();
 
         [TestMethod]
-        public void DashboardDataTest()
+        public void GetDashboardDataSuccessfullTest()
         {
             var account = new AccountBuilder().Build();
             var admin = new AccountBuilder().Build();
@@ -50,6 +51,40 @@ namespace SuperSmart.Test
             catch (Exception ex)
             {
                 Assert.IsTrue(false, ex?.Message);
+            }
+        }
+
+        [TestMethod]
+        public void GetDashboardDataEmptyLoginTokenThrowPropertyException()
+        {
+            var loginToken = string.Empty;
+
+            try
+            {
+                var result = dashboardPersistence.GetDashboardData(loginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void GetDashboardDataInvalidLoginTokenThrowPropertyException()
+        {
+            var loginToken = "loginToken";
+
+            try
+            {
+                var result = dashboardPersistence.GetDashboardData(loginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
         }
     }
