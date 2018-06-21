@@ -205,6 +205,11 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(admin), "User hasn't the permissions to remove a user from this class");
                 }
 
+                if (admin == user)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "You can't kick an admin");
+                }
+
                 user.AssignedClasses.Remove(teachingClass);
                 teachingClass.AssignedAccounts.Remove(user);
                 db.SaveChanges();
@@ -216,7 +221,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// </summary>
         /// <param name="id"></param>
         /// <param name="loginToken"></param>
-        public void Delete(int id, string loginToken)
+        public void Delete(Int64 id, string loginToken)
         {
             Guard.NotNullOrEmpty(loginToken);
 
@@ -246,13 +251,13 @@ namespace SuperSmart.Core.Persistence.Implementation
                 db.SaveChanges();
             }
         }
-        
+
         /// <summary>
         /// Changes the referral from the given teaching class id
         /// </summary>
         /// <param name="id">teaching class id</param>
         /// <param name="loginToken"></param>
-        public void ChangeReferral(int id, string loginToken)
+        public void ChangeReferral(Int64 id, string loginToken)
         {
             Guard.NotNullOrEmpty(loginToken);
 
@@ -298,10 +303,17 @@ namespace SuperSmart.Core.Persistence.Implementation
 
             using (var db = new SuperSmartDb())
             {
-                var teachingClasses = db.TeachingClasses.Include(t => t.AssignedAccounts)
-                                                        .Where(tc => tc.AssignedAccounts.Any(a => a.LoginToken == loginToken));
 
-                var mappedTeachingClasses = GetOverviewMapper().Map<List<TeachingClassViewModel>>(teachingClasses);
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Your account couldn't be found. Pleas try to relogin");
+                }
+
+                var teachingClasses = db.TeachingClasses.Where(tc => tc.AssignedAccounts.Any(a => a.LoginToken == loginToken));
+
+                var mappedTeachingClasses = GetOverviewMapper(account).Map<List<TeachingClassViewModel>>(teachingClasses);
 
                 var overviewTeachingClassViewModel = new OverviewTeachingClassViewModel()
                 {
@@ -312,13 +324,54 @@ namespace SuperSmart.Core.Persistence.Implementation
             }
         }
 
-        private IMapper GetOverviewMapper()
+        /// <summary>
+        /// Get all accounts from a teaching class
+        /// </summary>
+        /// <param name="classId"></param>
+        /// <param name="loginToken"></param>
+        public OverviewStudentsViewModel GetStudents(Int64 classId, string loginToken)
+        {
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                }
+
+                var teachingClass = db.TeachingClasses.SingleOrDefault(s => s.Id == classId);
+
+                if (teachingClass == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
+                }
+
+                var accounts = GetAccountMapper().Map<List<AccountViewModel>>(teachingClass.AssignedAccounts);
+
+                var overviewStudentsViewModel = new OverviewStudentsViewModel()
+                {
+                    IsAdmin = teachingClass.Admin == account,
+                    AdminId = teachingClass.Admin.Id,
+                    TeachingClassId = teachingClass.Id,
+                    Referral = teachingClass.Referral,
+                    Accounts = accounts,
+                };
+
+                return overviewStudentsViewModel;
+            }
+        }
+
+        private IMapper GetOverviewMapper(Account account)
         {
             var mapper = new MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<TeachingClass, TeachingClassViewModel>();
+                cfg.CreateMap<TeachingClass, TeachingClassViewModel>()
+                   .ForMember(vm => vm.IsAmdin, map => map.MapFrom(m => m.Admin == account)); ;
             }).CreateMapper();
-            
+
             return mapper;
         }
 
@@ -331,6 +384,20 @@ namespace SuperSmart.Core.Persistence.Implementation
             var mapper = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<TeachingClass, ManageTeachingClassViewModel>();
+            }).CreateMapper();
+
+            return mapper;
+        }
+
+        /// <summary>
+        /// Map account class to overvew students view model
+        /// </summary>
+        /// <returns></returns>
+        private IMapper GetAccountMapper()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Account, AccountViewModel>();
             }).CreateMapper();
 
             return mapper;

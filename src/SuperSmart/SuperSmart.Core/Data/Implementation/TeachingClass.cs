@@ -36,7 +36,7 @@ namespace SuperSmart.Core.Data.Implementation
         /// <summary>
         /// The number of education years until the class is finished
         /// </summary>
-        public int NumberOfEducationYears { get; set; }
+        public Int64 NumberOfEducationYears { get; set; }
 
         /// <summary>
         /// The date when the class was started (start year / month)

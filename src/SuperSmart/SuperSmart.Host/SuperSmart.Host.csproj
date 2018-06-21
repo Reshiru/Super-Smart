@@ -227,6 +227,7 @@
     <Content Include="Views\Document\CreateDocument.cshtml" />
     <Content Include="Views\Document\OverviewDocument.cshtml" />
     <Content Include="Views\Document\ManageDocument.cshtml" />
+    <Content Include="Views\TeachingClass\Students.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -48,19 +48,26 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="id"></param>
         /// <param name="loginToken"></param>
-        void Delete(int id, string loginToken);
+        void Delete(Int64 id, string loginToken);
 
         /// <summary>
         /// Changes the referral from the given teaching class id
         /// </summary>
         /// <param name="id">teaching class id</param>
         /// <param name="loginToken"></param>
-        void ChangeReferral(int id, string loginToken);
+        void ChangeReferral(Int64 id, string loginToken);
 
         /// <summary>
         /// Get teachingClasses for user by loginToken
         /// </summary>
         /// <param name="loginToken"></param>
         OverviewTeachingClassViewModel GetOverview(string loginToken);
+
+        /// <summary>
+        /// Get all accounts from a teaching class
+        /// </summary>
+        /// <param name="classId"></param>
+        /// <param name="loginToken"></param>
+        OverviewStudentsViewModel GetStudents(Int64 classId, string loginToken);
     }
 }

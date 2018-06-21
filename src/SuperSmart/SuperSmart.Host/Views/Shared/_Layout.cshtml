@@ -33,6 +33,7 @@
                 <!-- Navigation -->
                 <nav class="mdl-navigation">
                     <a class="mdl-navigation__link" href=""><i class="material-icons">person</i> @{Html.RenderAction("GetFullNameFromAuthorizedUser", "Home");}</a> 
+                    <a class="mdl-navigation__link" href="@Url.Action("Logout","Verification")">Logout</a>
                 </nav>
             </div>
         </header>

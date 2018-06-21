@@ -5,7 +5,7 @@ namespace SuperSmart.Core.Data.ViewModels
 {
     public class ManageTeachingClassViewModel
     {
-        public int Id { get; set; }
+        public Int64 Id { get; set; }
 
         [Required(ErrorMessage = "Please enter a designation")]
         [MinLength(1, ErrorMessage = "Please enter a designation")]

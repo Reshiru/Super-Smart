@@ -8,12 +8,14 @@ namespace SuperSmart.Core.Data.ViewModels
 {
     public class TeachingClassViewModel
     {
-        public int Id { get; set; }
+        public Int64 Id { get; set; }
         public string Designation { get; set; }
         public string Referral { get; set; }
-        public int NumberOfEducationYears { get; set; }
+        public Int64 NumberOfEducationYears { get; set; }
         public DateTime Started { get; set; }
         public string DisplayStarted { get => this.Started.ToString("dd.mm.yyyy"); }
+
+        public bool IsAmdin { get; set; }
 
     }
 }
