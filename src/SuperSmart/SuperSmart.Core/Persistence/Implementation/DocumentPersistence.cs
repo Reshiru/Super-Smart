@@ -80,7 +80,7 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// </summary>
         /// <param name="createTaskViewModel"></param>
         /// <param name="loginToken"></param>
-        public void Delete(int id, string loginToken)
+        public void Delete(Int64 id, string loginToken)
         {
             Guard.NotNullOrEmpty(loginToken);
 

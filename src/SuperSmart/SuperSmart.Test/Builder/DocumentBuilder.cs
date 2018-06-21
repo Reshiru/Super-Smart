@@ -13,7 +13,7 @@ namespace SuperSmart.Test.Builder
     {
         private string filename;
         private byte[] file;
-        private DocumentType documenType;
+        private DocumentType documentType;
         private string contentType;
         private DateTime uploaded;
         private bool active;
@@ -21,7 +21,7 @@ namespace SuperSmart.Test.Builder
         private Task task;
 
         /// <summary>
-        /// Initializes a new account builder class
+        /// Initializes a new document builder class
         /// </summary>
         public DocumentBuilder()
         {
@@ -29,7 +29,7 @@ namespace SuperSmart.Test.Builder
 
             this.filename = "Testfile";
             this.file = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 };
-            this.documenType = DocumentType.Document;
+            this.documentType = DocumentType.Document;
             this.contentType = "image/jpg";
             this.uploaded = DateTime.Now;
             this.active = true;
@@ -49,9 +49,9 @@ namespace SuperSmart.Test.Builder
             return this;
         }
 
-        public DocumentBuilder WitDocumenType(DocumentType documenType)
+        public DocumentBuilder WitDocumentType(DocumentType documentType)
         {
-            this.documenType = documenType;
+            this.documentType = documentType;
 
             return this;
         }
@@ -99,7 +99,7 @@ namespace SuperSmart.Test.Builder
                 FileName = this.filename,
                 Active = this.active,
                 ContentType = this.contentType,
-                DocumentType = this.documenType,
+                DocumentType = this.documentType,
                 Task = this.task,
                 Uploaded = this.uploaded,
                 Uploader = this.owner

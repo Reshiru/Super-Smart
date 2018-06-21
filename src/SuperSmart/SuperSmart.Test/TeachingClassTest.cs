@@ -11,9 +11,7 @@ namespace SuperSmart.Test
     [TestClass]
     public class TeachingClassTest
     {
-        IVerificationPersistence verificationPersistence = new VerificationPersistence();
         ITeachingClassPersistence teachingClassPersistence = new TeachingClassPersistence();
-        IUserPersistence userPersistence = new UserPersistence();
 
         [TestMethod]
         public void CreateNullStringEmptyTest()

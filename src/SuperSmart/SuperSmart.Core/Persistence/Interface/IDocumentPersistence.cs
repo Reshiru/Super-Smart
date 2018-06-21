@@ -21,7 +21,7 @@ namespace SuperSmart.Core.Persistence.Interface
         /// </summary>
         /// <param name="createTaskViewModel"></param>
         /// <param name="loginToken"></param>
-        void Delete(int id, string loginToken);
+        void Delete(Int64 id, string loginToken);
 
         /// <summary>
         /// Get Document Overview for a given task

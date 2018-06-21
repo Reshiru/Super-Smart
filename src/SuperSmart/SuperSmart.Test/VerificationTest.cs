@@ -154,6 +154,35 @@ namespace SuperSmart.Test
         }
 
         [TestMethod]
+        public void RegisterUserWithValidData()
+        {
+            var email = "test@user.com";
+            var firstname = "Test";
+            var lastname = "User";
+            var password = "Password";
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .Build();
+
+            try
+            {
+                verificationPersistence.Register(new RegisterViewModel()
+                {
+                    Email = email,
+                    FirstName = firstname,
+                    LastName = lastname,
+                    Password = password,
+                });
+
+                Assert.IsTrue(true);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(false, ex?.Message);
+            }
+        }
+
+        [TestMethod]
         public void LoginNullTest()
         {
             try

@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Enumeration;
 using SuperSmart.Core.Data.ViewModels;
 using SuperSmart.Core.Extension;
@@ -61,7 +62,6 @@ namespace SuperSmart.Test
             }
         }
 
-
         [TestMethod]
         public void CreateDocumentWithNullParameterPropertyException()
         {
@@ -71,6 +71,95 @@ namespace SuperSmart.Test
             try
             {
                 documentPersistence.Create(createDocumentViewModel, loginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void CreateDocumentWithInvalidLoginTokenPropertyException()
+        {
+            var filename = "Testfile";
+            var file = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 };
+            var documenType = DocumentType.Document;
+            var contentType = "image/jpg";
+            var invalidLoginToken = "loginToken";
+            
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                        .WithSubject(subject)
+                                        .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithTask(task)
+                                 .Build();
+
+            try
+            {
+                documentPersistence.Create(new CreateDocumentViewModel()
+                {
+                    File = file,
+                    DocumentType = documenType,
+                    FileName = filename,
+                    TaskId = task.Id,
+                    ContentType = contentType
+                }, invalidLoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void CreateDocumentWithInvalidTaskIdPropertyException()
+        {
+            var filename = "Testfile";
+            var file = new byte[] { 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 };
+            var documenType = DocumentType.Document;
+            var contentType = "image/jpg";
+            var invalidTaskId = 1;
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .Build();
+
+            try
+            {
+                documentPersistence.Create(new CreateDocumentViewModel()
+                {
+                    File = file,
+                    DocumentType = documenType,
+                    FileName = filename,
+                    TaskId = invalidTaskId,
+                    ContentType = contentType
+                }, account.LoginToken);
 
                 Assert.IsTrue(false);
             }
@@ -125,6 +214,117 @@ namespace SuperSmart.Test
                 Assert.IsTrue(ex is PropertyExceptionCollection);
             }
         }
+        
+        [TestMethod]
+        public void DeleteDocumentValidData()
+        {
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                        .WithSubject(subject)
+                                        .Build();
+
+            var document = new DocumentBuilder().WithTask(task)
+                                                .WithOwner(account)
+                                                .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithTask(task)
+                                 .WithDocument(document)
+                                 .Build();
+
+            try
+            {
+                documentPersistence.Delete(document.Id, account.LoginToken);
+
+                using (var db = new SuperSmartDb())
+                {
+                    if (db.Documents.SingleOrDefault(d => d.Id == document.Id).Active)
+                    {
+                        throw new Exception("Document not set to inactive");
+                    }
+                }
+
+                Assert.IsTrue(true);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(false, ex?.Message);
+            }
+        }
+
+        [TestMethod]
+        public void DeleteDocumentInvalidDocumentIdThrowPropertyException()
+        {
+            var invalidDocumentId = 1;
+
+            var account = new AccountBuilder().Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .Build();
+
+            try
+            {
+                documentPersistence.Delete(invalidDocumentId, account.LoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void DeleteDocumentInvalidLoginTokenThrowPropertyException()
+        {
+            var invalidLoginToken = "loginToken";
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                        .WithSubject(subject)
+                                        .Build();
+
+            var document = new DocumentBuilder().WithTask(task)
+                                                .WithOwner(account)
+                                                .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithTask(task)
+                                 .WithDocument(document)
+                                 .Build();
+
+            try
+            {
+                documentPersistence.Delete(document.Id, invalidLoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
 
         [TestMethod]
         public void OverviewDocumentSucceed()
@@ -166,6 +366,122 @@ namespace SuperSmart.Test
             catch (Exception ex)
             {
                 Assert.IsTrue(false, ex?.Message);
+            }
+        }
+
+        [TestMethod]
+        public void DownloadDocumentValidData()
+        {
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                        .WithSubject(subject)
+                                        .Build();
+
+            var document = new DocumentBuilder().WithTask(task)
+                                                .WithOwner(account)
+                                                .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithTask(task)
+                                 .WithDocument(document)
+                                 .Build();
+
+            try
+            {
+                var downloadDocumentViewModel = documentPersistence.Download(document.Id, account.LoginToken);
+                
+                Assert.IsTrue(downloadDocumentViewModel.File == document.File);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(false, ex?.Message);
+            }
+        }
+
+        [TestMethod]
+        public void DownloadDocumentInvalidDocumentIdThrowPropertyExceptionCollection()
+        {
+            var invalidDocumentId = 1;
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                        .WithSubject(subject)
+                                        .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithTask(task)
+                                 .Build();
+
+            try
+            {
+                var downloadDocumentViewModel = documentPersistence.Download(invalidDocumentId, account.LoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void DownloadDocumentInvalidLoginTokenThrowPropertyExceptionCollection()
+        {
+            var invalidLoginToken = "loginToken";
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            var subject = new SubjectBuilder().WithTeachingClass(teachingClass)
+                                              .Build();
+
+            var task = new TaskBuilder().WithOwner(account)
+                                        .WithSubject(subject)
+                                        .Build();
+
+            var document = new DocumentBuilder().WithTask(task)
+                                                .WithOwner(account)
+                                                .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .WithSubject(subject)
+                                 .WithTask(task)
+                                 .WithDocument(document)
+                                 .Build();
+
+            try
+            {
+                var downloadDocumentViewModel = documentPersistence.Download(document.Id, invalidLoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
         }
     }
