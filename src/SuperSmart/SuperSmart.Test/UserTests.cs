@@ -10,7 +10,6 @@ namespace SuperSmart.Test
     [TestClass]
     public class UserTests
     {
-        IVerificationPersistence verificationPersistence = new VerificationPersistence();
         IUserPersistence userPersistence = new UserPersistence();
 
         [TestMethod]
@@ -114,6 +113,26 @@ namespace SuperSmart.Test
             try
             {
                 var user = userPersistence.GetFullNameFromUser(string.Empty);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void GetFullNameFromUserInvalidLoginTokenString()
+        {
+            var invalidLoginToken = "loginToken";
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .Build();
+
+            try
+            {
+                var user = userPersistence.GetFullNameFromUser(invalidLoginToken);
 
                 Assert.IsTrue(false);
             }
