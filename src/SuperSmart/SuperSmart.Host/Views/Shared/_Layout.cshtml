@@ -21,12 +21,9 @@
     <div id="side-bar">
         <h1 id="title">TASKER</h1>
     </div>
-        <div id="current-user">
-            @if (!string.IsNullOrWhiteSpace(this.User?.Identity?.Name))
-            {
+        <div id="current-user">         
                 <label>@{Html.RenderAction("GetFullNameFromAuthorizedUser", "Home");}</label>
                 <a href="@Url.Action("Logout", "Verification")"><i class='fa fa-lock'></i></a>
-            }
         </div>
     <main>
         @RenderBody()
