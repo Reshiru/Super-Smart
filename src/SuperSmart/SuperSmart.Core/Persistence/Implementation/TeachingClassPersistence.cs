@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SuperSmart.Core.Data.Connection;
 using SuperSmart.Core.Data.Implementation;
 using SuperSmart.Core.Data.ViewModels;
@@ -297,14 +298,14 @@ namespace SuperSmart.Core.Persistence.Implementation
 
             using (var db = new SuperSmartDb())
             {
-                var teachingClasses = db.TeachingClasses.Where(tc => tc.AssignedAccounts.Any(a => a.LoginToken == loginToken));
+                var teachingClasses = db.TeachingClasses.Include(t => t.AssignedAccounts)
+                                                        .Where(tc => tc.AssignedAccounts.Any(a => a.LoginToken == loginToken));
 
                 var mappedTeachingClasses = GetOverviewMapper().Map<List<TeachingClassViewModel>>(teachingClasses);
 
                 var overviewTeachingClassViewModel = new OverviewTeachingClassViewModel()
                 {
-                    TeachingClasses = mappedTeachingClasses,
-                                                            
+                    TeachingClasses = mappedTeachingClasses,                                          
                 };
 
                 return overviewTeachingClassViewModel;

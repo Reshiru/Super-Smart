@@ -47,7 +47,7 @@ namespace SuperSmart.Host.Controllers
 
 
         [HttpGet]
-        public ActionResult Manage(int subjectId)
+        public ActionResult Manage(Int64 subjectId)
         {
             ManageSubjectViewModel vm = new ManageSubjectViewModel();
 
@@ -81,7 +81,7 @@ namespace SuperSmart.Host.Controllers
         }
 
         [HttpGet]
-        public ActionResult Overview(int classId)
+        public ActionResult Overview(Int64 classId)
         {
             OverviewSubjectViewModel overviewSubjectViewModel = null;
 

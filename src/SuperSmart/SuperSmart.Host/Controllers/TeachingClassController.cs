@@ -53,7 +53,7 @@ namespace SuperSmart.Host.Controllers
 
 
         [HttpGet]
-        public ActionResult Manage(int teachingClassId)
+        public ActionResult Manage(Int64 teachingClassId)
         {
             ManageTeachingClassViewModel vm = new ManageTeachingClassViewModel();
 
