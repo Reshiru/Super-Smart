@@ -17,17 +17,20 @@
 @Html.ActionLink("Create new class", "Create", "TeachingClass")
 
 <box class="no-padding w-60 float-left">
-    <table class="clean-table">
-        <tr>
-            <th>Status</th>
-            <th><i class="fa fa-question"></i> What</th>
-            <th><i class="fa fa-calendar-o"></i> Until</th>
-            <th><i class="fa fa-cloud-upload"></i> Solutions</th>
-        </tr>
+    <table class="clean-table mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-cell--12-col">
+        <thead>
+            <tr>
+
+                <th>Status</th>
+                <th><i class="fa fa-question"></i> What</th>
+                <th><i class="fa fa-calendar-o"></i> Until</th>
+                <th><i class="fa fa-cloud-upload"></i> Solutions</th>
+            </tr>
+        </thead>
 
         @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.ToDo))
         {
-            <tr class="task-todo">
+            <tr class="mdl-data-table__cell--non-numeri">
                 <td>
                     <i class="fa fa-check-circle"></i>
                 </td>
@@ -41,12 +44,14 @@
                 <td><i class="fa fa-cloud-upload"></i></td>
             </tr>
         }
+      
+        </table>
+    <table>
         <tr>
             <th>Done</th>
             <th></th>
             <th></th>
         </tr>
-
         @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done))
         {
             <tr class="task-done">
