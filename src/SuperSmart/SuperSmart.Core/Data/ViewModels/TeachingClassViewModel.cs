@@ -14,7 +14,7 @@ namespace SuperSmart.Core.Data.ViewModels
         /// <summary>
         /// The ID of the TeacingClass
         /// </summary>
-        public int Id { get; set; }
+        public Int64 Id { get; set; }
 
         /// <summary>
         /// The description of the TechingClass
@@ -29,7 +29,7 @@ namespace SuperSmart.Core.Data.ViewModels
         /// <summary>
         /// The Number of the Education Years
         /// </summary>
-        public int NumberOfEducationYears { get; set; }
+        public Int64 NumberOfEducationYears { get; set; }
 
         /// <summary>
         /// The Timestamp when the TeachingClass started

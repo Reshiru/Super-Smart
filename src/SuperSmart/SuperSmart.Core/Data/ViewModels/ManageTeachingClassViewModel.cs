@@ -11,7 +11,7 @@ namespace SuperSmart.Core.Data.ViewModels
         /// <summary>
         /// The Id of the TeachingClass
         /// </summary>
-        public int Id { get; set; }
+        public Int64 Id { get; set; }
 
         /// <summary>
         /// The Designation of the TeachingClass
