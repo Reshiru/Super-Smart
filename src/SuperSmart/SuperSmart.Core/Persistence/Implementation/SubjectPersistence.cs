@@ -153,7 +153,8 @@ namespace SuperSmart.Core.Persistence.Implementation
                 var overviewSubjectViewModel = new OverviewSubjectViewModel()
                 {
                     Subjects = subjects,
-                    IsClassAdmin = teachingClass.Admin == account
+                    IsClassAdmin = teachingClass.Admin == account,
+                    TeachingClassId = classId
                 };
 
                 return overviewSubjectViewModel;

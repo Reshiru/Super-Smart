@@ -3,46 +3,50 @@
 @{
     ViewBag.Title = "Task Overview";
 }
-@using (Html.BeginForm("Overview", "Task"))
-{
-    @Html.ActionLink("Create new task", "Create", "TeachingClass")
-    
-    <box class="no-padding w-60 float-left">
-        <table class="clean-table">
+
+@Html.ActionLink(linkText: "Create new task", actionName: "Create", controllerName: "Task", routeValues: new { subjectId = Model.SubjectId }, htmlAttributes: null)
+
+<box class="no-padding w-60 float-left">
+    <table class="clean-table">
+        <tr>
+            <th>Designation</th>
+            <th>Finished</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.Tasks)
+        {
             <tr>
-                <th>Designation</th>
-                <th>Finished</th>
-                <th>Status</th>
-                <th></th>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Designation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DisplayFinished)
+                </td>
+
+                <td>
+                    <a href="@Url.Action("Manage",new {taskId =item.Id })"><i title="Manage Task" class="fa fa-pencil"></i></a>
+                </td>
+                @if (item.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done)
+                {
+                    <td>
+                        <a href="#"><i title="Set TaskStatus to Done" class="fa fa-check-circle"></i></a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a href="#"><i title="Set TaskStatus to ToDo" class="fa fa-check-circle"></i></a>
+                    </td>
+                }
+                <td>
+                    <a href="@Url.Action("Overview","Document",new {taskId =item.Id })"><i title="Files" class="fa fa-cloud-download"></i></a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Create","Document",new {taskId =item.Id })"><i title="Upload File" class="fa fa-cloud-upload"></i></a>
+                </td>
             </tr>
-
-            @foreach (var item in Model.Tasks)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Designation)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DisplayFinished)
-                    </td>
-
-                    <td>
-                        <a href="@Url.Action("Manage",new {taskId =item.Id })"><i title="Manage Task" class="fa fa-pencil"></i></a>
-                    </td>
-                    @if (item.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done)
-                    {
-                        <td>
-                            <a href="#"><i title="Set TaskStatus to Done" class="fa fa-check-circle"></i></a>
-                        </td>
-                    }
-                    else
-                    {
-                        <td>
-                            <a href="#"><i title="Set TaskStatus to ToDo" class="fa fa-check-circle"></i></a>
-                        </td>
-                    }
-                </tr>
-            }
-        </table>
-    </box>
-}
+        }
+    </table>
+</box>

@@ -51,7 +51,7 @@ namespace SuperSmart.Host.Controllers
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
-            return RedirectToAction("OverviewDocument", new { taskId = createDocumentViewModel.TaskId });
+            return RedirectToAction("Overview", new { taskId = createDocumentViewModel.TaskId });
         }
 
         [HttpGet]

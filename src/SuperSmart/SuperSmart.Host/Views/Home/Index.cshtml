@@ -3,8 +3,7 @@
 @{
     ViewBag.Title = "Index";
 }
-@using (Html.BeginForm("Create", "TeachingClass"))
-{
+
     @Html.ActionLink("Create new class","Create","TeachingClass")
 
     <box class="no-padding w-60 float-left">
@@ -60,5 +59,3 @@
     <box class="w-40 float-left no-margin">
         <table class="calendar"></table>
     </box>
-
-}

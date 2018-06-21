@@ -182,12 +182,12 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(document), "Document not found");
                 }
 
-                if (document.Task.Subject.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken))
+                if (!document.Task.Subject.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken))
                 {
                     throw new PropertyExceptionCollection(nameof(document), "User has no permissions to download document");
                 }
 
-                var downloadDocumentViewModel = Mapper.Map<DownloadDocumentViewModel>(document);
+                var downloadDocumentViewModel = this.GetDocumentDownloadMapper().Map<DownloadDocumentViewModel>(document);
 
                 return downloadDocumentViewModel;
             }
@@ -205,6 +205,22 @@ namespace SuperSmart.Core.Persistence.Implementation
                 cfg.CreateMap<Document, DocumentViewModel>()
                .ForMember(vm => vm.Uploader, map => map.MapFrom(m => m.Uploader.FirstName + " " + m.Uploader.LastName))
                 .ForMember(vm => vm.IsOwner, map => map.MapFrom(m => m.Uploader == account));
+            }).CreateMapper();
+
+            return mapper;
+        }
+
+        /// <summary>
+        /// Gets the document download mapper to map documents to 
+        /// a download view modle
+        /// </summary>
+        /// <returns></returns>
+        public IMapper GetDocumentDownloadMapper()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Document, DownloadDocumentViewModel>();
+
             }).CreateMapper();
 
             return mapper;
