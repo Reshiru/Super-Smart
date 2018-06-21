@@ -135,18 +135,15 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
                 }
 
-                var subjectQuery = db.Subjects.Where(s => s.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) && s.TeachingClass.Id == classId);
+                var subjectQuery = db.Subjects.Include(s => s.TeachingClass)
+                                              .ThenInclude(t => t.AssignedAccounts)
+                                              .Where(s => s.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) && 
+                                                s.TeachingClass.Id == classId);
 
-                var config = new MapperConfiguration(cfg =>
-                {
-                    cfg.CreateMap<Subject, SubjectViewModel>();
-                });
 
-                IMapper mapper = config.CreateMapper();
+                var subjects = GetSubjectOverviewMapper().Map<List<SubjectViewModel>>(subjectQuery);
 
-                List<SubjectViewModel> subjects = mapper.Map<List<SubjectViewModel>>(subjectQuery);
-
-                OverviewSubjectViewModel overviewSubjectViewModel = new OverviewSubjectViewModel()
+                var overviewSubjectViewModel = new OverviewSubjectViewModel()
                 {
                     Subjects = subjects
                 };
@@ -183,6 +180,20 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 return hasPermissions;
             }
+        }
+
+        /// <summary>
+        /// Map subjects to subjects view model
+        /// </summary>
+        /// <returns></returns>
+        public IMapper GetSubjectOverviewMapper()
+        {
+            var mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Subject, SubjectViewModel>();
+            }).CreateMapper();
+
+            return mapper;
         }
     }
 }
