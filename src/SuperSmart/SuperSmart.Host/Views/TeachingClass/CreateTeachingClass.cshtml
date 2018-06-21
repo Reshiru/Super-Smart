@@ -7,20 +7,20 @@
         @Html.AntiForgeryToken()
 
 
-        <div class="mdl-textfield mdl-js-textfield">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input class="mdl-textfield__input" type="text" name="Designation" id="Designation">
             <label class="mdl-textfield__label" for="Designation">Designation</label>
             <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Designation)</span>
         </div>
 
-        <div class="mdl-textfield mdl-js-textfield">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
             <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="NumberOfEducationYears" name="NumberOfEducationYears">
             <label class="mdl-textfield__label" for="NumberOfEducationYears">Years of Education</label>
             <span class="mdl-textfield__error">Input is not a number!</span>
         </div>
 
         <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input class="mdl-textfield__input" type="datetime" id="Started" name="Started">
+            <input class="mdl-textfield__input" type="date" id="Started" name="Started" placeholder="">
             <label class="mdl-textfield__label" for="Started">Start date</label>
             <span class="mdl-textfield__error">Input is not a date!</span>
         </div>
