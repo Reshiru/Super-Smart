@@ -255,3 +255,29 @@ main {
     .task-done td:first-child {
         color: #00875A;
     }*/
+
+
+
+.centerMiddleWrap {
+    width: 100%;
+    height:100%;
+    text-align: center;
+    padding: 50px 0 50px 0;
+}
+
+    .centerMiddleWrap > div {
+        display: inline-block;
+        text-align: center;
+
+    }
+
+
+.mdl-button--accent.mdl-button--accent.mdl-button--raised, .mdl-button--accent.mdl-button--accent.mdl-button--fab{
+    float:left;
+    margin:10px 0 10px 10px;
+}
+
+
+
+
+   
