@@ -137,15 +137,15 @@ namespace SuperSmart.Core.Persistence.Implementation
                                             .ThenInclude(t => t.TeachingClass)
                                             .ThenInclude(t => t.AssignedAccounts)
                                             .Where(d => d.Task.Subject.TeachingClass.AssignedAccounts
-                                                    .Any(a => a.LoginToken == loginToken) && 
+                                                    .Any(a => a.LoginToken == loginToken) &&
                                                          d.Task.Id == taskId &&
                                                          d.Active);
 
                 var convertedDocuments = GetDocumentOverviewMapper().Map<List<DocumentViewModel>>(documents);
 
-                documents.ForEach(itm =>
+                convertedDocuments.ForEach(itm =>
                 {
-                    itm.IsOwner = documentQuery.Single(d => d.Id == itm.Id).Uploader == account;
+                    itm.IsOwner = documents.Single(d => d.Id == itm.Id).Uploader == account;
                 });
 
                 OverviewDocumentViewModel overviewDocumentViewModel = new OverviewDocumentViewModel()
@@ -192,9 +192,9 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(document), "User has no permissions to download document");
                 }
 
-                var documentViewModel = GetDocumentOverviewMapper().Map<DocumentViewModel>(document);
+                var downloadDocumentViewModel = GetDocumentOverviewMapper().Map<DownloadDocumentViewModel>(document);
 
-                return documentViewModel;
+                return downloadDocumentViewModel;
             }
         }
 
