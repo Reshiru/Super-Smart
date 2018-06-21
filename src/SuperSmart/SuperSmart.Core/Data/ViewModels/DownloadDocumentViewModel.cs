@@ -8,7 +8,7 @@ namespace SuperSmart.Core.Data.ViewModels
 {
     public class DownloadDocumentViewModel
     {
-        public string Filename { get; set; }
+        public string FileName { get; set; }
         public byte[] File { get; set; }
         public string ContentType { get; set; }
     }

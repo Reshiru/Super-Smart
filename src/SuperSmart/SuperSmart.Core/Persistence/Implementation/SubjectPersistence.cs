@@ -80,7 +80,8 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// </summary>
         /// <param name="manageSubjectViewModel"></param>
         /// <param name="loginToken"></param>
-        public void Manage(ManageSubjectViewModel manageSubjectViewModel, string loginToken)
+        /// <returns>The id of the TeachingClass</returns>
+        public Int64 Manage(ManageSubjectViewModel manageSubjectViewModel, string loginToken)
         {
             Guard.ModelStateCheck(manageSubjectViewModel);
             Guard.NotNullOrEmpty(loginToken);
@@ -112,7 +113,7 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 db.SaveChanges();
 
-                manageSubjectViewModel.TeachingClassId = subject.TeachingClass.Id;
+                return subject.TeachingClass.Id;
             }
         }
 

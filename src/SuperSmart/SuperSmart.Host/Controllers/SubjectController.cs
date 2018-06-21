@@ -73,8 +73,8 @@ namespace SuperSmart.Host.Controllers
         {
             try
             {
-                subjectPersistence.Manage(manageSubjectViewModel, User.Identity.Name);
-                return RedirectToAction("Overview", new { classId = manageSubjectViewModel.TeachingClassId });
+                Int64 teachingClassId = subjectPersistence.Manage(manageSubjectViewModel, User.Identity.Name);
+                return RedirectToAction("Overview", new { classId = teachingClassId });
             }
             catch (Exception ex)
             {

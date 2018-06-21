@@ -141,12 +141,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                                                          d.Task.Id == taskId &&
                                                          d.Active);
 
-                var convertedDocuments = GetDocumentOverviewMapper().Map<List<DocumentViewModel>>(documents);
-
-                convertedDocuments.ForEach(itm =>
-                {
-                    itm.IsOwner = documents.Single(d => d.Id == itm.Id).Uploader == account;
-                });
+                var convertedDocuments = GetDocumentOverviewMapper(account).Map<List<DocumentViewModel>>(documents);
 
                 OverviewDocumentViewModel overviewDocumentViewModel = new OverviewDocumentViewModel()
                 {
@@ -192,7 +187,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(document), "User has no permissions to download document");
                 }
 
-                var downloadDocumentViewModel = GetDocumentOverviewMapper().Map<DownloadDocumentViewModel>(document);
+                var downloadDocumentViewModel = Mapper.Map<DownloadDocumentViewModel>(document);
 
                 return downloadDocumentViewModel;
             }
@@ -203,18 +198,13 @@ namespace SuperSmart.Core.Persistence.Implementation
         /// a overview view modle
         /// </summary>
         /// <returns></returns>
-        public IMapper GetDocumentOverviewMapper()
+        public IMapper GetDocumentOverviewMapper(Account account)
         {
             var mapper = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Document, DocumentViewModel>()
-               .ForMember(vm => vm.Filename, map => map.MapFrom(m => m.FileName))
-               .ForMember(vm => vm.Uploader, map => map.MapFrom(m => m.Uploader.FirstName + " " + m.Uploader.LastName));
-
-                cfg.CreateMap<Document, DocumentViewModel>()
-                .ForMember(vm => vm.File, map => map.MapFrom(m => m.File))
-                .ForMember(vm => vm.ContentType, map => map.MapFrom(m => m.ContentType))
-                .ForMember(vm => vm.Filename, map => map.MapFrom(m => m.FileName));
+               .ForMember(vm => vm.Uploader, map => map.MapFrom(m => m.Uploader.FirstName + " " + m.Uploader.LastName))
+                .ForMember(vm => vm.IsOwner, map => map.MapFrom(m => m.Uploader == account));
             }).CreateMapper();
 
             return mapper;

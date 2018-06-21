@@ -68,7 +68,7 @@ namespace SuperSmart.Host.Controllers
             try
             {
                 DownloadDocumentViewModel document = documentPersistence.Download(documentId, this.User.Identity.Name);
-                return File(document.File, document.ContentType, document.Filename);
+                return File(document.File, document.ContentType, document.FileName);
             }
             catch (Exception ex)
             {
