@@ -84,6 +84,7 @@ namespace SuperSmart.Test
             var filename = "Testfile";
             var file = new byte[] { };
             var documenType = DocumentType.Document;
+            var contentType = "image/jpg";
 
             var account = new AccountBuilder().Build();
 
@@ -111,7 +112,8 @@ namespace SuperSmart.Test
                     File = file,
                     DocumentType = documenType,
                     FileName = filename,
-                    TaskId = task.Id
+                    TaskId = task.Id,
+                    ContentType = contentType
                 }, account.LoginToken);
 
                 Assert.IsTrue(false);
