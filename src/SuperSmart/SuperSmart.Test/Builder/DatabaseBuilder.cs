@@ -12,6 +12,7 @@ namespace SuperSmart.Test.Builder
         private List<Subject> subjects;
         private List<Appointment> appointments;
         private List<Task> tasks;
+        private List<Document> documents;
 
         public DatabaseBuilder()
         {
@@ -22,6 +23,7 @@ namespace SuperSmart.Test.Builder
             subjects = new List<Subject>();
             appointments = new List<Appointment>();
             tasks = new List<Task>();
+            documents = new List<Document>();
         }
 
         public DatabaseBuilder WithAccount(Account account)
@@ -59,6 +61,13 @@ namespace SuperSmart.Test.Builder
             return this;
         }
 
+        public DatabaseBuilder WithDocument(Document document)
+        {
+            this.documents.Add(document);
+
+            return this;
+        }
+
         public DatabaseBuilder WithSecureDatabaseDeleted(bool secureDatabaseDeleted)
         {
             this.secureDatabaseDeleted = secureDatabaseDeleted;
@@ -86,6 +95,7 @@ namespace SuperSmart.Test.Builder
                 subjects.ForEach(s => db.Subjects.Add(s));
                 appointments.ForEach(a => db.Appointments.Add(a));
                 tasks.ForEach(a => db.Tasks.Add(a));
+                documents.ForEach(d => db.Documents.Add(d));
 
                 db.SaveChanges();
 
