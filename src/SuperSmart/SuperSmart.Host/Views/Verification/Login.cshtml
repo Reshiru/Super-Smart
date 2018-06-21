@@ -3,29 +3,32 @@
 @{
     Layout = "~/Views/Shared/_VerificationLayout.cshtml";
 }
+<div id="createClassWrap" class="centerMiddleWrap">
+    <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+        @using (Html.BeginForm("Login", "Verification"))
+        {
+            @Html.AntiForgeryToken()
 
-<div class="box">
-    @using (Html.BeginForm("Login", "Verification"))
-    {
-        @Html.AntiForgeryToken()
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Email, new { @class = "mdl-textfield__input", id = "mailInput", required = "required" })
+                <label class="mdl-textfield__label" for="Designation">Email</label>
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Email)</span>
+            </div>
 
-        <div class="input-wrapper">
-            @Html.LabelFor(m => m.Email)
-            <i class="fa fa-envelope-o"></i>
-            @Html.TextBoxFor(m => m.Email, new { id = "mailInput", type = "email", required = "required" })
-            <p>@Html.ValidationMessageFor(m => m.Email)</p>
-        </div>
 
-        <div class="input-wrapper">
-            @Html.LabelFor(m => m.Password)
-            <i class="fa fa-lock"></i>
-            @Html.PasswordFor(m => m.Password, new { id = "passwordInput", type = "password", required = "required" })
-            <p>@Html.ValidationMessageFor(m => m.Password)</p>
-        </div>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.Password, new { @class = "mdl-textfield__input", id = "Firstname", required = "required", type = "password" })
+                <label class="mdl-textfield__label" for="Designation">Password</label>
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Password)</span>
+            </div>
 
-        <input type="hidden" name="ReturnUrl" value="@Request.QueryString["ReturnUrl"]" />
-        <button type="submit"><i class="fa fa-paper-plane-o"></i> Login</button>
+            <input type="hidden" name="ReturnUrl" value="@Request.QueryString["ReturnUrl"]" />
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                Login
+            </button>
 
-        <p>Not registred? @Html.ActionLink("Create an account", "Register")</p>
-    }
+            <p style="margin-top: 25px;">Not registred? @Html.ActionLink("Create an account", "Register")</p>
+        }
+    </div>
 </div>
+

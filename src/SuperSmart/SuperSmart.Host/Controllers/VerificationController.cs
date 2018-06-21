@@ -32,7 +32,7 @@ namespace SuperSmart.Host.Controllers
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
-            return View("Register");
+            return View("Register", registerViewModel);
         }
 
         [HttpGet]
@@ -42,7 +42,7 @@ namespace SuperSmart.Host.Controllers
                 if (!string.IsNullOrWhiteSpace(Request.Form["ReturnUrl"]) && Request.Form["ReturnUrl"] != "/")
                     return Redirect("~/" + Request.Form["ReturnUrl"]);
                 else
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index", "Home");
             else
                 return View("Login");
         }
@@ -58,12 +58,13 @@ namespace SuperSmart.Host.Controllers
             catch (Exception ex)
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
+                return View("Login", loginViewModel);
             }
-            
+
             if (!string.IsNullOrWhiteSpace(Request.Form["ReturnUrl"]) && Request.Form["ReturnUrl"] != "/")
                 return Redirect("~/" + Request.Form["ReturnUrl"]);
             else
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
