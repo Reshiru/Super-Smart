@@ -10,27 +10,54 @@
 
     <!-- STYLE -->
     <link href="~/Content/Style/Site.css" rel="stylesheet" />
+    <link href="~/Content/Style/material.min.css" rel="stylesheet" />
+
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
     <!-- FONTAWESOME -->
     <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
 
+    <script src="~/Content/Style/material.min.js"></script>
+
     @RenderSection("head", required: false)
 </head>
 <body>
-    <div id="side-bar">
-        <h1 id="title">TASKER</h1>
-    </div>
-        <div id="current-user">
-            @if (!string.IsNullOrWhiteSpace(this.User?.Identity?.Name))
-            {
-                <label>@{Html.RenderAction("GetFullNameFromAuthorizedUser", "Home");}</label>
-                <a href="@Url.Action("Logout", "Verification")"><i class='fa fa-lock'></i></a>
-            }
+    <div class="mdl-layout mdl-js-layout">
+        <header class="mdl-layout__header mdl-layout__header--scroll">
+            <div class="mdl-layout__header-row">
+                <!-- Title -->
+                <span class="mdl-layout-title">TASKER</span>
+                <!-- Add spacer, to align navigation to the right -->
+                <div class="mdl-layout-spacer"></div>
+                <!-- Navigation -->
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="">Link</a>
+                </nav>
+            </div>
+        </header>
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">Menu</span>
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+            </nav>
         </div>
-    <main>
-        @RenderBody()
-    </main>
-    <footer></footer>
+        <main class="mdl-layout__content">
+            <div class="page-content">
+                @RenderBody()
+            </div>
+        </main>
+        <footer class="mdl-mini-footer">
+            <div class="mdl-mini-footer__left-section">
+                <div class="mdl-logo">TASKER</div>
+                <ul class="mdl-mini-footer__link-list">
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Privacy & Terms</a></li>
+                </ul>
+            </div>
+        </footer>
+    </div>
 </body>
 </html>

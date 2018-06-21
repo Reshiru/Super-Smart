@@ -165,6 +165,10 @@
   <ItemGroup>
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\Style\material.css" />
+    <Content Include="Content\Style\material.js" />
+    <Content Include="Content\Style\material.min.css" />
+    <Content Include="Content\Style\material.min.js" />
     <Content Include="Content\Style\Site.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
