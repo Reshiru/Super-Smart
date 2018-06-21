@@ -89,7 +89,66 @@ namespace SuperSmart.Test
         }
 
         [TestMethod]
-        public void GetSubjectOverview()
+        public void CreateTeachingClassInvalidLoginTokenThrowPropertyExcpetionCollection()
+        {
+            var designation = "Test";
+            var invalidLoginToken = "loginToken";
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .Build();
+            try
+            {
+                subjectPersistence.Create(new CreateSubjectViewModel()
+                {
+                    Designation = designation,
+                    TeachingClassId = teachingClass.Id,
+                }, invalidLoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void CreateTeachingClassInvalidTeachingClassIdThrowPropertyExcpetionCollection()
+        {
+            var designation = "Test";
+            var invalidTeachingClassId = 1;
+
+            var account = new AccountBuilder().Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .Build();
+
+            try
+            {
+                subjectPersistence.Create(new CreateSubjectViewModel()
+                {
+                    Designation = designation,
+                    TeachingClassId = invalidTeachingClassId,
+                }, account.LoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void GetSubjectOverviewSuccessfullWithTwoSubjects()
         {
             var account = new AccountBuilder().Build();
 
@@ -122,7 +181,61 @@ namespace SuperSmart.Test
         }
 
         [TestMethod]
-        public void ManageSubject()
+        public void GetSubjectOverviewInvalidLoginTokenThrowPropertyExcpetionCollection()
+        {
+            var invalidLoginToke = "loginToken";
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .Build();
+
+            try
+            {
+                var result = subjectPersistence.GetOverview(invalidLoginToke, teachingClass.Id);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void GetSubjectOverviewInvalidSubjectIdReturnsEmptyList()
+        {
+            var invalidSubjectId = 1;
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .Build();
+
+            try
+            {
+                var result = subjectPersistence.GetOverview(account.LoginToken, invalidSubjectId);
+
+                Assert.IsTrue(result.Subjects.Count == 0);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(false, ex?.Message);
+            }
+        }
+
+        [TestMethod]
+        public void ManageSubjectSuccessfull()
         {
             var designation = "Test";
 
@@ -155,6 +268,69 @@ namespace SuperSmart.Test
             catch (Exception ex)
             {
                 Assert.IsTrue(false, ex?.Message);
+            }
+        }
+
+        [TestMethod]
+        public void ManageSubjectInvalidSubjectIdThrowsPropertyExcpetionCollection()
+        {
+            var designation = "Test";
+            var invalidSubjectId = 1;
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .Build();
+            try
+            {
+                subjectPersistence.Manage(new ManageSubjectViewModel()
+                {
+                    Designation = designation,
+                    Id = invalidSubjectId,
+                }, account.LoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
+            }
+        }
+
+        [TestMethod]
+        public void ManageSubjectInvalidLoginTokenThrowsPropertyExcpetionCollection()
+        {
+            var designation = "Test";
+            var subjectId = 1;
+            var invalidLoginToken = "loginToken";
+
+            var account = new AccountBuilder().Build();
+
+            var teachingClass = new TeachingClassBuilder().WithAdmin(account)
+                                                          .Build();
+
+            new DatabaseBuilder().WithSecureDatabaseDeleted(true)
+                                 .WithAccount(account)
+                                 .WithTeachingClass(teachingClass)
+                                 .Build();
+            try
+            {
+                subjectPersistence.Manage(new ManageSubjectViewModel()
+                {
+                    Designation = designation,
+                    Id = subjectId,
+                }, invalidLoginToken);
+
+                Assert.IsTrue(false);
+            }
+            catch (Exception ex)
+            {
+                Assert.IsTrue(ex is PropertyExceptionCollection);
             }
         }
     }
