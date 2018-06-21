@@ -98,7 +98,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 var subject = db.Subjects.Include(s => s.TeachingClass)
                                          .ThenInclude(t => t.AssignedAccounts)
                                          .SingleOrDefault(itm => itm.Id == manageSubjectViewModel.Id);
-                
+
                 if (subject == null)
                 {
                     throw new PropertyExceptionCollection(nameof(subject), "Subject not found");
@@ -132,20 +132,28 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 if (account == null)
                 {
-                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                    throw new PropertyExceptionCollection(nameof(account), "Account not found");
+                }
+
+                var teachingClass = db.TeachingClasses.SingleOrDefault(t => t.Id == classId);
+
+                if (teachingClass == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(teachingClass), "TeachingClass not found");
                 }
 
                 var subjectQuery = db.Subjects.Include(s => s.TeachingClass)
                                               .ThenInclude(t => t.AssignedAccounts)
-                                              .Where(s => s.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) && 
-                                                s.TeachingClass.Id == classId);
+                                              .Where(s => s.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) &&
+                                                s.TeachingClass == teachingClass);
 
 
                 var subjects = GetSubjectOverviewMapper().Map<List<SubjectViewModel>>(subjectQuery);
 
                 var overviewSubjectViewModel = new OverviewSubjectViewModel()
                 {
-                    Subjects = subjects
+                    Subjects = subjects,
+                    IsClassAdmin = teachingClass.Admin == account
                 };
 
                 return overviewSubjectViewModel;

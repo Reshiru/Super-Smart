@@ -10,5 +10,7 @@ namespace SuperSmart.Core.Data.ViewModels
     {
 
         public List<SubjectViewModel> Subjects { get; set; }
+
+        public bool IsClassAdmin { get; set; }
     }
 }
