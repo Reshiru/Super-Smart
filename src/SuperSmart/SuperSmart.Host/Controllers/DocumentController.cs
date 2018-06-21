@@ -51,7 +51,7 @@ namespace SuperSmart.Host.Controllers
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
-            return RedirectToAction("OverviewDocument", new { taskId = createDocumentViewModel.TaskId});
+            return RedirectToAction("OverviewDocument", new { taskId = createDocumentViewModel.TaskId });
         }
 
         [HttpGet]
@@ -67,7 +67,7 @@ namespace SuperSmart.Host.Controllers
         {
             try
             {
-                DocumentViewModel document = documentPersistence.GetDocument(documentId, this.User.Identity.Name);
+                DownloadDocumentViewModel document = documentPersistence.Download(documentId, this.User.Identity.Name);
                 return File(document.File, document.ContentType, document.Filename);
             }
             catch (Exception ex)

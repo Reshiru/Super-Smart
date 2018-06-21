@@ -13,6 +13,7 @@ namespace SuperSmart.Core.Data.ViewModels
         public string Filename { get; set; }
         public DateTime Uploaded { get; set; }
         public string Uploader { get; set; }
+        public bool IsOwner { get; set; }
         public DocumentType DocumentType { get; set; }
         public byte[] File { get; set; }
         public string ContentType { get; set; }

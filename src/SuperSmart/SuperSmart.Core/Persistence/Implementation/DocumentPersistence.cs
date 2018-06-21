@@ -133,6 +133,11 @@ namespace SuperSmart.Core.Persistence.Implementation
 
                 List<DocumentViewModel> documents = this.GetMapper().Map<List<DocumentViewModel>>(documentQuery);
 
+                documents.ForEach(itm =>
+                {
+                    itm.IsOwner = documentQuery.Single(d => d.Id == itm.Id).Uploader == account;
+                });
+
                 OverviewDocumentViewModel overviewDocumentViewModel = new OverviewDocumentViewModel()
                 {
                     Documents = documents
@@ -143,11 +148,11 @@ namespace SuperSmart.Core.Persistence.Implementation
         }
 
         /// <summary>
-        /// Get Document
+        /// Get document to download
         /// </summary>
         /// <param name="documentId"></param>
         /// <param name="loginToken"></param>
-        public DocumentViewModel GetDocument(Int64 documentId, string loginToken)
+        public DownloadDocumentViewModel Download(Int64 documentId, string loginToken)
         {
             Guard.NotNullOrEmpty(loginToken);
 
@@ -160,14 +165,19 @@ namespace SuperSmart.Core.Persistence.Implementation
                     throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
                 }
 
-                var document = db.Documents.SingleOrDefault(d => d.Task.Subject.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) && d.Id == documentId);
+                var document = db.Documents.SingleOrDefault(d => d.Id == documentId);
 
                 if (document == null)
                 {
                     throw new PropertyExceptionCollection(nameof(document), "Document not found");
                 }
 
-                return this.GetMapper().Map<DocumentViewModel>(document);
+                if (document.Task.Subject.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken))
+                {
+                    throw new PropertyExceptionCollection(nameof(document), "User has no permissions to download document");
+                }
+
+                return this.GetMapper().Map<DownloadDocumentViewModel>(document);
             }
         }
 
@@ -183,6 +193,10 @@ namespace SuperSmart.Core.Persistence.Implementation
                .ForMember(vm => vm.Uploaded, map => map.MapFrom(m => m.Uploaded))
                .ForMember(vm => vm.Uploader, map => map.MapFrom(m => m.Uploader.FirstName + " " + m.Uploader.LastName));
 
+                cfg.CreateMap<Document, DocumentViewModel>()
+                .ForMember(vm => vm.File, map => map.MapFrom(m => m.File))
+                .ForMember(vm => vm.ContentType, map => map.MapFrom(m => m.ContentType))
+                .ForMember(vm => vm.Filename, map => map.MapFrom(m => m.FileName));
             });
 
             return config.CreateMapper();
