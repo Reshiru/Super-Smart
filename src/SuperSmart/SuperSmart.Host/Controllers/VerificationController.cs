@@ -41,7 +41,7 @@ namespace SuperSmart.Host.Controllers
                 if (!string.IsNullOrWhiteSpace(Request.Form["ReturnUrl"]) && Request.Form["ReturnUrl"] != "/")
                     return Redirect("~/" + Request.Form["ReturnUrl"]);
                 else
-                    return RedirectToAction("Home");
+                    return RedirectToAction("Index","Home");
             else
                 return View("Login");
         }

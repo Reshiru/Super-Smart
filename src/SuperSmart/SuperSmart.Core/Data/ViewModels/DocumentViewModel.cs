@@ -11,5 +11,6 @@ namespace SuperSmart.Core.Data.ViewModels
         public string Uploader { get; set; }
         public DocumentType DocumentType { get; set; }
         public byte[] File { get; set; }
+        public string ContentType { get; set; }
     }
 }

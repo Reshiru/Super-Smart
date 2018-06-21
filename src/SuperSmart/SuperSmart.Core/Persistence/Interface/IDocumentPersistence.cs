@@ -29,5 +29,13 @@ namespace SuperSmart.Core.Persistence.Interface
         /// <param name="taskId"></param>
         /// <param name="loginToken"></param>
         OverviewDocumentViewModel GetOverview(Int64 taskId, string loginToken);
+
+
+        /// <summary>
+        /// Get Document
+        /// </summary>
+        /// <param name="documentId"></param>
+        /// <param name="loginToken"></param>
+        DocumentViewModel GetDocument(Int64 documentId, string loginToken);
     }
 }

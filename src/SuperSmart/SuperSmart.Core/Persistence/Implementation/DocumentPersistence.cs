@@ -59,6 +59,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 var document = new Document()
                 {
                     File = createDocumentViewModel.File,
+                    ContentType = createDocumentViewModel.ContentType,
                     DocumentType = createDocumentViewModel.DocumentType,
                     FileName = createDocumentViewModel.FileName,
                     Uploaded = DateTime.Now,
@@ -140,6 +141,57 @@ namespace SuperSmart.Core.Persistence.Implementation
                                                          d.Task.Id == taskId &&
                                                          d.Active);
 
+                List<DocumentViewModel> documents = this.GetMapper().Map<List<DocumentViewModel>>(documentQuery);
+
+                OverviewDocumentViewModel overviewDocumentViewModel = new OverviewDocumentViewModel()
+                {
+                    Documents = documents
+                };
+
+                return overviewDocumentViewModel;
+            }
+        }
+
+        /// <summary>
+        /// Get Document
+        /// </summary>
+        /// <param name="documentId"></param>
+        /// <param name="loginToken"></param>
+        public DocumentViewModel GetDocument(Int64 documentId, string loginToken)
+        {
+            Guard.NotNullOrEmpty(loginToken);
+
+            using (SuperSmartDb db = new SuperSmartDb())
+            {
+                var account = db.Accounts.SingleOrDefault(a => a.LoginToken == loginToken);
+
+                if (account == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
+                }
+
+                var document = db.Documents.SingleOrDefault(d => d.Task.Subject.TeachingClass.AssignedAccounts.Any(a => a.LoginToken == loginToken) && d.Id == documentId);
+
+                if (document == null)
+                {
+                    throw new PropertyExceptionCollection(nameof(document), "Document not found");
+                }
+
+                return this.GetMapper().Map<DocumentViewModel>(document);
+            }
+        }
+
+        private IMapper GetMapper()
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Document, DocumentViewModel>()
+               .ForMember(vm => vm.File, map => map.MapFrom(m => m.File))
+               .ForMember(vm => vm.ContentType, map => map.MapFrom(m => m.ContentType))
+               .ForMember(vm => vm.Filename, map => map.MapFrom(m => m.FileName))
+               .ForMember(vm => vm.DocumentType, map => map.MapFrom(m => m.DocumentType))
+               .ForMember(vm => vm.Uploaded, map => map.MapFrom(m => m.Uploaded))
+               .ForMember(vm => vm.Uploader, map => map.MapFrom(m => m.Uploader.FirstName + " " + m.Uploader.LastName));
                 var convertedDocuments = GetDocumentOverviewMapper().Map<List<DocumentViewModel>>(documents);
 
                 var overviewDocumentViewModel = new OverviewDocumentViewModel()

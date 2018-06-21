@@ -19,6 +19,11 @@ namespace SuperSmart.Core.Data.Implementation
         public byte[] File { get; set; }
 
         /// <summary>
+        /// The system generated ContentType
+        /// </summary>
+        public string ContentType { get; set; }
+
+        /// <summary>
         /// The document type from the document
         /// </summary>
         public DocumentType DocumentType { get; set; }
