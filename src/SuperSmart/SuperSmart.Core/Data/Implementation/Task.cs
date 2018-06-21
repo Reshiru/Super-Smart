@@ -9,7 +9,7 @@ namespace SuperSmart.Core.Data.Implementation
     public class Task
     {
         /// <summary>
-        /// The dataabse generated identifier for the task
+        /// The database generated identifier for the task
         /// </summary>
         public Int64 Id { get; set; }
 
