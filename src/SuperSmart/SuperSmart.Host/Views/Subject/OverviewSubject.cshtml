@@ -15,7 +15,6 @@
             <thead>
                 <tr>
                     <th class="mdl-data-table__cell--non-numeric">Designation</th>
-                    <th>Designation</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -23,16 +22,30 @@
                 @foreach (var item in Model.Subjects)
                 {
                     <tr>
-                        <td>
                         <td class="mdl-data-table__cell--non-numeric">@item.Designation</td>
                         <td>
                             @if (Model.IsClassAdmin)
                             {
-                                <a href="@Url.Action("Manage", new { subjectId = item.Id })"><i class="material-icons">edit</i></a>
+                                <a href="@Url.Action("Manage", new { subjectId = item.Id })">
+                                    <i class="material-icons" id="edit">edit</i>
+                                    <div class="mdl-tooltip" data-mdl-for="edit">
+                                        Edit subject
+                                    </div>
+                                </a>
                             }
 
-                            <a href="@Url.Action("Overview","Task",new {subjectId =item.Id })"><i class="material-icons">visibility</i></a>
-                            <a href="@Url.Action("Create","Task",new {subjectId =item.Id })"><i class="material-icons">add</i></a>
+                            <a href="@Url.Action("Overview","Task",new {subjectId =item.Id })">
+                                <i class="material-icons" id="overview">visibility</i>
+                                <div class="mdl-tooltip" data-mdl-for="overview">
+                                    Task overview
+                                </div>
+                            </a>
+                            <a href="@Url.Action("Create","Task",new {subjectId =item.Id })">
+                                <i class="material-icons" id="add">add</i>
+                                <div class="mdl-tooltip" data-mdl-for="add">
+                                    Create new task
+                                </div>
+                            </a>
                         </td>
                     </tr>
                 }

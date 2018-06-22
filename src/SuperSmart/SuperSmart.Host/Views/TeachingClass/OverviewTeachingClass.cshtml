@@ -27,13 +27,33 @@
                         <td>@item.Started</td>
                         <td>@item.NumberOfEducationYears</td>
                         <td>
-                            <a href="@Url.Action("Overview","Subject",new {classId =item.Id })"><i class="material-icons">visibility</i></a>
+                            <a href="@Url.Action("Overview","Subject",new {classId =item.Id })">
+                                <i class="material-icons" id="overview">visibility</i>
+                                <div class="mdl-tooltip" data-mdl-for="overview">
+                                    Overview subject
+                                </div>
+                            </a>
                             @if (item.IsAmdin)
                             {
-                                <a href="@Url.Action("Manage", new { teachingClassId = item.Id })"><i class="material-icons">edit</i></a>
-                                <a href="@Url.Action("Create", "Subject", new { classId = item.Id })"><i class="material-icons">add</i></a>
+                            <a href="@Url.Action("Manage", new { teachingClassId = item.Id })">
+                                <i class="material-icons" id="editclass">edit</i>
+                                <div class="mdl-tooltip" data-mdl-for="editclass">
+                                    Edit class
+                                </div>
+                            </a>
+                            <a href="@Url.Action("Create", "Subject", new { classId = item.Id })">
+                                <i class="material-icons" id="add">add</i>
+                                <div class="mdl-tooltip" data-mdl-for="add">
+                                    Add subject
+                                </div>
+                            </a>
                             }
-                            <a href="@Url.Action("Students", new { classId = item.Id })"><i class="material-icons">group</i></a>
+                            <a href="@Url.Action("Students", new { classId = item.Id })">
+                                <i class="material-icons" id="students">group</i>
+                                <div class="mdl-tooltip" data-mdl-for="students">
+                                   Students
+                                </div>
+                            </a>
                         </td>
                     </tr>
                 }

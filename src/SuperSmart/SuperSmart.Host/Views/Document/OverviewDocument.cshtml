@@ -33,10 +33,20 @@
                         <td>
                             @if (item.IsOwner)
                             {
-                                <a href="@Url.Action("Manage", new { documentId = item.Id })"><i class="material-icons">edit</i></a>
+                                <a href="@Url.Action("Manage", new { documentId = item.Id })">
+                                    <i class="material-icons" id="edit">edit</i>
+                                    <div class="mdl-tooltip" data-mdl-for="edit">
+                                        Edit document
+                                    </div>
+                                </a>
                             }
 
-                            <a href="@Url.Action("Download",new {documentId =item.Id })"><i class="material-icons">cloud_download</i></a>
+                            <a href="@Url.Action("Download",new {documentId = item.Id })">
+                                <i class="material-icons" id="download">cloud_download</i>
+                                <div class="mdl-tooltip" data-mdl-for="download">
+                                    Download
+                                </div>
+                            </a>
                         </td>
                     </tr>
                 }

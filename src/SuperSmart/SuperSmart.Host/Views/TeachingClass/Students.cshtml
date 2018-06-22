@@ -31,7 +31,12 @@
                         <td>
                             @if (item.Id != Model.AdminId && Model.IsAdmin)
                             {
-                                <a href="@Url.Action("Kick", new RemoveUserFromTeachingClassViewModel { TeachingClassId = Model.TeachingClassId, UserId = item.Id })"><i class="material-icons">clear</i></a>
+                                <a href="@Url.Action("Kick", new RemoveUserFromTeachingClassViewModel { TeachingClassId = Model.TeachingClassId, UserId = item.Id })">
+                                    <i class="material-icons" id="kick">clear</i>
+                                    <div class="mdl-tooltip" data-mdl-for="kick">
+                                        Remove student
+                                    </div>
+                                </a>
                             }
                         </td>
                     </tr>
