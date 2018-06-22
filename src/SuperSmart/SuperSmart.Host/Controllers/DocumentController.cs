@@ -55,6 +55,20 @@ namespace SuperSmart.Host.Controllers
         }
 
         [HttpGet]
+        public ActionResult Delete(Int64 documentId, Int64 taskId)
+        {
+            try
+            {
+                documentPersistence.Delete(documentId, User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+                ModelState.Merge(ex as PropertyExceptionCollection);
+            }
+            return RedirectToAction("Overview", new { taskId = taskId });
+        }
+
+        [HttpGet]
         public ActionResult Overview(Int64 taskId)
         {
             OverviewDocumentViewModel vm = documentPersistence.GetOverview(taskId, this.User.Identity.Name);

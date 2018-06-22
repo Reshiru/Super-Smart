@@ -29,7 +29,12 @@
                         <td>
                             @if (item.IsOwner)
                             {
-                                <a href="@Url.Action("Manage", new { taskId = item.Id })"><i class="material-icons">edit</i></a>
+                                <a href="@Url.Action("Manage", new { taskId = item.Id })">
+                                    <i class="material-icons" id="edit">edit</i>
+                                    <div class="mdl-tooltip" data-mdl-for="edit">
+                                        Edit task
+                                    </div>
+                                </a>
                             }
                             <a href="@Url.Action("InvertStatus","Task",new {taskId =item.Id,subjectId = Model.SubjectId })">
                                 @if (item.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done)

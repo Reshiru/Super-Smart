@@ -39,6 +39,14 @@
                                         Edit document
                                     </div>
                                 </a>
+
+
+                                <a href="@Url.Action("Delete", new { documentId = item.Id, taskId = Model.TaskId })">
+                                    <i class="material-icons" id="remove">clear</i>
+                                    <div class="mdl-tooltip" data-mdl-for="edremoveit">
+                                        Delete document
+                                    </div>
+                                </a>
                             }
 
                             <a href="@Url.Action("Download",new {documentId = item.Id })">
