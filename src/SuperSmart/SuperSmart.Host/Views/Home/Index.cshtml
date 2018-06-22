@@ -4,73 +4,84 @@
     ViewBag.Title = "Index";
 }
 
+
 <div class="mdl-grid">
-    <div class="mdl-cell mdl-cell--8-col"></div>
     <div class="mdl-cell mdl-cell--2-col"></div>
+
+    <div class="mdl-cell mdl-cell--8-col mdl-shadow--4dp table-wrap">
+        <h3>Tasks ToDo</h3>
+
+        <table class="mdl-data-table mdl-js-data-table mdl-cell--12-col">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Designation</th>
+                    <th>Deadline</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Tasks.Where(t => t.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.ToDo))
+                {
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">@item.Designation</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DisplayFinished)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("InvertStatus","Task",new {taskId =item.TaskId,subjectId = item.SubjectId ,home=true})">
+                                @if (item.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done)
+                                {<i class="material-icons">clear</i>}
+                                else
+                                {<i class="material-icons">check</i>}
+                            </a>
+                            <a href="@Url.Action("Overview","Document",new {taskId =item.TaskId })"><i class="material-icons">cloud_download</i></a>
+                            <a href="@Url.Action("Create","Document",new {taskId =item.TaskId })"><i class="material-icons">cloud_upload</i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<!-- Colored FAB button with ripple -->
-<button id="add-ClassButtonIndex" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
-    <i class="material-icons">add</i>
-</button>
 
-@Html.ActionLink("Create new class", "Create", "TeachingClass")
 
-<box class="no-padding w-60 float-left">
-    <table class="clean-table mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-cell--12-col">
-        <thead>
-            <tr>
 
-                <th>Status</th>
-                <th><i class="fa fa-question"></i> What</th>
-                <th><i class="fa fa-calendar-o"></i> Until</th>
-                <th><i class="fa fa-cloud-upload"></i> Solutions</th>
-            </tr>
-        </thead>
+<div class="mdl-grid">
+    <div class="mdl-cell mdl-cell--2-col"></div>
 
-        @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.ToDo))
-        {
-            <tr class="mdl-data-table__cell--non-numeri">
-                <td>
-                    <i class="fa fa-check-circle"></i>
-                </td>
-                <td>
-                    <label class="task-header"> @Html.DisplayFor(modelItem => item.SubjectName)</label>
-                    <p class="task-content"> @Html.DisplayFor(modelItem => item.Designation)</p>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DisplayFinished)
-                </td>
-                <td><i class="fa fa-cloud-upload"></i></td>
-            </tr>
-        }
-      
+    <div class="mdl-cell mdl-cell--8-col mdl-shadow--4dp table-wrap">
+        <h3>Tasks Done</h3>
+
+        <table class="mdl-data-table mdl-js-data-table mdl-cell--12-col">
+            <thead>
+                <tr>
+                    <th class="mdl-data-table__cell--non-numeric">Designation</th>
+                    <th>Deadline</th>
+                    <th>actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Tasks.Where(t => t.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done))
+                {
+                    <tr>
+                        <td class="mdl-data-table__cell--non-numeric">@item.Designation</td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DisplayFinished)
+                        </td>
+                        <td>
+                            <a href="@Url.Action("InvertStatus","Task",new {taskId =item.TaskId,subjectId = item.SubjectId ,home=true})">
+                                @if (item.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done)
+                                {<i class="material-icons">clear</i>}
+                                else
+                                {<i class="material-icons">check</i>}
+                            </a>
+                            <a href="@Url.Action("Overview","Document",new {taskId =item.TaskId })"><i class="material-icons">cloud_download</i></a>
+                            <a href="@Url.Action("Create","Document",new {taskId =item.TaskId })"><i class="material-icons">cloud_upload</i></a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
         </table>
-    <table>
-        <tr>
-            <th>Done</th>
-            <th></th>
-            <th></th>
-        </tr>
-        @foreach (var item in Model.Tasks.Where(itm => itm.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done))
-        {
-            <tr class="task-done">
-                <td>
-                    <i class="fa fa-check-circle"></i>
-                </td>
-                <td>
-                    <label class="task-header"> @Html.DisplayFor(modelItem => item.SubjectName)</label>
-                    <p class="task-content"> @Html.DisplayFor(modelItem => item.Designation)</p>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DisplayFinished)
-                </td>
-                <td><i class="fa fa-cloud-upload"></i></td>
-
-            </tr>}
-    </table>
-</box>
-
-<box class="w-40 float-left no-margin">
-    <table class="calendar"></table>
-</box>
+    </div>
+</div>

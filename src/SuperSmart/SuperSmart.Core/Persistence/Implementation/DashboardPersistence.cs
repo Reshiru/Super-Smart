@@ -36,7 +36,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 {
                     throw new PropertyExceptionCollection(nameof(loginToken), "Account not found");
                 }
-                
+
                 var appointments = db.Appointments.Include(a => a.Subject)
                                                   .ThenInclude(s => s.TeachingClass)
                                                   .ThenInclude(t => t.AssignedAccounts)
@@ -47,7 +47,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                                     .ThenInclude(s => s.TeachingClass)
                                     .ThenInclude(t => t.AssignedAccounts)
                                     .Where(task => task.Subject.TeachingClass.AssignedAccounts
-                                        .Any(itm => itm.LoginToken == loginToken) && 
+                                        .Any(itm => itm.LoginToken == loginToken) &&
                                             task.Finished > DateTime.Now && task.Finished < DateTime.Now.AddDays(7) && task.Active);
 
 
@@ -93,6 +93,7 @@ namespace SuperSmart.Core.Persistence.Implementation
                 cfg.CreateMap<Task, DashboardTaskViewModel>()
                  .ForMember(vm => vm.SubjectName, map => map.MapFrom(m => m.Subject.Designation))
                  .ForMember(vm => vm.TaskId, map => map.MapFrom(m => m.Id))
+                 .ForMember(vm => vm.SubjectId, map => map.MapFrom(m => m.Subject.Id))
                  .ForMember(vm => vm.Status, map => map.MapFrom(task => taskPersistence.GetTaskStatus(task.Id, accountId)));
             }).CreateMapper();
 

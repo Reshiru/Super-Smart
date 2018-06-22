@@ -10,14 +10,14 @@
             @Html.HiddenFor(m => m.SubjectId)
 
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                @Html.TextBoxFor(m => m.Designation, new { @class = "mdl-textfield__input", id = "Designation", required = "true" })
+                @Html.TextAreaFor(m => m.Designation, new { @class = "mdl-textfield__input", id = "Designation", required = "true" ,rows="3"})
                 <label class="mdl-textfield__label" for="Designation">Designation</label>
                 <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Designation)</span>
             </div>
 
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                 @Html.TextBoxFor(m => m.Finished, new { @class = "mdl-textfield__input", id = "Finished", required = "true", type = "date" })
-                <label class="mdl-textfield__label" for="Designation">Finished</label>
+                <label class="mdl-textfield__label" for="Finished">Finished</label>
                 <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.Finished)</span>
             </div>
 

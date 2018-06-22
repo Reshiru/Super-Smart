@@ -1,17 +1,28 @@
 ﻿@model CreateDocumentViewModel
 
-@using (Html.BeginForm("Create", "Document", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
 
-    @Html.HiddenFor(m => m.TaskId)
+<div id="createClassWrap" class="centerMiddleWrap">
+    <div class="demo-card-wide mdl-card mdl-shadow--2dp">
+        <h4>Upload new document</h4>
+        @using (Html.BeginForm("Create", "Document", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
 
-    @Html.LabelFor(m => m.FileUpload)
-    @Html.TextBoxFor(m => m.FileUpload, new { type = "file", multiple = "false" })
+            @Html.HiddenFor(m => m.TaskId)
 
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.TextBoxFor(m => m.FileUpload, new { id = "FileUpload", required = "true", type = "file", multiple = "false" })
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.FileUpload)</span>
+            </div>
 
-    @Html.LabelFor(m => m.DocumentType)
-    @Html.EnumDropDownListFor( m => m.DocumentType, "Select DocumentType")
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                @Html.EnumDropDownListFor(m => m.DocumentType, "Select DocumentType");
+                <span class="mdl-textfield__error">@Html.ValidationMessageFor(m => m.DocumentType)</span>
+            </div>
 
-    <input type="submit" value="Submit" />
-}
+            <button type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                Add
+            </button>
+        }
+    </div>
+</div>

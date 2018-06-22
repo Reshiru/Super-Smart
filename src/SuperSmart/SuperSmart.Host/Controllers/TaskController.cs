@@ -31,7 +31,7 @@ namespace SuperSmart.Host.Controllers
             try
             {
                 taskPersistence.Create(createTaskViewModel, User.Identity.Name);
-                
+
                 return RedirectToAction("Overview", new { subjectId = createTaskViewModel.SubjectId });
 
             }
@@ -85,7 +85,7 @@ namespace SuperSmart.Host.Controllers
         }
 
         [HttpGet]
-        public ActionResult InvertStatus(Int64 taskId, Int64 subjectId)
+        public ActionResult InvertStatus(Int64 taskId, Int64 subjectId, bool home = false)
         {
             try
             {
@@ -95,8 +95,10 @@ namespace SuperSmart.Host.Controllers
             {
                 ModelState.Merge(ex as PropertyExceptionCollection);
             }
-
-            return RedirectToAction(nameof(Overview),new { @subjectId = subjectId });
+            if (home)
+                return RedirectToAction("Index", "Home");
+            else
+                return RedirectToAction(nameof(Overview), new { @subjectId = subjectId });
         }
     }
 }

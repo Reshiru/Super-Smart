@@ -14,6 +14,11 @@ namespace SuperSmart.Core.Data.ViewModels
         public Int64 TaskId { get; set; }
 
         /// <summary>
+        /// The database generated identifier for the task
+        /// </summary>
+        public Int64 SubjectId { get; set; }
+
+        /// <summary>
         /// The designation / title for the task (whats the task about?)
         /// </summary>
         public string Designation { get; set; }
@@ -26,7 +31,7 @@ namespace SuperSmart.Core.Data.ViewModels
         /// <summary>
         /// The converted view visible finished date
         /// </summary>
-        public string DisplayFinished { get => this.Finished.ToString("dddd") + ", the " + this.Finished.ToString("dd.mm.yyyy"); }
+        public string DisplayFinished { get => this.Finished.ToString("dddd") + ", the " + this.Finished.ToString("dd.MM.yyyy"); }
 
         /// <summary>
         /// The designation from the subject

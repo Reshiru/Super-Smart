@@ -39,7 +39,7 @@ namespace SuperSmart.Core.Data.ViewModels
         /// <summary>
         /// Displaying when the Task is finished
         /// </summary>
-        public string DisplayFinished { get => this.Finished.ToString("dd.mm.yyyy"); }
+        public string DisplayFinished { get => this.Finished.ToString("dd.MM.yyyy"); }
 
     }
 }
