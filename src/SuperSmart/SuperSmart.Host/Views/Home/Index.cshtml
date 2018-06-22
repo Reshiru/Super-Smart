@@ -22,22 +22,34 @@
             <tbody>
                 @foreach (var item in Model.Tasks.Where(t => t.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.ToDo))
                 {
-                    <tr>
-                        <td class="mdl-data-table__cell--non-numeric">@item.Designation</td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DisplayFinished)
-                        </td>
-                        <td>
-                            <a href="@Url.Action("InvertStatus","Task",new {taskId =item.TaskId,subjectId = item.SubjectId ,home=true})">
-                                @if (item.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done)
-                                {<i class="material-icons">clear</i>}
-                                else
-                                {<i class="material-icons">check</i>}
-                            </a>
-                            <a href="@Url.Action("Overview","Document",new {taskId =item.TaskId })"><i class="material-icons">cloud_download</i></a>
-                            <a href="@Url.Action("Create","Document",new {taskId =item.TaskId })"><i class="material-icons">cloud_upload</i></a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word">@item.Designation</td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DisplayFinished)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("InvertStatus","Task",new {taskId =item.TaskId,subjectId = item.SubjectId ,home=true})">
+                            <i class="material-icons" id="status">check</i>
+                            <div class="mdl-tooltip" data-mdl-for="status">
+                                Mark as Done
+                            </div>
+                        </a>
+                        <a href="@Url.Action("Overview","Document",new {taskId =item.TaskId })">
+                            <i class="material-icons" id="download">file_copy</i>
+                            <div class="mdl-tooltip" data-mdl-for="download">
+                                Documents
+                            </div>
+                        </a>
+
+                        <a href="@Url.Action("Create","Document",new {taskId =item.TaskId })">
+                            <i class="material-icons" id="upload">cloud_upload</i>
+                            <div class="mdl-tooltip" data-mdl-for="upload">
+                                Upload new document
+                            </div>
+                        </a>
+                    </td>
+
+                </tr>
                 }
             </tbody>
         </table>
@@ -65,19 +77,30 @@
                 @foreach (var item in Model.Tasks.Where(t => t.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done))
                 {
                     <tr>
-                        <td class="mdl-data-table__cell--non-numeric">@item.Designation</td>
+                        <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word">@item.Designation</td>
                         <td>
                             @Html.DisplayFor(modelItem => item.DisplayFinished)
                         </td>
                         <td>
                             <a href="@Url.Action("InvertStatus","Task",new {taskId =item.TaskId,subjectId = item.SubjectId ,home=true})">
-                                @if (item.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done)
-                                {<i class="material-icons">clear</i>}
-                                else
-                                {<i class="material-icons">check</i>}
+                                <i class="material-icons" id="status">clear</i>
+                                <div class="mdl-tooltip" data-mdl-for="status">
+                                    Mark as ToDo
+                                </div>
                             </a>
-                            <a href="@Url.Action("Overview","Document",new {taskId =item.TaskId })"><i class="material-icons">cloud_download</i></a>
-                            <a href="@Url.Action("Create","Document",new {taskId =item.TaskId })"><i class="material-icons">cloud_upload</i></a>
+                            <a href="@Url.Action("Overview","Document",new {taskId =item.TaskId })">
+                                <i class="material-icons" id="download">file_copy</i>
+                                <div class="mdl-tooltip" data-mdl-for="download">
+                                    Documents
+                                </div>
+                            </a>
+
+                            <a href="@Url.Action("Create","Document",new {taskId =item.TaskId })">
+                                <i class="material-icons" id="upload">cloud_upload</i>
+                                <div class="mdl-tooltip" data-mdl-for="upload">
+                                    Upload new document
+                                </div>
+                            </a>
                         </td>
                     </tr>
                 }

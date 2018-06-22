@@ -23,26 +23,26 @@
             <tbody>
                 @foreach (var item in Model.Tasks)
                 {
-                    <tr>
-                        <td>
-                        <td class="mdl-data-table__cell--non-numeric">@item.Designation</td>
-                        <td>@item.Status</td>
-                        <td>@item.DisplayFinished</td>
-                        <td>
-                            @if (item.IsOwner)
-                            {
-                                <a href="@Url.Action("Manage", new { taskId = item.Id })"><i class="material-icons">edit</i></a>
-                            }
-                            <a href="@Url.Action("InvertStatus","Task",new {taskId =item.Id,subjectId = Model.SubjectId })">
-                                @if (item.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done)
-                                {<i class="material-icons">clear</i>}
-                                else
-                                {<i class="material-icons">check</i>}
-                            </a>
-                            <a href="@Url.Action("Overview","Document",new {taskId =item.Id })"><i class="material-icons">cloud_download</i></a>
-                            <a href="@Url.Action("Create","Document",new {taskId =item.Id })"><i class="material-icons">cloud_upload</i></a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                    <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word">@item.Designation</td>
+                    <td>@item.Status</td>
+                    <td>@item.DisplayFinished</td>
+                    <td>
+                        @if (item.IsOwner)
+                        {
+                            <a href="@Url.Action("Manage", new { taskId = item.Id })"><i class="material-icons">edit</i></a>
+                        }
+                        <a href="@Url.Action("InvertStatus","Task",new {taskId =item.Id,subjectId = Model.SubjectId })">
+                            @if (item.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done)
+                            {<i class="material-icons">clear</i>}
+                            else
+                            {<i class="material-icons">check</i>}
+                        </a>
+                        <a href="@Url.Action("Overview","Document",new {taskId =item.Id })"><i class="material-icons">cloud_download</i></a>
+                        <a href="@Url.Action("Create","Document",new {taskId =item.Id })"><i class="material-icons">cloud_upload</i></a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
