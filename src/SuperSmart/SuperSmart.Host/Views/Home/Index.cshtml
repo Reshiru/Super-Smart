@@ -20,7 +20,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Tasks.Where(t => t.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.ToDo))
+                @if (Model?.Tasks != null)
+                {
+                foreach (var item in Model.Tasks.Where(t => t.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.ToDo))
                 {
                 <tr>
                     <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word">@item.Designation</td>
@@ -28,7 +30,7 @@
                         @Html.DisplayFor(modelItem => item.DisplayFinished)
                     </td>
                     <td>
-                        <a href="@Url.Action("InvertStatus","Task",new {taskId =item.TaskId,subjectId = item.SubjectId ,home=true})">
+                        <a href="@Url.Action("InvertStatus", "Task", new { taskId = item.TaskId, subjectId = item.SubjectId, home = true })">
                             <i class="material-icons" id="status">check</i>
                             <div class="mdl-tooltip" data-mdl-for="status">
                                 Mark as Done
@@ -41,7 +43,7 @@
                             </div>
                         </a>
 
-                        <a href="@Url.Action("Create","Document",new {taskId =item.TaskId })">
+                        <a href="@Url.Action("Create", "Document", new { taskId = item.TaskId })">
                             <i class="material-icons" id="upload">cloud_upload</i>
                             <div class="mdl-tooltip" data-mdl-for="upload">
                                 Upload new document
@@ -50,6 +52,7 @@
                     </td>
 
                 </tr>
+                }
                 }
             </tbody>
         </table>
@@ -74,7 +77,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Tasks.Where(t => t.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done))
+                @if (Model?.Tasks != null)
+                {
+                foreach (var item in Model.Tasks.Where(t => t.Status == SuperSmart.Core.Data.Enumeration.TaskStatus.Done))
                 {
                     <tr>
                         <td class="mdl-data-table__cell--non-numeric" style="word-wrap: break-word">@item.Designation</td>
@@ -82,7 +87,7 @@
                             @Html.DisplayFor(modelItem => item.DisplayFinished)
                         </td>
                         <td>
-                            <a href="@Url.Action("InvertStatus","Task",new {taskId =item.TaskId,subjectId = item.SubjectId ,home=true})">
+                            <a href="@Url.Action("InvertStatus", "Task", new { taskId = item.TaskId, subjectId = item.SubjectId, home = true })">
                                 <i class="material-icons" id="status">clear</i>
                                 <div class="mdl-tooltip" data-mdl-for="status">
                                     Mark as ToDo
@@ -95,7 +100,7 @@
                                 </div>
                             </a>
 
-                            <a href="@Url.Action("Create","Document",new {taskId =item.TaskId })">
+                            <a href="@Url.Action("Create", "Document", new { taskId = item.TaskId })">
                                 <i class="material-icons" id="upload">cloud_upload</i>
                                 <div class="mdl-tooltip" data-mdl-for="upload">
                                     Upload new document
@@ -103,6 +108,7 @@
                             </a>
                         </td>
                     </tr>
+                }
                 }
             </tbody>
         </table>
